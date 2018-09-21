@@ -1,0 +1,59 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath></OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="Engine.config" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="WebApi.bat" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\css\" />
+    <Folder Include="wwwroot\images\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Engine.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Domain\UTH.Domain\UTH.Domain.csproj" />
+    <ProjectReference Include="..\..\Framework\UTH.Framework.Log4net\UTH.Framework.Log4net.csproj" />
+    <ProjectReference Include="..\..\Framework\UTH.Framework.SqlSugar\UTH.Framework.SqlSugar.csproj" />
+    <ProjectReference Include="..\..\Framework\UTH.Framework.Web\UTH.Framework.Web.csproj" />
+    <ProjectReference Include="..\..\Framework\UTH.Framework\UTH.Framework.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\UTH.Infrastructure.Resource\UTH.Infrastructure.Resource.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\UTH.Infrastructure.Utility\UTH.Infrastructure.Utility.csproj" />
+    <ProjectReference Include="..\..\Module\UTH.Module.Basics\UTH.Module.Basics.csproj" />
+    <ProjectReference Include="..\..\Module\UTH.Module.Core\UTH.Module.Core.csproj" />
+    <ProjectReference Include="..\..\Module\UTH.Module.Meeting\UTH.Module.Meeting.csproj" />
+    <ProjectReference Include="..\..\Module\UTH.Module.User\UTH.Module.User.csproj" />
+    <ProjectReference Include="..\..\Plug\UTH.Plug.Notification\UTH.Plug.Notification.csproj" />
+    <ProjectReference Include="..\..\Plug\UTH.Plug\UTH.Plug.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Upload\4\9\87\v1001.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Upload\9\E\A0\v1000.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

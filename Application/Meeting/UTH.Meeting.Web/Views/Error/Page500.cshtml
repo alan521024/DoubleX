@@ -1,0 +1,22 @@
+﻿@model ErrorViewModel
+@{
+    ViewData["Title"] = "Error-500";
+}
+
+@section Heads{ }
+
+@section Styles{ }
+
+<h2>服务器内部错误</h2>
+@if (Model.ShowRequestId)
+{
+    <p>
+        <strong>请求Id ID:</strong> <code>@Model.RequestId</code>
+    </p>
+}
+
+@section Scripts{
+    <script type="text/javascript">
+    </script>
+}
+

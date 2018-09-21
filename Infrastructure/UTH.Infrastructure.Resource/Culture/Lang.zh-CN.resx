@@ -1,0 +1,564 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="basFenLeiMingCheng" xml:space="preserve">
+    <value>分类名称</value>
+  </data>
+  <data name="basQuanXianGongNeng" xml:space="preserve">
+    <value>权限功能</value>
+  </data>
+  <data name="basQuanXianGuanLi" xml:space="preserve">
+    <value>权限管理</value>
+  </data>
+  <data name="basQuanXianLuJing" xml:space="preserve">
+    <value>权限路径</value>
+  </data>
+  <data name="basYingYongChengXu" xml:space="preserve">
+    <value>应用程序</value>
+  </data>
+  <data name="busChanPingMingCheng" xml:space="preserve">
+    <value>产品名称</value>
+  </data>
+  <data name="cstKeHuYiCunZai" xml:space="preserve">
+    <value>客户已存在</value>
+  </data>
+  <data name="synDangQianWeiZuiXinBanBeng" xml:space="preserve">
+    <value>当前为最新版</value>
+  </data>
+  <data name="sysBaoCun" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="sysBianJi" xml:space="preserve">
+    <value>编辑</value>
+  </data>
+  <data name="sysCaoZuo" xml:space="preserve">
+    <value>操作</value>
+  </data>
+  <data name="sysChangDuQuJianFormat" xml:space="preserve">
+    <value>{PropertyName}的长度为{MinLength}-{MaxLength}个字符</value>
+  </data>
+  <data name="sysChengGong" xml:space="preserve">
+    <value>成功</value>
+  </data>
+  <data name="sysChongZhi" xml:space="preserve">
+    <value>重置</value>
+  </data>
+  <data name="sysCuoWu" xml:space="preserve">
+    <value>错误</value>
+  </data>
+  <data name="sysDangQianBanBeng" xml:space="preserve">
+    <value>当前版本</value>
+  </data>
+  <data name="sysDuanXinYanZhengMaCuoWu" xml:space="preserve">
+    <value>短信验证码错误</value>
+  </data>
+  <data name="sysGengXinChengXu" xml:space="preserve">
+    <value>更新程序</value>
+  </data>
+  <data name="sysJiChuXinXi" xml:space="preserve">
+    <value>基础信息</value>
+  </data>
+  <data name="sysLeiXing" xml:space="preserve">
+    <value>类型</value>
+  </data>
+  <data name="sysLiJiGengXin" xml:space="preserve">
+    <value>立即更新</value>
+  </data>
+  <data name="sysLiJiTiJiao" xml:space="preserve">
+    <value>立即提交</value>
+  </data>
+  <data name="sysMingCheng" xml:space="preserve">
+    <value>名称</value>
+  </data>
+  <data name="sysName" xml:space="preserve">
+    <value>名称</value>
+  </data>
+  <data name="sysQieHuan" xml:space="preserve">
+    <value>切换</value>
+  </data>
+  <data name="sysQingShuRuFormat" xml:space="preserve">
+    <value>请输入{PropertyName}</value>
+  </data>
+  <data name="sysQingShuRuGuanJianZi" xml:space="preserve">
+    <value>请输入关键字搜索</value>
+  </data>
+  <data name="sysQingShuRuMingCheng" xml:space="preserve">
+    <value>请输入名称</value>
+  </data>
+  <data name="sysQingShuRuYouXiaoFormat" xml:space="preserve">
+    <value>请输入有效的{PropertyName}</value>
+  </data>
+  <data name="sysQingXuanZeLeiXing" xml:space="preserve">
+    <value>请选择类型</value>
+  </data>
+  <data name="sysShanChu" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="sysShouQuanShiYongCiShuYiChaoChu" xml:space="preserve">
+    <value>授权使用次数已超出</value>
+  </data>
+  <data name="sysShouQuanWenJianCuoWu" xml:space="preserve">
+    <value>授权文件错误</value>
+  </data>
+  <data name="sysShouQuanXinXiCuoWu" xml:space="preserve">
+    <value>授权信息错误</value>
+  </data>
+  <data name="sysShouQuanYiGuoQi" xml:space="preserve">
+    <value>授权信息已过期</value>
+  </data>
+  <data name="sysShouYe" xml:space="preserve">
+    <value>首页</value>
+  </data>
+  <data name="sysSouSuo" xml:space="preserve">
+    <value>搜索</value>
+  </data>
+  <data name="sysTianJia" xml:space="preserve">
+    <value>添加</value>
+  </data>
+  <data name="sysTiJiao" xml:space="preserve">
+    <value>提交</value>
+  </data>
+  <data name="sysTiShi" xml:space="preserve">
+    <value>提示</value>
+  </data>
+  <data name="sysXinXi" xml:space="preserve">
+    <value>信息</value>
+  </data>
+  <data name="sysXinXiBiaoTi" xml:space="preserve">
+    <value>信息标题</value>
+  </data>
+  <data name="sysXiuGai" xml:space="preserve">
+    <value>修改</value>
+  </data>
+  <data name="sysYiXuanZeXiang" xml:space="preserve">
+    <value>已选中&lt;em&gt;{0}&lt;/em&gt;项</value>
+  </data>
+  <data name="sysZengJia" xml:space="preserve">
+    <value>增加</value>
+  </data>
+  <data name="sysZuiXinBanBeng" xml:space="preserve">
+    <value>最新版本</value>
+  </data>
+  <data name="userDengLu" xml:space="preserve">
+    <value>登录</value>
+  </data>
+  <data name="userMiMa" xml:space="preserve">
+    <value>密码</value>
+  </data>
+  <data name="userMiMaCuoWu" xml:space="preserve">
+    <value>密码错误</value>
+  </data>
+  <data name="userQingShuRuZhangHaoShouJiHaoMaYouXiangDiZhi" xml:space="preserve">
+    <value>请输入账号、手机号码、邮箱地址</value>
+  </data>
+  <data name="userQingShuZhaoHaoMiMa" xml:space="preserve">
+    <value>请输入账号/密码</value>
+  </data>
+  <data name="userShouJiHaoMa" xml:space="preserve">
+    <value>手机号码</value>
+  </data>
+  <data name="userYanZhengMa" xml:space="preserve">
+    <value>验证码</value>
+  </data>
+  <data name="userYanZhengMaCuoWu" xml:space="preserve">
+    <value>验证码错误</value>
+  </data>
+  <data name="userYouJianYanZhengMaCuoWu" xml:space="preserve">
+    <value>邮件验证码错误</value>
+  </data>
+  <data name="userYouXiangDiZhi" xml:space="preserve">
+    <value>邮箱地址</value>
+  </data>
+  <data name="userZhangHao" xml:space="preserve">
+    <value>账号</value>
+  </data>
+  <data name="userZhangHaoCuoWu" xml:space="preserve">
+    <value>账号错误</value>
+  </data>
+  <data name="userZhangHuYiCunZai" xml:space="preserve">
+    <value>账户已存在</value>
+  </data>
+  <data name="userZhuCe" xml:space="preserve">
+    <value>注册</value>
+  </data>
+  <data name="userZhuCeChengGongXiaoXi" xml:space="preserve">
+    <value>恭喜账号注册成功</value>
+  </data>
+  <data name="userZhuCeShiBai" xml:space="preserve">
+    <value>注册失败</value>
+  </data>
+  <data name="winQiDongQi" xml:space="preserve">
+    <value>启动器</value>
+  </data>
+  <data name="winUpdate" xml:space="preserve">
+    <value>正在下载更新文件 ......</value>
+  </data>
+  <data name="winZhuJieMian" xml:space="preserve">
+    <value>主界面</value>
+  </data>
+  <data name="sysConfigEngineError" xml:space="preserve">
+    <value>应用程序没有找到必须的运行引擎配置文件{0}，请修复并重启运行。</value>
+  </data>
+  <data name="sysConfigFileError" xml:space="preserve">
+    <value>没有正确的对象配置文件({0})</value>
+  </data>
+  <data name="sysLoggerAdapterError" xml:space="preserve">
+    <value>未找到指定的日志记录器对象({0}:{1})</value>
+  </data>
+  <data name="sysCompany" xml:space="preserve">
+    <value>UTH国际</value>
+  </data>
+  <data name="sysGengXin" xml:space="preserve">
+    <value>更新</value>
+  </data>
+  <data name="sysGuanYu" xml:space="preserve">
+    <value>关于</value>
+  </data>
+  <data name="sysGuanYuWoMen" xml:space="preserve">
+    <value>关于我们</value>
+  </data>
+  <data name="sysJianCha" xml:space="preserve">
+    <value>检查</value>
+  </data>
+  <data name="sysSheZhi" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="sysTitle" xml:space="preserve">
+    <value>多语会议系统</value>
+  </data>
+  <data name="sysWoYiYueDu" xml:space="preserve">
+    <value>我已阅读</value>
+  </data>
+  <data name="sysXiTont" xml:space="preserve">
+    <value>系统</value>
+  </data>
+  <data name="userMeiYouZhangHao" xml:space="preserve">
+    <value>没有账号</value>
+  </data>
+  <data name="userQingQueRenXinMiMa" xml:space="preserve">
+    <value>请确认新密码</value>
+  </data>
+  <data name="userQingShuRuXinMiMa" xml:space="preserve">
+    <value>请输入新密码</value>
+  </data>
+  <data name="userWoYiTongYi" xml:space="preserve">
+    <value>我已同意</value>
+  </data>
+  <data name="userXiuGaiMiMa" xml:space="preserve">
+    <value>修改密码</value>
+  </data>
+  <data name="userYiYouZhangHao" xml:space="preserve">
+    <value>已有账号</value>
+  </data>
+  <data name="userYongHuZhuCe" xml:space="preserve">
+    <value>用户注册</value>
+  </data>
+  <data name="userYongHuZhuCeXieYi" xml:space="preserve">
+    <value>用户注册协议</value>
+  </data>
+  <data name="userZhaoHuiMiMa" xml:space="preserve">
+    <value>找回密码？</value>
+  </data>
+  <data name="userFanHuiDengLu" xml:space="preserve">
+    <value>返回登录</value>
+  </data>
+  <data name="sysHuoQuYanZhengMa" xml:space="preserve">
+    <value>获取验证码</value>
+  </data>
+  <data name="sysXiaYiBu" xml:space="preserve">
+    <value>下一步</value>
+  </data>
+  <data name="userJiZhuMiMa" xml:space="preserve">
+    <value>记住密码</value>
+  </data>
+  <data name="userQingShuRuShouJiHao" xml:space="preserve">
+    <value>请输入手机号</value>
+  </data>
+  <data name="userWoYiTongYiYongHuZhuCeXieYi" xml:space="preserve">
+    <value>我已同意《用户注册协议》</value>
+  </data>
+  <data name="userYongYuZhuCeXin" xml:space="preserve">
+    <value>新用户注册</value>
+  </data>
+  <data name="userQingYueDuBingTongYiZhuCeXieYi" xml:space="preserve">
+    <value>请阅读并同意注册协议</value>
+  </data>
+  <data name="sysBaoCunChengGong" xml:space="preserve">
+    <value>保存成功</value>
+  </data>
+  <data name="sysFaSongChengGong" xml:space="preserve">
+    <value>发送成功</value>
+  </data>
+  <data name="sysDaoJiShi" xml:space="preserve">
+    <value>倒计时</value>
+  </data>
+  <data name="userQingShuRuMiMa" xml:space="preserve">
+    <value>请输入密码</value>
+  </data>
+  <data name="userQingShuRuYanZhengMa" xml:space="preserve">
+    <value>请输入验证码</value>
+  </data>
+  <data name="userQingShuRuZhengQueDeShouJiHao" xml:space="preserve">
+    <value>请输入正确的手机号</value>
+  </data>
+  <data name="userQingShuRuZhengQueDeYanZhengMa" xml:space="preserve">
+    <value>请输入正确的验证码</value>
+  </data>
+  <data name="userDengLuShiBai" xml:space="preserve">
+    <value>登录失败</value>
+  </data>
+  <data name="metHuiYiSheZhi" xml:space="preserve">
+    <value>会议设置</value>
+  </data>
+  <data name="userGeRenXinXi" xml:space="preserve">
+    <value>个人信息</value>
+  </data>
+  <data name="userYongHuZhangHao" xml:space="preserve">
+    <value>用户账号</value>
+  </data>
+  <data name="userTuiChuDengLu" xml:space="preserve">
+    <value>退出登录</value>
+  </data>
+  <data name="userQingShuRuYouXiaoDeQueRenMiMa" xml:space="preserve">
+    <value>请输入有效的确认密码</value>
+  </data>
+  <data name="userQingShuRuYouXiaoDeXinMiMa" xml:space="preserve">
+    <value>请输入有效的新密码</value>
+  </data>
+  <data name="userQingShuRuYouXiaoDeYuanMiMa" xml:space="preserve">
+    <value>请输入有效的原密码</value>
+  </data>
+  <data name="userQueRenMiMa" xml:space="preserve">
+    <value>确认密码</value>
+  </data>
+  <data name="userXinMiMa" xml:space="preserve">
+    <value>新密码</value>
+  </data>
+  <data name="userYuanMiMa" xml:space="preserve">
+    <value>原密码</value>
+  </data>
+  <data name="sysYanZhengShiBai" xml:space="preserve">
+    <value>验证失败</value>
+  </data>
+  <data name="userXinMiMaYuQueRenMiMaBuTong" xml:space="preserve">
+    <value>新密码与确认密码不同</value>
+  </data>
+  <data name="sysCaoZuoChengGong" xml:space="preserve">
+    <value>操作成功</value>
+  </data>
+  <data name="sysBangZhuZhongXin" xml:space="preserve">
+    <value>帮助中心</value>
+  </data>
+  <data name="sysBangZhu" xml:space="preserve">
+    <value>帮助</value>
+  </data>
+  <data name="sysDaoChu" xml:space="preserve">
+    <value>导出</value>
+  </data>
+  <data name="metZhengZaiHuiYi" xml:space="preserve">
+    <value>正在会议</value>
+  </data>
+  <data name="sysChuShiShiBai" xml:space="preserve">
+    <value>初始失败</value>
+  </data>
+  <data name="sysZhengZaiQiDong" xml:space="preserve">
+    <value>正在启动</value>
+  </data>
+  <data name="sysFuWuYiChang" xml:space="preserve">
+    <value>服务异常</value>
+  </data>
+  <data name="metQingChuHuiYiJiLu" xml:space="preserve">
+    <value>清除会议记录</value>
+  </data>
+  <data name="metZhengZaiDaoChuHuiYiJiLu" xml:space="preserve">
+    <value>正在导出会议记录</value>
+  </data>
+  <data name="sysFaXianXinBanBeng" xml:space="preserve">
+    <value>发现新版本</value>
+  </data>
+  <data name="sysShiYongBan" xml:space="preserve">
+    <value>试用版</value>
+  </data>
+  <data name="sysZhengShiBan" xml:space="preserve">
+    <value>正式版</value>
+  </data>
+  <data name="userZhaoHuiMiMaYanZhengMaXiaoXi" xml:space="preserve">
+    <value>您正在找回 UTH 账号，验证码为 {0}，验证码10分钟内有效，祝您使用愉快！</value>
+  </data>
+  <data name="userZhuCeYanZhengMaXiaoXi" xml:space="preserve">
+    <value>您正在注册 UTH 账号，验证码为 {0}，验证码10分钟内有效，祝您使用愉快！</value>
+  </data>
+  <data name="plugDuanXinHaoMaHuoNeiRongCuoWu" xml:space="preserve">
+    <value>短信号码或内容错误</value>
+  </data>
+  <data name="sysTongZhiLeiXinCuoWu" xml:space="preserve">
+    <value>通知类型错误</value>
+  </data>
+  <data name="sysFaSongShiBai" xml:space="preserve">
+    <value>发送失败</value>
+  </data>
+  <data name="sysTongZhiFaSongCuoWu" xml:space="preserve">
+    <value>通知发送错误</value>
+  </data>
+  <data name="metDescript" xml:space="preserve">
+    <value>芝麻秘语-多语言及时翻译会议系统是一款支持当多语言的在线会议系统。支持全球主流的16种语言（汉语、英语、阿拉伯语、葡萄牙语、日语、泰语、西班牙语、印尼语）同声翻译：即时将当前获取到的语言转换成多种目标语言，并以文字的方式展现出来。 同时，通过扫描二维码，系统支持与手机的在线系统。</value>
+  </data>
+  <data name="metName" xml:space="preserve">
+    <value>芝麻秘语-多语言即时翻译会议系统</value>
+  </data>
+  <data name="metHuiYiJiLuFuWuYiChang" xml:space="preserve">
+    <value>会议记录服务异常</value>
+  </data>
+  <data name="metWeiZhaoDaoYuYinSeBei" xml:space="preserve">
+    <value>未找到语音设备</value>
+  </data>
+  <data name="metWeiZhaoDaoYuYinSeBei1" xml:space="preserve">
+    <value>未找到语音设备</value>
+  </data>
+  <data name="metYuanChengShuJuYiChang" xml:space="preserve">
+    <value>远程数据服务异常</value>
+  </data>
+  <data name="metYuYingShiBieFuWuYiChang" xml:space="preserve">
+    <value>语音识别服务异常</value>
+  </data>
+  <data name="sysChengXuYiJingYunXingQingWuChongFuCaoZuo" xml:space="preserve">
+    <value>程序已经运行，请勿重复操作！</value>
+  </data>
+  <data name="metHuiYiShi" xml:space="preserve">
+    <value>会议室</value>
+  </data>
+  <data name="metKaiShiHuiYi" xml:space="preserve">
+    <value>开始会议</value>
+  </data>
+  <data name="metJiaRuHuiYi" xml:space="preserve">
+    <value>加入会议</value>
+  </data>
+  <data name="metQingShuRuDangQianHuiYi" xml:space="preserve">
+    <value>请输入当前会议</value>
+  </data>
+  <data name="metHuiYiCuoWu" xml:space="preserve">
+    <value>会议错误</value>
+  </data>
+  <data name="userZhangHaoGuanLi" xml:space="preserve">
+    <value>账号管理</value>
+  </data>
+  <data name="userTuiChu" xml:space="preserve">
+    <value>退出</value>
+  </data>
+</root>

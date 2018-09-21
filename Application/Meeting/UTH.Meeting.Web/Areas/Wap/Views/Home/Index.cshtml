@@ -1,0 +1,869 @@
+﻿@model MeetingViewModel
+
+@{
+    ViewData["Title"] = Lang.metName;
+    var targetArs = StringHelper.GetToArray(Model.Setting.TargetLangs, separator: new string[] { "|" });
+    //中文|zs,英语|en,阿拉伯语|ar,德语|de,俄语|ru,法语|fr,高棉语|km,韩语|ko,老挝语|lo,马来语|ms,葡萄牙语|pt,日语|ja,泰语|th,西班牙语|es,意大利语|it,印尼语|id
+}
+
+@section Heads{ }
+
+@section Styles{ }
+
+<div id="app">
+    <div class="statusbar"></div>
+    <div class="panel panel-left panel-cover">
+        <div class="page">
+            <div class="navbar">
+                <div class="navbar-inner sliding">
+                    <div class="title">选择语言</div>
+                </div>
+            </div>
+            <div class="page-content">
+                <div class="block-title">语音/内容</div>
+                <div class="list">
+                    <ul>
+                        @foreach (var item in AppHelper.MeetingSourceLangs)
+                        {
+                        <li>
+                            <label class="item-radio item-content">
+                                @if (item.Value == Model.Setting.SourceLang)
+                                {
+                                <input type="radio" name="language-source" value="@(item.Value)" checked="checked" />
+                                }
+                                else
+                                {
+                                <input type="radio" name="language-source" value="@(item.Value)" />
+                                }
+                                <i class="icon icon-radio"></i>
+                                <span class="item-inner">
+                                    <span class="item-title">@(item.Key)</span>
+                                </span>
+                            </label>
+                        </li>
+                        }
+                    </ul>
+                </div>
+                <div class="block-title">翻译目标</div>
+                <div class="list">
+                    <ul class="target-list">
+                        @foreach (var item in AppHelper.MeetingSourceLangs)
+                        {
+                        <li>
+                            <label class="item-checkbox item-content">
+                                @if (targetArs.Contains(item.Value))
+                                {
+                                <input type="checkbox" name="language-target" value="@(item.Value)" checked="checked" />
+                                }
+                                else
+                                {
+                                <input type="checkbox" name="language-target" value="@(item.Value)" />
+                                }
+                                <i class="icon icon-checkbox"></i>
+                                <span class="item-inner">
+                                    <span class="item-title">@(item.Key)</span>
+                                </span>
+                            </label>
+                        </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="view view-main view-init ios-edges" data-url="/">
+        <div class="page page-on-center">
+            <div class="navbar">
+                <div class="navbar-inner">
+                    <div class="left">
+                        <a href="#" class="link icon-only panel-open" data-panel="left">
+                            <i class="icon f7-icons ios-only">menu</i>
+                            <i class="icon material-icons md-only">menu</i>
+                        </a>
+                    </div>
+                    <div id="txt-title" class="title sliding"></div>
+                    <div class="right">
+                        <a id="btn-refresh" href="#" class="link icon-only">
+                            <i class="icon f7-icons ios-only">refresh</i>
+                            <i class="icon material-icons md-only">refresh</i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="toolbar tabbar toolbar-bottom-md">
+                <div class="toolbar-inner">
+                    <a href="#" class="link icon-only msg-button msg-switch" data-type="text">
+                        <i class="icon f7-icons ios-only">compose_fill</i>
+                        <i class="icon material-icons md-only">chat</i>
+                    </a>
+                    <div class="messagebar msg-box msg-text">
+                        <textarea id="txt-content" placeholder="请输入消息……" class=""></textarea>
+                        <a id="btn-text-send" href="#" class="link icon-only msg-button">
+                            <i class="icon f7-icons ios-only">arrow_up_fill</i>
+                            <i class="icon material-icons md-only">arrow_forward</i>
+                        </a>
+                    </div>
+                    <div class="messagebar msg-box msg-voice">
+                        <button id="btn-voice" class="button col color-gray">按住 说话</button>
+                    </div>
+                </div>
+            </div>
+            <div class="page-content messages-content ptr-content">
+                <div class="ptr-preloader">
+                    <div class="preloader"></div>
+                    <div class="ptr-arrow"></div>
+                </div>
+                <div class="messages messages-auto-layout">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+<script id="recordTemplate" type="text/template7">
+    <div class="message message-item record-item" data-record="{{recordId}}">
+        <i class="bot left"></i>
+        <div class="sources">
+            <label class="title">源：<em class="tag">[{{langue}}]</em></label>
+            <div class="content">{{content}}</div>
+        </div>
+        <div class="targets">
+            <div class="target-item-list">
+            </div>
+        </div>
+    </div>
+</script>
+
+<script id="translationTemplate" type="text/template7">
+    <div class="target-item  translation-item" data-translation="{{translationId}}" data-code="{{langue}}">
+        <label class="title">译：<em class="tag">[{{langue}}]</em></label>
+        <div class="content">{{content}}</div>
+    </div>
+</script>
+
+<script type="text/javascript">
+    Array.prototype.unique = function () {
+        var res = [];
+        var json = {};
+        for (var i = 0; i < this.length; i++) {
+            if (!json[this[i]]) {
+                res.push(this[i]);
+                json[this[i]] = 1;
+            }
+        }
+        return res;
+    }
+
+    Array.prototype.indexOf = function (val) {
+        for (var i = 0; i < this.length; i++) {
+            if (this[i] == val) return i;
+        }
+        return -1;
+    };
+
+    Array.prototype.remove = function (val) {
+        var index = this.indexOf(val);
+        if (index > -1) {
+            this.splice(index, 1);
+        }
+    };
+</script>
+
+<script type="text/javascript">
+
+    function dateParse(str) {
+        //2017/02/16 格式无时间问题
+        //2017-02-16 字符串转日期8小时差问题
+        str = str.replace(new RegExp(/(-)/g), "/");
+        str = str.replace(new RegExp(/(T)/g), " ");
+        return new Date(str);
+    };
+
+    function requestCallback(result, callback) {
+        if (result && result.code == 0) {
+            callback(result.obj);
+        }
+    }
+
+    function requestError(error) {
+
+    }
+
+    function html2Escape(sHtml) {
+        return sHtml.replace(/[<>&"]/g, function (c) { return { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c]; });
+    }
+
+    function escape2Html(str) {
+        var arrEntities = { 'lt': '<', 'gt': '>', 'nbsp': ' ', 'amp': '&', 'quot': '"' };
+        return str.replace(/&(lt|gt|nbsp|amp|quot);/ig, function (all, t) { return arrEntities[t]; });
+    }
+
+</script>
+
+<script type="text/javascript">
+        var apiUrl = "@(Model.ApiUrl)", webUrl = "@(Model.WebUrl)",curUrl = "@(Model.RequestUrl)";
+        var setting = JSON.parse(escape2Html("@(Model.Meeting.Setting)"));
+        var storage = window.localStorage;
+
+        var pageView = {
+
+            meetingId: "@(Model.Meeting.Id)",
+            sourceLang: setting.sourceLang,
+            targetLangs: setting.targetLangs,
+
+            recodInterval: null,
+            recodIntervalValue:0,
+            recodTouchStart: { pageX: 0, pageY: 0, timestamp:0 },
+            recodTouchEnd: { pageX: 0, pageY: 0, timestamp: 0 },
+            recodingToast: null,
+            recodIsCancel: false,
+
+            loadingTimer:null,
+            isloading: false,
+            isHistory:false,
+            firstRecordDt: "9999-12-31 23:59:59",
+            firstTranslationDt: "9999-12-31 23:59:59",
+            lastRecordDt: "1900-01-01 00:00:00",
+            lastTranslationDt: "1900-01-01 00:00:00",
+
+            dataMin: 0,
+            dataMax: 0
+        };
+
+        if (storage.getItem("src")!=null) {
+            pageView.sourceLang = storage.getItem("src")
+        } else {
+            storage.setItem("src", pageView.sourceLang);
+        }
+        if (storage.getItem("tgt") != null) {
+            pageView.targetLangs = storage.getItem("tgt")
+        } else {
+            storage.setItem("tgt", pageView.targetLangs);
+        }
+
+        wx.config({
+            debug: false,                                           // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+            appId: "@(Model.WxJs.AppId)",                           // 必填，公众号的唯一标识
+            timestamp: '@(Model.WxJs.Timestamp)',                   // 必填，生成签名的时间戳
+            nonceStr: '@(Model.WxJs.NonceStr)',                     // 必填，生成签名的随机串
+            signature: '@(Model.WxJs.Signature)',                   // 必填，签名，见附录1
+            jsApiList: [                                            // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+                'onMenuShareAppMessage',
+                'startRecord',
+                'stopRecord',
+                'onVoiceRecordEnd',
+                'playVoice',
+                'pauseVoice',
+                'stopVoice',
+                'onVoicePlayEnd',
+                'uploadVoice',
+                'downloadVoice',
+                'translateVoice'
+            ]
+        });
+
+</script>
+
+<script type="text/javascript">
+
+    pageView.loading = function (success, error) {
+        var that = this;
+        var dir = "next";
+
+        //增加条件防止连续滚动时，同时开始多个任务
+        if (pageView.isloading) {
+            return;
+        }
+        pageView.isloading = true;
+
+        //console.log(pageView.sourceLang, pageView.targetLangs);
+
+        pageView.remote(dir, function (res, trs) {
+            res.sort(function (x, y) { return new Date(x["lastDt"]) > new Date(y["lastDt"]) ? 1 : -1; });
+            res.forEach((item) => { pageView.recordContent(item, dir); });
+            trs.forEach((item) => { pageView.translationContent(item); });
+            if (success != null) {
+                success(res, trs);
+            }
+
+            pageView.isloading = false;
+            pageView.loadingClear();
+            pageView.loadingTimer = setTimeout(function () { pageView.loading(success, error); }, 2000);
+        }, function (err) {
+            if (error != null) {
+                error(err);
+            }
+            pageView.isloading = false;
+            pageView.loadingClear();
+            pageView.loadingTimer = setTimeout(function () { pageView.loading(success, error); }, 2000);
+        })
+    }
+
+    pageView.loadingClear = function () {
+        clearTimeout(pageView.loadingTimer);
+        pageView.loadingTimer = null;
+    }
+
+    pageView.history = function (success, error) {
+        var that = this;
+        var dir = "pre";
+
+        //正在读取返回
+        if (pageView.isHistory) {
+            return;
+        }
+        pageView.isHistory = true;
+
+        pageView.remote("pre", function (res, trs) {
+            //res.sort(function (x, y) { return new Date(x["lastDt"]) < new Date(y["lastDt"]) ? 1 : -1; });
+            res.forEach((item) => { pageView.recordContent(item, dir); });
+            trs.forEach((item) => { pageView.translationContent(item); });
+            if (success != null) {
+                success(res, trs);
+            }
+            pageView.isHistory = false;
+            $$(".messages-content").scrollTop(1);
+        }, function (err) {
+            if (error != null) {
+                error(err);
+            }
+            pageView.isHistory = false;
+        });
+    }
+
+
+    pageView.send = function (content, success, error) {
+        var that = this;
+        content = content || "";
+        if (content == "") {
+            pageView.message("内容为空", 2000);
+            return;
+        }
+
+        var url = encodeURIComponent("/api/meet/meetingrecord/add");
+        var model = {
+            MeetingId: that.meetingId,
+            Langue: that.sourceLang,
+            LangueTrs: that.targetLangs,
+            Content: content,
+            Sort: -1
+        };
+
+        app.request.postJSON("/common/do", { action: url, content: model }, function () {
+            pageView.loadingClear();
+            pageView.loading(pageView.toFooter);
+            if (success != null) {
+                success();
+            }
+        }, function () {
+            if (error != null) {
+                error();
+            }
+        });
+    }
+
+    pageView.remote = function (dir, success, error) {
+        var that = this;
+        dir = (dir || "next").toLocaleLowerCase();
+
+        var url = encodeURIComponent("/api/meet/meeting/syncquery");
+        var model = {
+            MeetingId: pageView.meetingId,
+            Direction: dir,
+            RecordDt: pageView.lastRecordDt,
+            TranslationDt: pageView.lastTranslationDt
+        };
+
+        if (dir == "pre") {
+            model.RecordDt = pageView.firstRecordDt;
+            model.TranslationDt = pageView.firstTranslationDt;
+        }
+
+        app.request.postJSON("/common/do", { action: url, content: model }, function (result) {
+            requestCallback(result, function (obj) {
+                var records = [], translations = [];
+
+                if (obj) {
+                    records = obj["records"] || [];
+                    translations = obj["translations"] || [];
+                }
+
+                records.forEach((item) => {
+                    var _item = dateParse(item["lastDt"]);
+                    var _first = dateParse(pageView.firstRecordDt);
+                    var _last = dateParse(pageView.lastRecordDt);
+
+                    if (_item < _first) {
+                        pageView.firstRecordDt = item["lastDt"];
+                    }
+                    if (_item > _last) {
+                        pageView.lastRecordDt = item["lastDt"];
+                    }
+                });
+
+                translations.forEach((item) => {
+                    var _item = dateParse(item["lastDt"]);
+                    var _first = dateParse(pageView.firstTranslationDt);
+                    var _last = dateParse(pageView.lastTranslationDt);
+                    if (_item < _first) {
+                        pageView.firstTranslationDt = item["lastDt"];
+                    }
+                    if (_item > _last) {
+                        pageView.lastTranslationDt = item["lastDt"];
+                    }
+                });
+
+                if (success != null) {
+                    success(records, translations)
+                }
+            });
+        }, function () {
+            requestError();
+            if (error != null) {
+                error();
+            }
+        });
+    }
+
+
+    pageView.recordStart = function (position) {
+        wx.startRecord({
+            fail: function (res) {
+                pageView.recordReset();
+                alert(JSON.stringify(res));
+            }
+        });
+        setTimeout(function () {
+            //开始前，置重状态
+            pageView.recordReset();
+
+            var that = this;
+            that.recodTouchStart = position || { pageX: 0, pageY: 0, timestamp: 0 };
+            if (that.recodTouchStart.pageX == 0 || that.recodTouchStart.pageY == 0 || that.recodTouchStart.timestamp == 0) {
+                return;
+            }
+
+            pageView.recordMsg("手指上滑 取消发送");
+
+            $$("#btn-voice").html("松开 结束");
+
+        }, 800);
+    }
+
+    pageView.recordOver = function (result, position) {
+        var that = this;
+        that.recodTouchEnd = position || { pageX: 0, pageY: 0, timestamp: 0 };
+
+        //滑动错误,录制取消
+        if (that.recodTouchEnd.pageX <= 0 || that.recodTouchEnd.pageY <= 0 || that.recodTouchEnd.timestamp <= 0 || pageView.recodIsCancel) {
+            //console.log('cancel')
+            pageView.recordReset();
+            return;
+        }
+
+        //录制太短
+        if (that.recodTouchEnd.timestamp - that.recodTouchStart.timestamp < 1000) {
+            //console.log('1s')
+            pageView.recordReset();
+            return;
+        }
+
+        //录制太长?
+        if (that.recodTouchEnd.timestamp - that.recodTouchStart.timestamp >= 60 * 1000) {
+            //wx.onVoiceRecordEnd({
+            //    complete: function (res) {
+            //        //pageView.recordResult(res, 'complete')
+            //        //console.log('complete');
+            //    }
+            //});
+        }
+
+        //置重状态
+        pageView.recordReset();
+
+        //处理结果
+        pageView.recordResult(result, 'stop');
+    }
+
+    pageView.recordReset = function () {
+        var that = this;
+        window.clearInterval(that.recodInterval);
+        that.recodInterval = null;
+        that.recodIntervalValue = 0;
+        that.recodTouchStart = { pageX: 0, pageY: 0, timestamp: 0 };
+        that.recodTouchEnd = { pageX: 0, pageY: 0, timestamp: 0 };
+        that.recodIsCancel = false;
+        if (that.recodingToast != null) {
+            that.recodingToast.close();
+            that.recodingToast = null;
+        }
+        app.dialog.close();
+        app.toast.close();
+        $$("#btn-voice").html("按住 说话");
+    }
+
+    pageView.recordTimeout = function () { }
+
+    pageView.recordMsg = function (text) {
+        if (text == "" || text == null || text == undefined)
+            return;
+        var that = this;
+        if (that.recodingToast == null) {
+            that.recodingToast = app.toast.create({
+                icon: app.theme === 'ios' ? '<img src="/images/saying.gif" />' : '<img src="/images/saying.gif" />',
+                text: '',
+                position: 'center'
+            });
+            that.recodingToast.open();
+        }
+        if (that.recodingToast != null) {
+            that.recodingToast.params.text = text;
+            $$("#app").find(".toast-text").html('<p>' + text + '</p>');
+        }
+    }
+
+    pageView.recordResult = function (res, type) {
+        try {
+            pageView.recordReset();
+            app.dialog.progress('正在识别内容(' + pageView.sourceLang + ').....');
+            type = type || "stop";
+            var localId = res.localId;
+            if (pageView.sourceLang == 'zs') {
+                wx.translateVoice({
+                    localId: localId,           // 需要识别的音频的本地Id，由录音相关接口获得
+                    isShowProgressTips: 0,      // 默认为1，显示进度提示
+                    success: function (res) {
+                        if (res && res.translateResult && res.translateResult != '') {
+                            pageView.recordReset();
+                            pageView.send(res.translateResult || "");
+                        } else {
+                            _upload();
+                        }
+                    },
+                    fail: function (res) {
+                        alert(JSON.stringify(res));
+                        pageView.recordReset();
+                    }
+                });
+            } else {
+                _upload();
+            }
+        }
+        catch (e) {
+            pageView.recordReset();
+        }
+
+        function _upload() {
+            wx.uploadVoice({
+                localId: localId,                               // 需要上传的音频的本地ID，由stopRecord接口获得
+                isShowProgressTips: 0,                          // 默认为1，显示进度提示
+                success: function (ups) {
+                    var serverId = ups.serverId;                // 返回音频的服务器端ID serverId = 'VYwwMCSimvsyhlzm7EauO3h83f12ymif52Ocjl98temAJ-r2z-oQahuGv2oDUE9P';
+                    app.request.json('/wap/home/text?source=' + pageView.sourceLang + '&mediaId=' + serverId, {}, function (data) {
+                        pageView.recordReset();
+                        if (data != null && data.code == 0 && data.obj != '') {
+                            pageView.send(data.obj);
+                        } else {
+                            _upclear('识别结果为空');
+                        }
+                    }, function (res) {
+                        // _upclear('识别结果为空');
+                    });
+                },
+                fail: function (res) {
+                    _upclear(res);
+                }
+            });
+        }
+
+        function _upclear(msg) {
+            pageView.recordReset();
+            pageView.message(msg, 2000);
+        }
+    }
+
+
+    pageView.recordContent = function (model, dir) {
+
+        if (!model)
+            return;
+
+        if ($$(".record-item[data-record='" + model.recordId + "']").length > 0) {
+            return;
+        }
+
+        var compiledTemplate = Template7.compile($$('#recordTemplate').html());
+        var templateHtml = compiledTemplate(model);
+        if (dir == "pre") {
+            $$('.ptr-content').find('.messages-auto-layout').prepend(templateHtml);
+        }
+        else {
+            $$('.ptr-content').find('.messages-auto-layout').append(templateHtml);
+        }
+    }
+
+    pageView.translationContent = function (model) {
+        if (!model)
+            return;
+
+        var record = $$(".record-item[data-record='" + model.recordId + "']");
+        if (record.length == 0) {
+            return;
+        }
+
+        if ($$(".translation-item[data-translation='" + model.translationId + "']").length > 0) {
+            return;
+        }
+
+        var compiledTemplate = Template7.compile($$('#translationTemplate').html());
+        var templateHtml = compiledTemplate(model);
+        record.find('.target-item-list').append(templateHtml);
+    }
+
+
+    pageView.toFooter = function () {
+        var box = $$(".messages-content").height();
+        var content = $$(".messages-auto-layout").height();
+        var other = parseInt($$(".navbar").height()) + parseInt($$(".toolbar").height());
+        if (content > box) {
+            $$(".messages-content").scrollTo(0, content - box + other);
+        }
+    }
+
+    pageView.message = function (msg, close) {
+        try {
+            app.toast.close();
+        }
+        catch (e) { }
+        if (msg == '') {
+            return;
+        }
+        var opt = {
+            text: msg,
+            position: 'center'
+        };
+        if (close && close > 0) {
+            opt.closeTimeout = close;
+        }
+        app.toast.create(opt).open();
+    }
+
+    pageView.selectSource = function (lang) {
+        lang = lang || "";
+        if (lang == "")
+            return;
+        $$("input[type='radio'][name='language-source']").removeAttr("checked").prop('checked', false);
+        $$("input[type='radio'][name='language-source'][value='" + lang + "']").prop('checked', true);
+        pageView.sourceLang = lang;
+        storage.setItem("src", lang);
+    }
+
+    pageView.selectTargets = function (langs) {
+        langs = langs || "";
+        console.log(langs);
+        if (langs == "") {
+            $$("input[type='checkbox'][name='language-target']:checked").forEach((x) => {
+                langs = langs + x.value + "|";
+            });
+            if (langs.length > 0) {
+                langs = langs.slice(0, langs.length - 1);
+            }
+        }
+        if (langs == "") {
+            return;
+        }
+
+        var splitArr = langs.split('|');
+        var langArr = [];
+        var langStr = "";
+        for (var i = 0; i < splitArr.length; i++) {
+            if (splitArr[i] != pageView.sourceLang) {
+                langArr.push(splitArr[i]);
+                langStr = langStr+splitArr[i] + "|";
+            }
+        }
+        if (langStr.length > 0) {
+            langStr = langStr.slice(0, langStr.length - 1);
+        }
+
+        $$("input[type='checkbox'][name='language-target']").removeAttr("checked").prop('checked', false);
+        for (var i = 0; i < langArr.length; i++) {
+            $$("input[type='checkbox'][name='language-target'][value='" + langArr[i] + "']").prop('checked', true);
+        }
+        console.log(langStr);
+        pageView.targetLangs = langStr;
+        storage.setItem("tgt", langStr);
+
+        $$(".messages-auto-layout").find(".target-item").hide();
+        langArr.forEach((x) => {
+            $$(".messages-auto-layout").find(".target-item[data-code='" + x + "']").show();
+        });
+
+        //效果处理
+        $$(".target-item-list").forEach((item) => {
+            var current = $$(item), shows = 0;
+            current.find(".target-item").forEach((sub) => {
+                shows = $$(sub).css("display") != 'none' ? (shows + 1) : shows;
+            });
+            if (shows == 0) {
+                current.parents(".targets").hide();
+            }
+            else {
+                current.parents(".targets").show();
+            }
+        });
+    }
+
+</script>
+
+<script type="text/javascript">
+
+
+    //语言选择
+    $$("input[type='radio'][name='language-source']").on("change", function (e) {
+        pageView.selectSource(e.target.value);
+        pageView.selectTargets();
+
+    })
+
+    $$("input[type='checkbox'][name='language-target']").on("change", function () {
+        pageView.selectTargets();
+    })
+
+    //内容滚动
+    var _tmpScrollP = 0, _old = 0;
+    $$('.messages-content').on("scroll", function (e) {
+        var _top = $$(".messages-content").scrollTop();
+        var _height = $$(".messages-auto-layout").height();
+        var _view = $$(".messages-content").height();
+
+        //滚动方向(上/下)
+        if (_old <= _top) {
+            //console.log("下滚 -- down");
+        }
+        else {
+            //console.log("上滚 -- up");
+        }
+        _old = _top;
+
+        //滚动时先清除
+        pageView.loadingClear();
+
+        //顶部区间
+        if (_top == 0) {
+            pageView.history();
+        }
+
+        //底部区间(注意pading margin)
+        var _scrollView = _top + _view - _height;
+        if (_scrollView > (parseInt($$('.messages-content').css("padding-bottom")) - 1)) {
+            pageView.loading(pageView.toFooter);
+        }
+        //_height 的值=_top+_view  pageView.message/console.log
+        //console.log("top:" + _top + "   _height:" + _height + "   _view:" + _view + "  _scrollView:" + _scrollView, 500);
+    })
+
+    //上/下拉刷新
+    $$('.ptr-content').on('ptr:refresh', function (e) {
+        pageView.history();
+        app.ptr.done();
+    });
+
+    //发送消息
+    $$("#btn-text-send").on("click", function () {
+        pageView.send($$("#txt-content").val() || "", function () {
+        });
+        $$("#txt-content").val("");
+    })
+
+    //刷新页面
+    $$("#btn-refresh").on("click", function () {
+        window.location.reload();
+        //wx.onMenuShareAppMessage({
+        //    title: 'UTH多语会议',                   // 分享标题
+        //    desc: 'UTH多语会议',                    // 分享描述
+        //    link: curUrl,                          // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+        //    imgUrl: webUrl+'/images/uth.png',      // 分享图标
+        //    //type: '',                            // 分享类型,music、video或link，不填默认为link
+        //    //dataUrl: '',                         // 如果type是music或video，则要提供数据链接，默认为空
+        //    success: function () {
+        //        // 用户确认分享后执行的回调函数
+        //    },
+        //    cancel: function () {
+        //        // 用户取消分享后执行的回调函数
+        //    }
+        //});
+    })
+
+    //消息类型切换
+    $$(".msg-switch").on("click", function () {
+        var currentType = $$(this).dataset().type;
+        if (currentType == "text") {
+            $$(this).find("i").html(app.theme == 'md' ? 'mic' : "mic_fill");
+            $$(this).attr("data-type", "voice");
+
+            $$(".msg-text").css("display", "none");
+            $$(".msg-voice").css("display", "flex");
+        } else {
+            $$(this).find("i").html(app.theme == 'md' ? 'chat' : "compose_fill");
+            $$(this).attr("data-type", "text");
+
+            $$(".msg-text").css("display", "flex");
+            $$(".msg-voice").css("display", "none");
+        }
+    })
+
+    //语音/录音操作
+    $$("#btn-voice").on("touchstart", function (e) {
+        //只要点了表示开始
+        pageView.recordStart({ pageX: e.changedTouches[0].pageX, pageY: e.changedTouches[0].pageY, timestamp: (new Date()) });
+    })
+
+    $$("#btn-voice").on("touchend", function (e) {
+        //只要松开表示结束
+        wx.stopRecord({
+            success: function (res) {
+                pageView.recordOver(res, { pageX: e.changedTouches[0].pageX, pageY: e.changedTouches[0].pageY, timestamp: (new Date()) });
+            },
+            fail: function (res) {
+                alert('wx:error(stopRecord)');
+                pageView.recordReset();
+            }
+        });
+    })
+
+    $$("#btn-voice").on("touchmove", function (e) {
+        if (!pageView.recodIsCancel && pageView.recodTouchStart.pageY > 0) {
+            if (pageView.recodTouchStart.pageY - e.changedTouches[0].pageY > 50) {
+                pageView.recordMsg("<em class='error'>手指松开 取消发送</em>");
+                pageView.recodIsCancel = true;
+            }
+        }
+    })
+
+    //pageInit
+    !function () {
+        pageView.loading(pageView.toFooter);
+        pageView.selectSource(pageView.sourceLang);
+        pageView.selectTargets(pageView.targetLangs);
+    }(Window);
+
+    // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后
+    // config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。
+    // 对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
+    wx.ready(function () { });
+
+    //错误处理
+    wx.error(function (res) {
+        //置重状态
+        //pageView.recordReset();
+
+        //显示错误
+        //pageView.message('错误：' + (res && res["errMsg"] ? res["errMsg"] : "-1"), 2000);
+    });
+
+</script>
+}
+
+

@@ -1,0 +1,62 @@
+﻿<Page x:Class="UTH.Meeting.Win.View.Regist"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+      xmlns:local="clr-namespace:UTH.Meeting.Win.View"
+      xmlns:mv="http://www.galasoft.ch/mvvmlight"
+      xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+      xmlns:behaviors="clr-namespace:MahApps.Metro.Behaviours;assembly=MahApps.Metro"
+      xmlns:uth="http://uth.com/uthui"
+      xmlns:culture="clr-namespace:UTH.Infrastructure.Resource.Culture;assembly=UTH.Infrastructure.Resource"
+      mc:Ignorable="d" 
+      DataContext="{Binding Source={StaticResource Locator}, Path=RegistModel}"
+      Title="{Binding Title}" d:DesignWidth="312" d:DesignHeight="332">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Margin="35,35,35,0">
+            <Image Source="pack://application:,,,/UTH.Meeting.Win;component/Assets/Image/account2.png"></Image>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Margin="35,15,35,0">
+            <TextBox Text="{Binding Mobile,UpdateSourceTrigger=PropertyChanged}" controls:TextBoxHelper.Watermark="{x:Static culture:Lang.userQingShuRuShouJiHao}"></TextBox>
+        </StackPanel>
+        <Grid Grid.Row="2" Margin="35,15,35,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBox Grid.Column="0" Text="{Binding Code}" Style="{StaticResource UTH.GroupTextBox}"></TextBox>
+            <Button Grid.Column="1" x:Name="btnSend"  Content="{Binding SendText}" Style="{StaticResource UTH.GroupButton}" IsEnabled="{Binding CanSend}" Click="btnSend_Click"></Button>
+        </Grid>
+        <StackPanel Grid.Row="3" Margin="35,15,35,0">
+            <PasswordBox behaviors:PasswordBoxBindingBehavior.Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></PasswordBox>
+        </StackPanel>
+        <DockPanel Grid.Row="4"  Margin="35,15,35,0">
+            <CheckBox DockPanel.Dock="Left" Content="" IsChecked="{Binding IsRead, Converter={StaticResource BooleanConverter}}" ></CheckBox>
+            <TextBlock DockPanel.Dock="Right">
+                <Hyperlink x:Name="hlRegAgreement" Click="hlRegAgreement_Click">
+                    <TextBlock Text="{x:Static culture:Lang.userWoYiTongYiYongHuZhuCeXieYi}" />
+                </Hyperlink>
+            </TextBlock>
+        </DockPanel>
+        <StackPanel Grid.Row="5" Margin="35,15,35,0">
+            <Button x:Name="btnRegist" Content="{x:Static culture:Lang.userZhuCe}" Click="btnRegist_Click"></Button>
+        </StackPanel>
+        <StackPanel Grid.Row="6" Margin="35,15,35,0" HorizontalAlignment="Center">
+            <TextBlock>
+                <Hyperlink x:Name="hlLogin" Click="hlLogin_Click"><TextBlock Text="{x:Static culture:Lang.userFanHuiDengLu}" /></Hyperlink>
+            </TextBlock>
+        </StackPanel>
+        <StackPanel Grid.Row="7"></StackPanel>
+    </Grid>
+</Page>

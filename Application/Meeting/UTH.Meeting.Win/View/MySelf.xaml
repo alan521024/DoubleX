@@ -1,0 +1,41 @@
+﻿<Page x:Class="UTH.Meeting.Win.View.MySelf"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+      xmlns:local="clr-namespace:UTH.Meeting.Win.View"
+      xmlns:mv="http://www.galasoft.ch/mvvmlight"
+      xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+      xmlns:behaviors="clr-namespace:MahApps.Metro.Behaviours;assembly=MahApps.Metro"
+      xmlns:uth="http://uth.com/uthui"
+      xmlns:culture="clr-namespace:UTH.Infrastructure.Resource.Culture;assembly=UTH.Infrastructure.Resource"
+      mc:Ignorable="d" 
+      DataContext="{Binding Source={StaticResource Locator}, Path=MySelfModel}"
+      Title="{Binding Title}" d:DesignWidth="444" d:DesignHeight="451">
+    <Grid Margin="50,28,50,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <DockPanel Grid.Row="0" Margin="0,10,0,10">
+            <TextBlock  DockPanel.Dock="Left"  Style="{StaticResource formTitle}" Text="{x:Static culture:Lang.userYongHuZhangHao}"></TextBlock>
+            <TextBox  DockPanel.Dock="Right" Text="{Binding CurrentUser.Account}" IsEnabled="False"></TextBox>
+        </DockPanel>
+
+        <DockPanel Grid.Row="1" Margin="0,10,0,10">
+            <TextBlock DockPanel.Dock="Left" Style="{StaticResource formTitle}" Text="{x:Static culture:Lang.userShouJiHaoMa}"></TextBlock>
+            <TextBox DockPanel.Dock="Right" Text="{Binding CurrentUser.Mobile}" IsEnabled="False"></TextBox>
+        </DockPanel>
+        
+        <WrapPanel Grid.Row="2" Margin="0,20,0,10">
+            <TextBlock Style="{StaticResource formTitle}" Text=""></TextBlock>
+            <Button Content="{x:Static culture:Lang.userTuiChuDengLu}" Width="{StaticResource ButtonDefaultSize}"></Button>
+        </WrapPanel>
+
+        <Grid Grid.Row="3" Margin="0,10,0,10"></Grid>
+    </Grid>
+</Page>

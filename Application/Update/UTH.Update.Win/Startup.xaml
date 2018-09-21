@@ -1,0 +1,18 @@
+﻿<uth:UTHWindow x:Class="UTH.Update.Win.Startup"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:UTH.Update.Win"
+        xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:uth="http://uth.com/uthui"
+        mc:Ignorable="d" 
+        DataContext="{Binding Source={StaticResource Locator}, Path=StartupModel}"
+        Title="{Binding Title}" Height="14" Width="200" 
+        UseNoneWindowStyle="True" ShowTitleBar="False" BorderThickness="0" 
+        WindowStyle="None" ResizeMode="NoResize" WindowState="Normal" WindowStartupLocation="CenterScreen" WindowTransitionsEnabled="False"
+               Opacity="1" AllowsTransparency="True" Background="Transparent">
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+        <TextBlock FontSize="12">加载中...</TextBlock>
+    </Grid>
+</uth:UTHWindow>

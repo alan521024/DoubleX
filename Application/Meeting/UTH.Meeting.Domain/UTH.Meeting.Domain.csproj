@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Model\**" />
+    <EmbeddedResource Remove="Model\**" />
+    <None Remove="Model\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="7.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="UTH.Domain">
+      <HintPath>..\..\..\Build\netstandard2.0\UTH.Domain.dll</HintPath>
+    </Reference>
+    <Reference Include="UTH.Framework">
+      <HintPath>..\..\..\Build\netstandard2.0\UTH.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="UTH.Framework.Log4net">
+      <HintPath>..\..\..\Build\netstandard2.0\UTH.Framework.Log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="UTH.Framework.SqlSugar">
+      <HintPath>..\..\..\Build\netstandard2.0\UTH.Framework.SqlSugar.dll</HintPath>
+    </Reference>
+    <Reference Include="UTH.Framework.Web">
+      <HintPath>..\..\..\Build\netstandard2.0\UTH.Framework.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="UTH.Framework.Wpf">
+      <HintPath>..\..\..\Build\net47\UTH.Framework.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="UTH.Infrastructure.Resource">
+      <HintPath>..\..\..\Build\netstandard2.0\UTH.Infrastructure.Resource.dll</HintPath>
+    </Reference>
+    <Reference Include="UTH.Infrastructure.Utility">
+      <HintPath>..\..\..\Build\netstandard2.0\UTH.Infrastructure.Utility.dll</HintPath>
+    </Reference>
+    <Reference Include="UTH.Plug">
+      <HintPath>..\..\..\Build\netstandard2.0\UTH.Plug.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

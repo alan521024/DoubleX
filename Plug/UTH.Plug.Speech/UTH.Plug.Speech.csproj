@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net47</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\..\Build</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\..\Build</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Library\**" />
+    <EmbeddedResource Remove="Library\**" />
+    <None Remove="Library\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Library\msc.dll" />
+    <None Include="Library\msc_x64.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Domain\UTH.Domain\UTH.Domain.csproj" />
+    <ProjectReference Include="..\..\Framework\UTH.Framework.Wpf\UTH.Framework.Wpf.csproj" />
+    <ProjectReference Include="..\..\Framework\UTH.Framework\UTH.Framework.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\UTH.Infrastructure.Resource\UTH.Infrastructure.Resource.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\UTH.Infrastructure.Utility\UTH.Infrastructure.Utility.csproj" />
+    <ProjectReference Include="..\UTH.Plug\UTH.Plug.csproj" />
+  </ItemGroup>
+
+</Project>

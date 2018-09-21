@@ -1,0 +1,42 @@
+﻿    //eg:https://blog.csdn.net/qq_18995513/article/details/69524858
+    /// <summary>
+    /// Boolean 值转为文本
+    /// eg: Binding="{Binding Path=Image,Converter={StaticResource BooleanToTextConverter},ConverterParameter={StaticResource DefaultBoolTextType}}"
+    /// eg: Binding="{Binding IsLogin, Converter={StaticResource BooleanToTextConverter},ConverterParameter='是|否'}"
+    /// eg: Binding="{Binding IsLogin, Converter={StaticResource BooleanToTextConverter},ConverterParameter='default'}"
+    /// type:default,status
+    /// </summary>
+    public class ToBooleanConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            bool flag = false;
+            if (value is bool)
+            {
+                flag = (bool)value;
+            }
+            else if (value is bool?)
+            {
+                bool? nullable = (bool?)value;
+                flag = nullable.HasValue ? nullable.Value : false;
+            }
+            else
+            {
+                string str = StringHelper.FormatDefault(StringHelper.Get(value));
+                if (str == "是" || str == "1" || str == "true" || str == "yes")
+                {
+                    flag = false;
+                }
+                else
+                {
+                    flag = true;
+                }
+            }
+            return flag;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }

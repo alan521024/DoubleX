@@ -1,0 +1,58 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net47</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net47|AnyCPU'">
+    <DefineConstants>DEBUG;NET47;NET4_5;NETFRAMEWORK;NET47</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net47|AnyCPU'">
+    <OutputPath>..\..\Build</OutputPath>
+    <DefineConstants>NET47;NET4_5;RELEASE;NETFRAMEWORK;NET47</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\..\Build</OutputPath>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="ControlzEx" Version="3.0.2.4" />
+    <PackageReference Include="MahApps.Metro" Version="1.6.5" />
+    <PackageReference Include="MahApps.Metro.IconPacks" Version="2.3.0" />
+    <PackageReference Include="MvvmLight" Version="5.4.1" />
+    <PackageReference Include="NHotkey.Wpf" Version="1.2.1" />
+    <PackageReference Include="WpfAnalyzers" Version="2.1.6" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Page Include="Assets\Style\Theme.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Infrastructure\UTH.Infrastructure.Resource\UTH.Infrastructure.Resource.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\UTH.Infrastructure.Utility\UTH.Infrastructure.Utility.csproj" />
+    <ProjectReference Include="..\UTH.Framework\UTH.Framework.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile DependentUpon="%(Filename)" SubType="Code" Update="$(MSBuildProjectDirectory)\obj\**\*.g$(_SdkLanguageExtension)" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Update="Assets\Style\Theme.xaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  
+  
+</Project>

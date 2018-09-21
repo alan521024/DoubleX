@@ -1,0 +1,69 @@
+﻿<Page x:Class="UTH.Meeting.Win.View.FindPwd"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+      xmlns:local="clr-namespace:UTH.Meeting.Win.View"
+      xmlns:mv="http://www.galasoft.ch/mvvmlight"
+      xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+      xmlns:behaviors="clr-namespace:MahApps.Metro.Behaviours;assembly=MahApps.Metro"
+      xmlns:uth="http://uth.com/uthui"
+      xmlns:culture="clr-namespace:UTH.Infrastructure.Resource.Culture;assembly=UTH.Infrastructure.Resource"
+      mc:Ignorable="d" 
+      DataContext="{Binding Source={StaticResource Locator}, Path=FindPwdModel}"
+      Title="{Binding Title}" d:DesignWidth="312" d:DesignHeight="332">
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.Buttons.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Margin="35,35,35,0">
+            <Image Source="pack://application:,,,/UTH.Meeting.Win;component/Assets/Image/account3.png"></Image>
+        </StackPanel>
+        <Grid Grid.Row="1">
+            <StackPanel Visibility="{Binding Setp0visible, Converter={StaticResource VisibilityConverter}}">
+                <StackPanel Margin="35,15,35,0">
+                    <TextBox Text="{Binding Mobile,UpdateSourceTrigger=PropertyChanged}" controls:TextBoxHelper.Watermark="{x:Static culture:Lang.userQingShuRuShouJiHao}"></TextBox>
+                </StackPanel>
+                <Grid Margin="35,15,35,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" Text="{Binding Code}" Style="{StaticResource UTH.GroupTextBox}"></TextBox>
+                    <Button Grid.Column="1" x:Name="btnSend"  Content="{Binding SendText}" Style="{DynamicResource UTH.GroupButton}" IsEnabled="{Binding CanSend}" Click="btnSend_Click"></Button>
+                </Grid>
+                <StackPanel Margin="35,15,35,0">
+                    <Button x:Name="btnSetop0Next" Content="{x:Static culture:Lang.sysXiaYiBu}" Click="btnSetop0Next_Click"></Button>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Visibility="{Binding Setp1visible, Converter={StaticResource VisibilityConverter}}">
+                <StackPanel Margin="35,15,35,0">
+                    <PasswordBox behaviors:PasswordBoxBindingBehavior.Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" controls:TextBoxHelper.Watermark="{x:Static culture:Lang.userQingShuRuXinMiMa}"></PasswordBox>
+                </StackPanel>
+                <StackPanel Margin="35,15,35,0">
+                    <PasswordBox behaviors:PasswordBoxBindingBehavior.Password="{Binding Password2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" controls:TextBoxHelper.Watermark="{x:Static culture:Lang.userQingQueRenXinMiMa}"></PasswordBox>
+                </StackPanel>
+                <StackPanel Margin="35,15,35,0">
+                    <Button x:Name="btnEditPwd" Content="{x:Static culture:Lang.userXiuGaiMiMa}" Click="btnEditPwd_Click"></Button>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+        <StackPanel Grid.Row="2" Margin="35,15,35,0" HorizontalAlignment="Center">
+            <TextBlock>
+                <Hyperlink x:Name="hlLogin" Click="hlLogin_Click"><TextBlock Text="{x:Static culture:Lang.userFanHuiDengLu}" /></Hyperlink>
+            </TextBlock>
+        </StackPanel>
+        <StackPanel Grid.Row="3"></StackPanel>
+    </Grid>
+</Page>

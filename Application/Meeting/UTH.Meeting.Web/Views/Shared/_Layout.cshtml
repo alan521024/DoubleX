@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <title>@ViewData["Title"]</title>
+    @RenderSection("Heads", required: false)
+    <link rel="stylesheet" type="text/css" href="~/lib/framework7/css/framework7.css" />
+    <link rel="stylesheet" type="text/css" href="~/lib/framework7/css/framework7.ios.css" />
+    <link rel="stylesheet" type="text/css" href="~/lib/framework7/css/weixin.css" />
+    <link rel="stylesheet" type="text/css" href="~/css/app.css?v=1.0.0.0" />
+    @RenderSection("Styles", required: false)
+
+</head>
+<body>
+    @RenderBody()
+    <script typet="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script src="~/lib/framework7/js/framework7.js"></script>
+    <script src="~/script/routes.js"></script>
+    <script src="~/script/app.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

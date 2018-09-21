@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net47</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\..\Build</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\..\Build</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Domain\UTH.Domain\UTH.Domain.csproj" />
+    <ProjectReference Include="..\..\Framework\UTH.Framework.Wpf\UTH.Framework.Wpf.csproj" />
+    <ProjectReference Include="..\..\Framework\UTH.Framework\UTH.Framework.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\UTH.Infrastructure.Resource\UTH.Infrastructure.Resource.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\UTH.Infrastructure.Utility\UTH.Infrastructure.Utility.csproj" />
+    <ProjectReference Include="..\UTH.Plug\UTH.Plug.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Graphic\" />
+    <Folder Include="Video\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NAudio" Version="1.8.4" />
+  </ItemGroup>
+
+</Project>

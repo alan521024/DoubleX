@@ -1,0 +1,29 @@
+﻿.tabbar a.msg-button { width: 44px; align-items: center; }
+
+.tabbar .msg-box { flex: 1; display: flex; vertical-align: middle; align-items: center; background-color: transparent; }
+    .tabbar .msg-box textarea { border-radius: 3px; flex: 1; }
+.tabbar .msg-text { display: flex; }
+.tabbar .msg-voice { display: none; align-items: center; /*垂直居中*/ justify-content: center; /*水平居中*/ }
+    .tabbar .msg-voice button {height: 34px; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;  }
+
+.ios .messages-content, .ios .messages { background-color: transparent; }
+.toast-text p em.error { font-style: normal; background: #f00; color: #fff; padding: 3px; border-radius: 3px; }
+.toast-icon img { width: 80px; margin-top: 20px; }
+
+
+.message-item { position: relative; display: flex; flex-flow: column wrap; align-items: stretch; padding: 15px; margin: 10px 20px; background-color: #fff; max-width: 100%; border-radius: 3px; }
+    .message-item i.bot { position: absolute; width: 0; height: 0; font-size: 0; overflow: hidden; }
+    .message-item i.left { border-width: 8px; border-style: solid; border-color: transparent #fff #fff transparent; left: -10px; top: 5px; }
+
+    .message-item .sources, .message-item .targets { display: flex; flex: 1; margin: 0; padding: 0.3em; color: #333; overflow: hidden; }
+    .message-item .targets { color: #666; }
+        .message-item .targets .target-item-list { float: left; }
+            .message-item .targets .target-item-list .target-item, .message-item .targets .target-item-list .target-no { display: flex; margin-bottom: 5px; }
+
+    .message-item .title { float: left; display: block; color: #333; width:60px; }
+        .message-item .title .tag { font-style:normal;  font-size: 0.6em; opacity:0.8; }
+
+    .message-item .content { flex:1;}
+
+.md .messagebar textarea { color:#fff;}
+.md .tabbar i.icon { color:#fff;}

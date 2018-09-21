@@ -1,0 +1,217 @@
+﻿1.window
+
+<uth:UTHWindow x:Class="UTH.Update.Win.View.Main"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:UTH.Update.Win.View"
+        xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:uth="http://uth.com/uthui"
+        xmlns:culture="clr-namespace:UTH.Infrastructure.Resource.Culture;assembly=UTH.Infrastructure.Resource"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        mc:Ignorable="d"
+        DataContext="{Binding Source={StaticResource Locator}, Path=MainModel}"
+        Title="{Binding Title}" Height="500" Width="720" TitlebarHeight="44" 
+        ShowIconOnTitleBar="True"  WindowTransitionsEnabled="False" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+
+    <controls:MetroWindow.IconTemplate>
+        <ItemContainerTemplate>
+            <Image Source="{Binding Source={StaticResource AppIco}, Path=Source}" Height="16" Margin="0,0,0,0"></Image>
+        </ItemContainerTemplate>
+    </controls:MetroWindow.IconTemplate>
+    
+    <controls:MetroWindow.TitleTemplate>
+        <ItemContainerTemplate>
+            <TextBlock VerticalAlignment="Center"  Text="{TemplateBinding Content}" Visibility="Hidden" />
+        </ItemContainerTemplate>
+    </controls:MetroWindow.TitleTemplate>
+    
+    <controls:MetroWindow.RightWindowCommands>
+        <controls:WindowCommands>
+            <Button Content="设置" ToolTip="设置" />
+            <Button Content="关于" ToolTip="关于" />
+        </controls:WindowCommands>
+    </controls:MetroWindow.RightWindowCommands>
+
+    <!-- layout -->
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="400"></ColumnDefinition>
+            <ColumnDefinition Width="3"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0" Margin="20,10,20,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">标识：</TextBlock>
+                    <TextBox Grid.Column="1" Name="txtProduct" Text="{Binding LicenseSource.Product}"></TextBox>
+                </Grid>
+                <Grid Grid.Row="1" Margin="20,0,20,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">版本：</TextBlock>
+                    <ComboBox Name="cmbEdition" Grid.Column="1" ItemsSource="{Binding EditionSource}" SelectedIndex="0" SelectedValue="{Binding LicenseSource.Edition,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"></ComboBox>
+                </Grid>
+                <Grid Grid.Row="2" Margin="20,0,20,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">邮箱：</TextBlock>
+                    <TextBox Grid.Column="1" Name="txtEmail" Text="{Binding LicenseSource.Email}"></TextBox>
+                </Grid>
+                <Grid Grid.Row="3" Margin="20,0,20,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">手机：</TextBlock>
+                    <TextBox Grid.Column="1" Name="txtMobile" Text="{Binding LicenseSource.Mobile}"></TextBox>
+                </Grid>
+                <Grid Grid.Row="4" Margin="20,0,20,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">Mac：</TextBlock>
+                    <TextBox Grid.Column="1" Name="txtMac" Text="{Binding LicenseSource.Mac}"></TextBox>
+                </Grid>
+                <Grid Grid.Row="5" Margin="20,0,20,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">CPU：</TextBlock>
+                    <TextBox Grid.Column="1" Name="txtCPU" Text="{Binding LicenseSource.CPU}"></TextBox>
+                </Grid>
+                <Grid Grid.Row="6" Margin="20,0,20,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">使用次数：</TextBlock>
+                    <TextBox Grid.Column="1" Name="txtTimes" Text="{Binding LicenseSource.UseTimes}"></TextBox>
+                </Grid>
+                <Grid Grid.Row="7" Margin="20,0,20,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80"></ColumnDefinition>
+                        <ColumnDefinition Width="120"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">过期时间/天：</TextBlock>
+                    <TextBox Grid.Column="1" Name="txtDate" Text="{Binding LicenseSource.ExpirationTime}"></TextBox>
+                    <TextBlock Grid.Column="2" VerticalAlignment="Center" Margin="5,0,0,0">'1900-01-01' / '0','1', ...</TextBlock>
+                </Grid>
+                <Grid Grid.Row="8" Margin="20,0,20,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right">是否试用：</TextBlock>
+                    <CheckBox Grid.Column="1" Name="chkIsTrial" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
+                              IsChecked="{Binding LicenseSource.IsTrial, Converter={StaticResource BooleanConverter}}"></CheckBox>
+                </Grid>
+                <Grid Grid.Row="9" Margin="20,0,20,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center"></TextBlock>
+                    <UniformGrid Grid.Column="1" Rows="2" Columns="3" >
+                        <Button Content="获取系统信息" Width="86" Margin="2" Command="{Binding OnSysteminfo}"></Button>
+                        <Button Content="生成公/私钥对" Width="86" Margin="2" Command="{Binding OnSignFile}"></Button>
+                        <Button Content="生成注册文件" Width="86" Margin="2" Command="{Binding OnGenerateLic}"></Button>
+                        <Button Content="验证注册文件" Width="86" Margin="2" Command="{Binding OnVerifyLic}"></Button>
+                        <Button Content="浏览文件" Width="86" Margin="2" Command="{Binding OnOpenFileDic}"></Button>
+                    </UniformGrid>
+                </Grid>
+            </Grid>
+        </StackPanel>
+        <GridSplitter Grid.Column="1" Width="3" HorizontalAlignment="Stretch" Background="#FFEAEAEA" />
+        <StackPanel Grid.Column="2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0"  Margin="20,10,20,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="60"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="60"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center">信息解析：</TextBlock>
+                    <TextBox Grid.Column="1" Name="txtUrlAddress" Text="http://"></TextBox>
+                    <Button Grid.Column="2" Name="btnResUrl" Content="解析"></Button>
+                </Grid>
+                <Grid Grid.Row="1"  Margin="20,10,20,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="60"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center">解析结果：</TextBlock>
+                    <TextBox Grid.Column="1" Name="txtUrlResult" VerticalAlignment="Center"></TextBox>
+                </Grid>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</uth:UTHWindow>
+
+
+2.splitter
+<GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Background="#FF9F9F9F" Style="{DynamicResource UTH.Splitter}" />
+
+main.cs
+GridLength m_WidthCache;
+
+public MainWindow()
+{
+    InitializeComponent();
+    this.Loaded += new RoutedEventHandler(MainWindow_Loaded);
+}
+
+void MainWindow_Loaded(object sender, RoutedEventArgs e)
+{
+    //获取GridSplitterr的cotrolTemplate中的按钮btn，必须在Loaded之后才能获取到
+    Button btnGrdSplitter = gsSplitterr.Template.FindName("uthSplitterButton", gsSplitterr) as Button;
+    if (btnGrdSplitter != null)
+        btnGrdSplitter.Click += new RoutedEventHandler(btnGrdSplitter_Click);
+}
+
+
+void btnGrdSplitter_Click(object sender, RoutedEventArgs e)
+{
+    GridLength temp = grdWorkbench.ColumnDefinitions[0].Width;
+    GridLength def = new GridLength();
+    if (temp.Equals(def))
+    {
+        //恢复
+        grdWorkbench.ColumnDefinitions[0].Width = m_WidthCache;
+    }
+    else
+    {
+        //折叠
+        m_WidthCache = grdWorkbench.ColumnDefinitions[0].Width;
+        grdWorkbench.ColumnDefinitions[0].Width = def;
+    }
+}

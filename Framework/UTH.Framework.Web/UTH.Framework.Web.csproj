@@ -1,0 +1,58 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\..\Build</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\..\Build</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Mvc\Filters\**" />
+    <Compile Remove="_DEFAULT\**" />
+    <EmbeddedResource Remove="Mvc\Filters\**" />
+    <EmbeddedResource Remove="_DEFAULT\**" />
+    <None Remove="Mvc\Filters\**" />
+    <None Remove="_DEFAULT\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Mvc\ApplicationBuilderExtensions.cs" />
+    <Compile Remove="Mvc\Extensions\ServiceCollectionExtensions2.cs" />
+    <Compile Remove="Mvc\ServiceCollectionExtensions.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Mvc\Filters\WebActionFilter.cs" />
+    <Compile Include="Mvc\Filters\WebExceptionFilter.cs" />
+    <Compile Include="Mvc\Filters\WebResultFilter.cs" />
+    <Compile Include="_DEFAULT\Model\ErrorViewModel.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="DynamicApi\Configuration\" />
+    <Folder Include="Mvc\Identity\Authorize\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.1.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Infrastructure\UTH.Infrastructure.Resource\UTH.Infrastructure.Resource.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\UTH.Infrastructure.Utility\UTH.Infrastructure.Utility.csproj" />
+    <ProjectReference Include="..\UTH.Framework\UTH.Framework.csproj" />
+  </ItemGroup>
+
+</Project>
