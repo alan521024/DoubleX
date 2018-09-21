@@ -3,7 +3,7 @@
 
 # User-specific files
 *.suo
-*.user
+# *.user
 *.userosscache
 *.sln.docstates
 
@@ -19,8 +19,10 @@ x64/
 x86/
 bld/
 [Bb]in/
+_[Bb]in/
 [Oo]bj/
 [Ll]og/
+Build/
 
 # Visual Studio 2015 cache/options directory
 .vs/
@@ -259,3 +261,4 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+*.pubxml
