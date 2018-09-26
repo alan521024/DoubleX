@@ -20,6 +20,8 @@ namespace UTH.Server.Management.Controllers
     [AllowAnonymous]
     public class ErrorController : WebViewBase
     {
+        #region Page
+
         [Route("/error/404")]
         public virtual IActionResult Page404()
         {
@@ -37,5 +39,7 @@ namespace UTH.Server.Management.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        #endregion
     }
 }

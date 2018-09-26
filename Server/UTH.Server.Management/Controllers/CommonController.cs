@@ -20,6 +20,12 @@ namespace UTH.Server.Management.Controllers
     {
         public ICaptchaService captchaService { get; set; }
 
+        #region Page
+
+        #endregion
+
+        #region HTTP
+
         [HttpGet]
         public ResultModel<CaptchaOutput> VerifyCode(EnumNotificationCategory category, EnumNotificationType type)
         {
@@ -34,5 +40,7 @@ namespace UTH.Server.Management.Controllers
             }
             return result;
         }
+
+        #endregion
     }
 }

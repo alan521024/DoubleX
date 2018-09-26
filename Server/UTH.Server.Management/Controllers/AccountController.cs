@@ -21,11 +21,26 @@ namespace UTH.Server.Management.Controllers
     {
         public ICaptchaService captchaService { get; set; }
 
+        #region Page
+
+        /// <summary>
+        /// Page Login
+        /// </summary>
+        /// <returns></returns>
         public IActionResult Login()
         {
             return View();
         }
 
+        #endregion
+
+        #region HTTP
+
+        /// <summary>
+        /// Post Login
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         [HttpPost]
         public virtual async Task<ActionResult> Login([FromForm]SignInInput input)
         {
@@ -53,7 +68,7 @@ namespace UTH.Server.Management.Controllers
 
             #endregion
 
-            var result=PlugCoreHelper.ApiUrl.User.SignIn.GetResult<SignInOutput, SignInInput>(input);
+            var result = PlugCoreHelper.ApiUrl.User.SignIn.GetResult<SignInOutput, SignInInput>(input);
             if (result.Code == EnumCode.成功)
             {
                 AppHelper.SignIn(result.Obj.Token);
@@ -65,5 +80,7 @@ namespace UTH.Server.Management.Controllers
 
             return !ReturnUrl.IsEmpty() ? Redirect(ReturnUrl) : Redirect("/");
         }
+
+        #endregion
     }
 }

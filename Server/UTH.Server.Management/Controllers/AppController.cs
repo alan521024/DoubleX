@@ -20,16 +20,18 @@ namespace UTH.Server.Management.Controllers
     {
         public IHttpContextAccessor accessor { get; set; }
 
-        public virtual bool Verify(string appCode)
-        {
-            if (appCode == "980001981")
-            {
-                return true;
-            }
-            
-            return true;
-        }
+        #region HTTP
 
+        /// <summary>
+        /// 文件下载
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="md5"></param>
+        /// <param name="name"></param>
+        /// <param name="begin"></param>
+        /// <param name="end"></param>
+        /// <param name="chunk"></param>
+        /// <returns></returns>
         public virtual FileContentResult Download(int type, string md5, string name = "", long begin = 0, long end = 0, int chunk = 0)
         {
             accessor.CheckNull();
@@ -55,5 +57,7 @@ namespace UTH.Server.Management.Controllers
 
             return File(datas, "application/octet-stream", name);
         }
+
+        #endregion
     }
 }

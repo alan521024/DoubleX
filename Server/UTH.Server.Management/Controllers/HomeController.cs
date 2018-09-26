@@ -18,6 +18,8 @@ namespace UTH.Server.Management.Controllers
 {
     public class HomeController : AuthBase
     {
+        #region Page
+
         public IActionResult Index()
         {
             return View();
@@ -32,5 +34,7 @@ namespace UTH.Server.Management.Controllers
         {
             return View();
         }
+
+        #endregion
     }
 }
