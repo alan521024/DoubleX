@@ -1,0 +1,109 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <title>@ViewData["Title"]-@(AppHelper.WebTitle)</title>
+    @RenderSection("Heads", required: false)
+    <environment include="Development">
+        <link type="text/css" rel="stylesheet" href="~/icon/iconfont.css" media="all" />
+        <link type="text/css" rel="stylesheet" href="~/lib/layui/css/layui.css" media="all" />
+        <link type="text/css" rel="stylesheet" href="~/css/style.css" media="all" />
+    </environment>
+    <environment exclude="Development">
+        <link type="text/css" rel="stylesheet" href="~/icon/iconfont.css" asp-append-version="true" />
+        <link type="text/css" rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+        <link type="text/css" rel="stylesheet" href="~/lib/layui/css/layui.css" asp-append-version="true" />
+    </environment>
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+    <div class="dxm-body">
+        <div class="dxm-left">
+            <div class="dxm-log">
+                <a href="@(Url.Action("Index","Home"))"><img src="~/images/dxm-logo2.png" /></a>
+            </div>
+            <div class="dxm-nav">
+                <ul class="dxm-nav-side">
+                    <li>
+                        <a href="~/" class="active"><i class="iconfont icon-shouye2"></i></a>
+                    </li>
+                    <li>
+                        <a href="~/home/list"><i class="iconfont icon-bangong3"></i></a>
+                    </li>
+                    <li>
+                        <a href="~/home/form"><i class="iconfont icon-shangye2"></i></a>
+                    </li>
+                    <li>
+                        <a href="javascript:;"><i class="iconfont icon-kehu1"></i></a>
+                    </li>
+                    <li>
+                        <a href="javascript:;"><i class="iconfont icon-wendang1"></i></a>
+                    </li>
+                    <li>
+                        <a href="javascript:;"><i class="iconfont icon-caiwu1"></i></a>
+                    </li>
+                    <li>
+                        <a href="javascript:;"><i class="iconfont icon-tongji1"></i></a>
+                    </li>
+                    <li>
+                        <a href="javascript:;"><i class="iconfont icon-tongxunlu1"></i></a>
+                    </li>
+                    <li>
+                        <a href="javascript:;"><i class="iconfont icon-zuzhi1"></i></a>
+                    </li>
+                    <li>
+                        <a href="javascript:;"><i class="iconfont icon-xitong1"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="dxm-right">
+            <div class="dxm-top">
+                <div class="dxm-menu">
+                    <a href="javascript:;" class="active"><i class="iconfont icon-shangye1"></i>线索</a>
+                    <a href="javascript:;"><i class="iconfont icon-shangye2"></i>线索池</a>
+                    <a href="javascript:;"><i class="iconfont icon-shangye3"></i>客户</a>
+                    <a href="javascript:;"><i class="iconfont icon-shangye4"></i>客户池</a>
+                    <a href="javascript:;"><i class="iconfont icon-shangye6"></i>客户联系人</a>
+                </div>
+                <div class="dxm-tag">
+                    <a href="javascript:;"><i class="iconfont icon-gongzuo10"></i></a>
+                    <a href="javascript:;"><i class="iconfont icon-bangong3"></i><em class="badge">0</em></a>
+                    <a href="javascript:;"><i class="iconfont icon-xiaoxi1"></i><em class="badge">101</em></a>
+                    <a href="~/account/login" title="@(User.Identity.Name)"><i class="iconfont icon-user3"></i></a>
+                </div>
+            </div>
+            <div class="dxm-main">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/underscore/underscore.js"></script>
+        <script src="~/lib/underscore-contrib/dist/underscore-contrib.js"></script>
+        <script src="~/lib/layui/layui.all.js"></script>
+        <script src="~/js/app.js"></script>
+        <script src="~/js/controller.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.js"
+                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                asp-fallback-test="window.jQuery"
+                crossorigin="anonymous"
+                integrity="sha384-K+ctZQ+LL8q6tP7I94W+qzQsfRV2a+AfHIi9k8z8l9ggpc8X+Ytst4yBo/hH+8Fk">
+        </script>
+        <script src="~/lib/underscore/underscore.js" asp-append-version="true"></script>
+        <script src="~/lib/underscore-contrib/dist/underscore-contrib.js" asp-append-version="true"></script>
+        <script src="~/lib/layui/layui.all.js" asp-append-version="true"></script>
+        <script src="~/js/app.js" asp-append-version="true"></script>
+        <script src="~/js/controller.js" asp-append-version="true"></script>
+    </environment>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

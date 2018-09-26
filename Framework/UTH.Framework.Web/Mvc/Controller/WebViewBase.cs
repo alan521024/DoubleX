@@ -17,5 +17,6 @@
     /// </summary>
     public abstract class WebViewBase : Controller
     {
+        public string ReturnUrl { get { return WebHelper.GetQueryValue(ControllerContext.HttpContext, "ReturnUrl"); } }
     }
 }

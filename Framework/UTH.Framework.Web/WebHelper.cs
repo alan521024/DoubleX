@@ -21,6 +21,21 @@
     public static class WebHelper
     {
         /// <summary>
+        /// 获取地址含返回路径
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static string GetUrl(HttpContext context, string path)
+        {
+            if (path.IsEmpty())
+            {
+                path = "";
+            }
+            return $"{path}{(path.IndexOf("?") > -1 ? "&" : "?")}ReturnUrl={GetQueryValue(context, "ReturnUrl")}";
+        }
+
+        /// <summary>
         /// 获取HttpContext
         /// </summary>
         /// <returns></returns>
@@ -35,7 +50,7 @@
         /// <param name="context"></param>
         /// <param name="key"></param>
         /// <returns></returns>
-        public static string GetQueryValue(HttpContext context, string key = "_ref")
+        public static string GetQueryValue(HttpContext context, string key)
         {
             if (context.IsNull() || key.IsEmpty())
                 return "";
@@ -101,6 +116,7 @@
 
             return defaultValue;
         }
+
 
         /// <summary>
         /// 获取Web应用Id
@@ -243,7 +259,7 @@
             return request.Headers != null &&
                    request.Headers["X-Requested-With"] == "XMLHttpRequest";
         }
-        
+
         /// <summary>
         /// 是否支持Cookies
         /// </summary>
@@ -325,7 +341,7 @@
 
             return true;
         }
-       
+
         /// <summary>
         /// 设置Response无缓存
         /// </summary>

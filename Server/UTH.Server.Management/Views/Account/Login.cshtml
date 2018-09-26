@@ -1,0 +1,72 @@
+﻿@model SignInInput
+@{
+    Layout = "~/Views/Shared/_Master.cshtml";
+    ViewData["Title"] = Lang.userDengLu;
+}
+
+@section Heads{ }
+
+@section Styles{ }
+
+<div class="dxm-body">
+    <div class="dxm-login-form">
+        <div class="title">
+            <h3>@(AppHelper.WebTitle)</h3>
+        </div>
+        <form action="@(WebHelper.GetUrl(this.Context,"/account/login"))" method="post">
+            <div class="form-group">
+                <div class="form-item">
+                    <div class="form-input">
+                        @Html.TextBox("account", Model?.Account, new { placeholder = Lang.userZhangHao })
+                    </div>
+                </div>
+                <div class="form-item">
+                    <div class="form-input password">
+                        @Html.Password("password", Model?.Password, new { placeholder = Lang.userMiMa })
+                    </div>
+                </div>
+                <div class="form-item">
+                    <div class="clearfix">
+                        <div class="left form-input verify-code-input">
+                            @Html.TextBox("imgCode", Model?.ImgCode, new { placeholder = Lang.userYanZhengMa })
+                            @Html.Hidden("imgCodeTag", Model?.ImgCodeTag)
+                        </div>
+                        <div class="left form-input verify-code-img">
+                            <img id="img-captcha" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-item">
+                    <input class="form-submit" value="@(Lang.userDengLu)" type="submit">
+                </div>
+            </div>
+        </form>
+        @(Html.ValidationSummary())
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        var pageView = {};
+        $(document).ready(function () { pageView.init(); pageView.event(); });
+    </script>
+    <script type="text/javascript">
+        pageView.init = function () {
+            pageView.getCaptcha();
+        };
+        pageView.event = function () {
+            $("#img-captcha").on("click", function () {
+                pageView.getCaptcha();
+            });
+        };
+        pageView.getCaptcha = function () {
+            app.request("/common/verifycode?category=login&type=image", { type: "GET" }, function (data) {
+                $("#img-captcha").attr("src", "data:image/png;base64," + data.code).attr("data-id", "");
+                $("#imgCodeTag").attr("value", data.tag);
+            }, function () {
+                $("#img-captcha").attr("src", "").attr("data-id", "");
+                $("#imgCodeTag").attr("value", "");
+            });
+        };
+    </script>
+}

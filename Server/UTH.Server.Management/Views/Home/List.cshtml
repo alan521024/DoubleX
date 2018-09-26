@@ -1,0 +1,104 @@
+﻿@{
+    ViewData["Title"] = "列表页";
+}
+
+@section Heads{ }
+
+@section Styles{ }
+<div class="dxm-main-inner">
+    <div class="dxm-list layui-form">
+        <div class="dxm-list-head bg-white">
+            <div class="dxm-option clearfix" check-for="data-list">
+                <div class="left">
+                    <div class="layui-inline">
+                        <a href="~/home/form" class="layui-btn layui-btn-sm"><i class="iconfont icon-tool1"></i>新建客户</a>
+                    </div>
+                </div>
+                <div class="right">
+                    <div class="layui-inline">
+                        <select name="city" lay-verify="">
+                            <option value="">请选择一个城市</option>
+                            <option value="010">北京</option>
+                            <option value="021">上海</option>
+                            <option value="0571">杭州</option>
+                        </select>
+                    </div>
+                    <div class="dxm-input-search layui-inline">
+                        <input type="text" placeholder="请输入关键字搜索" autocomplete="off" class="layui-input">
+                        <a><i class="iconfont icon-tool15"></i></a>
+                    </div>
+                    <div class="layui-inline">
+                        <a class="layui-btn layui-btn-sm"><i class="iconfont icon-tool1"></i>操作</a>
+                    </div>
+                </div>
+            </div>
+            <div class="dxm-actions layui-anim layui-anim-upbit" data-anim="layui-anim-upbit" check-for="data-list">
+                <span class="statices">已选中<em>15</em>项</span>
+                <a href="javascript:;"><i class="iconfont icon-tool1"></i>放入客户池</a>
+                <a href="javascript:;"><i class="iconfont icon-tool2"></i>转移</a>
+                <a href="javascript:;"><i class="iconfont icon-tool3"></i>分享</a>
+                <a href="javascript:;"><i class="iconfont icon-tool4"></i>删除</a>
+                <a href="javascript:;" class="close" lay-filter="dxm-actions-close"><i class="iconfont icon-tool4"></i></a>
+            </div>
+        </div>
+        <div class="dxm-list-content p-l p-r">
+            <table class="dxm-list-table dxm-list-chk layui-table" id="data-list">
+                <thead>
+                    <tr>
+                        <th class="dxm-list-chk-item"><input name="chk-list-all" lay-skin="primary" lay-filter="chk-list-all" type="checkbox" /></th>
+                        <th>人物</th>
+                        <th>民族</th>
+                        <th>出场时间</th>
+                        <th>格言</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="dxm-list-chk-item"><input name="chk-list-item" lay-skin="primary" lay-filter="chk-list-item" value="1" type="checkbox" /></td>
+                        <td>贤心</td>
+                        <td>汉族</td>
+                        <td>1989-10-14</td>
+                        <td>人生似修行</td>
+                    </tr>
+                    <tr>
+                        <td class="dxm-list-chk-item"><input name="chk-list-item" lay-skin="primary" lay-filter="chk-list-item" value="2" type="checkbox" /></td>
+                        <td>张爱玲</td>
+                        <td>汉族</td>
+                        <td>1920-09-30</td>
+                        <td>于千万人之中遇见你所遇见的人，于千万年之中，时间的无涯的荒野里…</td>
+                    </tr>
+                    <tr>
+                        <td class="dxm-list-chk-item"><input name="chk-list-item" lay-skin="primary" lay-filter="chk-list-item" value="3" type="checkbox" /></td>
+                        <td>Helen Keller</td>
+                        <td>拉丁美裔</td>
+                        <td>1880-06-27</td>
+                        <td> Life is either a daring adventure or nothing.</td>
+                    </tr>
+                    <tr>
+                        <td class="dxm-list-chk-item"><input name="chk-list-item" lay-skin="primary" lay-filter="chk-list-item" value="4" type="checkbox" /></td>
+                        <td>岳飞</td>
+                        <td>汉族</td>
+                        <td>1103-北宋崇宁二年</td>
+                        <td>教科书再滥改，也抹不去“民族英雄”的事实</td>
+                    </tr>
+                    <tr>
+                        <td class="dxm-list-chk-item"><input name="chk-list-item" lay-skin="primary" lay-filter="chk-list-item" value="5" type="checkbox" /></td>
+                        <td>孟子</td>
+                        <td>华夏族（汉族）</td>
+                        <td>公元前-372年</td>
+                        <td>猿强，则国强。国强，则猿更强！ </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="m-t"></div>
+</div>
+@section Scripts{
+    <script>
+        var pageView = {};
+    </script>
+    <script>
+
+    </script>
+}
