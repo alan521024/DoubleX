@@ -25,10 +25,10 @@
     <div class="dxm-body">
         <div class="dxm-left">
             <div class="dxm-log">
-                <a href="@(Url.Action("Index","Home"))"><img src="~/images/dxm-logo2.png" /></a>
+                <a href="~/"><img src="~/images/dxm-logo2.png" /></a>
             </div>
             <div class="dxm-nav">
-                <ul class="dxm-nav-side">
+                <ul class="dxm-nav-inner">
                     <li>
                         <a href="~/" class="active"><i class="iconfont icon-shouye2"></i></a>
                     </li>
@@ -38,60 +38,42 @@
                     <li>
                         <a href="~/home/form"><i class="iconfont icon-shangye2"></i></a>
                     </li>
+
                     <li>
-                        <a href="javascript:;"><i class="iconfont icon-kehu1"></i></a>
-                    </li>
-                    <li>
-                        <a href="javascript:;"><i class="iconfont icon-wendang1"></i></a>
-                    </li>
-                    <li>
-                        <a href="javascript:;"><i class="iconfont icon-caiwu1"></i></a>
-                    </li>
-                    <li>
-                        <a href="javascript:;"><i class="iconfont icon-tongji1"></i></a>
-                    </li>
-                    <li>
-                        <a href="javascript:;"><i class="iconfont icon-tongxunlu1"></i></a>
-                    </li>
-                    <li>
-                        <a href="javascript:;"><i class="iconfont icon-zuzhi1"></i></a>
-                    </li>
-                    <li>
-                        <a href="javascript:;"><i class="iconfont icon-xitong1"></i></a>
+                        <a href="~/basics/app"><i class="iconfont icon-xitong1"></i></a>
                     </li>
                 </ul>
             </div>
         </div>
         <div class="dxm-right">
             <div class="dxm-top">
-                <div class="dxm-menu">
-                    <a href="javascript:;" class="active"><i class="iconfont icon-shangye1"></i>线索</a>
-                    <a href="javascript:;"><i class="iconfont icon-shangye2"></i>线索池</a>
-                    <a href="javascript:;"><i class="iconfont icon-shangye3"></i>客户</a>
-                    <a href="javascript:;"><i class="iconfont icon-shangye4"></i>客户池</a>
-                    <a href="javascript:;"><i class="iconfont icon-shangye6"></i>客户联系人</a>
-                </div>
+                @RenderSection("Menus", required: false)
                 <div class="dxm-tag">
                     <a href="javascript:;"><i class="iconfont icon-gongzuo10"></i></a>
                     <a href="javascript:;"><i class="iconfont icon-bangong3"></i><em class="badge">0</em></a>
                     <a href="javascript:;"><i class="iconfont icon-xiaoxi1"></i><em class="badge">101</em></a>
-                    <a href="~/account/login" title="@(User.Identity.Name)"><i class="iconfont icon-user3"></i></a>
+                    <a href="~/" title="@(User.Identity.Name)"><i class="iconfont icon-user3"></i></a>
                 </div>
             </div>
             <div class="dxm-main">
-                @RenderBody()
+                <div class="dxm-main-inner">
+                    @RenderBody()
+                </div>
             </div>
         </div>
     </div>
     <environment include="Development">
+        <script src="~/culture/@(WebHelper.GetCulture().ToLower()).js"></script>
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/underscore/underscore.js"></script>
+        <script src="~/lib/underscore/underscore.string.js"></script>
         <script src="~/lib/underscore-contrib/dist/underscore-contrib.js"></script>
         <script src="~/lib/layui/layui.all.js"></script>
         <script src="~/js/app.js"></script>
         <script src="~/js/controller.js"></script>
     </environment>
     <environment exclude="Development">
+        <script src="~/culture/@(WebHelper.GetCulture().ToLower()).js" asp-append-version="true"></script>
         <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.js"
                 asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
                 asp-fallback-test="window.jQuery"
@@ -99,6 +81,7 @@
                 integrity="sha384-K+ctZQ+LL8q6tP7I94W+qzQsfRV2a+AfHIi9k8z8l9ggpc8X+Ytst4yBo/hH+8Fk">
         </script>
         <script src="~/lib/underscore/underscore.js" asp-append-version="true"></script>
+        <script src="~/lib/underscore/underscore.string.js" asp-append-version="true"></script>
         <script src="~/lib/underscore-contrib/dist/underscore-contrib.js" asp-append-version="true"></script>
         <script src="~/lib/layui/layui.all.js" asp-append-version="true"></script>
         <script src="~/js/app.js" asp-append-version="true"></script>

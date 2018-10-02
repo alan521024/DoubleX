@@ -1,0 +1,134 @@
+﻿@{
+    ViewData["Title"] = Lang.basYingYongChengXu;
+    Layout = string.Format("~/Views/Shared/{0}.cshtml", AppHelper.IsMaster ? "_Master" : "_Layout");
+}
+
+@section Heads{ }
+
+@section Styles{ }
+
+@section Menus{
+    @Html.Partial("~/Areas/Basics/Views/_Menus.cshtml")
+}
+
+<div class="dxm-page dxm-page-pos dxm-page-pos-no-foot layui-form">
+    <div class="dxm-page-head bg-white">
+        <div id="data-list-option" class="dxm-option clearfix">
+            <div class="left">
+                <a id="btn-add" href="javascript:;" class="layui-btn layui-btn-sm"><i class="iconfont icon-tool1"></i>@(Lang.sysTianJia)</a>
+            </div>
+            <div class="right">
+                <div class="dxm-input-search layui-inline">
+                    <input type="text" placeholder="@(Lang.sysQingShuRuGuanJianZi)" autocomplete="off" class="layui-input">
+                    <a><i class="iconfont icon-tool15"></i></a>
+                </div>
+                <div class="layui-inline">
+                    <a class="layui-btn layui-btn-sm"><i class="iconfont icon-tool1"></i>@(Lang.sysSouSuo)</a>
+                </div>
+            </div>
+        </div>
+        <div id="data-list-action" class="dxm-action layui-anim layui-anim-upbit" data-anim="layui-anim-upbit">
+            <span class="statices">@(new HtmlString(Lang.sysYiXuanZeXiang))</span>
+            <a id="btn-update" href="javascript:;"><i class="iconfont icon-tool2"></i>@(Lang.sysXiuGai)</a>
+            <a id="btn-delete" href="javascript:;"><i class="iconfont icon-tool3"></i>@(Lang.sysShanChu)</a>
+            <a href="javascript:;" class="close" id="data-list-action-close"><i class="iconfont icon-tool4"></i></a>
+        </div>
+    </div>
+    <div class="dxm-page-content  bg-white">
+        <div class="dxm-page-content-inner">
+            <div id="data-list"></div>
+            <div id="data-paging" class="dx-list-paging"></div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        var pageView = {};
+        var list;
+        var columns = [[
+            { field: 'id', type: 'checkbox', width: 80 },
+            { field: 'name', title: '名称', template: function (value) { return "<a href=''>" + value + "</a>"; } },
+            { field: 'appType', title: '类型', },
+            { title: '操作', width: 80 }
+        ]];
+        $(document).ready(function () { pageView.init(); pageView.event(); })
+    </script>
+    <script type="text/javascript">
+
+        pageView.init = function () {
+            list = control.list({
+                id: '#data-list',
+                columns: columns,
+                url: "/basics/app/paging",
+                param: { page: 1, size: 10 },
+                success: function (data) {
+                    return data.rows;
+                },
+                checkAllCallback: pageView.status,
+                checkItemCallback: pageView.status,
+                resultCallback: function (result) {
+                    var that = this;
+                    control.paging({
+                        elem: 'data-paging',
+                        count: result.total,
+                        curr: that.param.page,
+                        limit: that.param.size,
+                        jump: function (obj, first) {
+                            if (!first) {
+                                list.query({ param: { page: obj.curr, size: obj.limit } });
+                            }
+                        }
+                    });
+                    pageView.clear();
+                }
+            });
+            list.query();
+        };
+
+        pageView.event = function () {
+            $("#data-list-action-close").on("click", pageView.clear);
+            $("#btn-add").on("click", pageView.add);
+            $("#btn-update").on("click", pageView.update);
+            $("#btn-delete").on("click", pageView.delete);
+        };
+
+        pageView.query = function () {
+        };
+
+        pageView.add = function () {
+            app.open("/basics/app/edit?callback=list.query");
+        };
+
+        pageView.update = function () {
+
+        };
+
+        pageView.delete = function () {
+
+        };
+
+        pageView.clear = function () {
+            list.checked();
+            pageView.status();
+        };
+
+        pageView.status = function () {
+            var items = $("input[name='list-chk-item']");
+            var chks = $("input[name='list-chk-item']:checked");
+
+            var $opt = $("#data-list-option"), $action = $("#data-list-action");
+            if (chks && chks.length > 0) {
+                $opt.hide();
+                $action.show();
+            }
+            else {
+                $opt.show();
+                $action.hide();
+            }
+            $action.find(".statices > em").html(chks.length);
+        };
+
+    </script>
+}
+

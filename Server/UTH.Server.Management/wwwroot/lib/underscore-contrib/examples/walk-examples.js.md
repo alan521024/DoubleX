@@ -83,7 +83,7 @@ Parse Trees
 -----------
 
 A _parse tree_ is tree that represents the syntactic structure of a formal
-language. For example, the arithmetic expression `1 + (4 + 2) * 7` might have the
+Lang. For example, the arithmetic expression `1 + (4 + 2) * 7` might have the
 following parse tree:
 
     var tree = {

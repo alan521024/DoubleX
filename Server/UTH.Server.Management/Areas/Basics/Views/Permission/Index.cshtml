@@ -1,0 +1,178 @@
+﻿@{
+    ViewData["Title"] = Lang.basQuanXianGuanLi;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Heads{ }
+
+@section Styles{
+    <link rel="stylesheet" type="text/css" href="~/lib/ztree_v3/css/zTreeStyle/zTreeStyle.css" />
+}
+
+@section Menus{
+    @Html.Partial("~/Areas/Basics/Views/_Menus.cshtml")
+}
+
+<div class="layui-card dxm-main-left">
+    <div class="layui-card-header">
+        <label class="layui-form-title">@(Lang.basQuanXianLuJing)</label>
+        <span class="layui-form-nav"><a id="btn-permission-nav-add" href="javascript:;">+@(Lang.sysZengJia)</a></span>
+    </div>
+    <div class="layui-card-body">
+        <ul id="treeDemo" class="ztree permission-tree"></ul>
+        <button class="layui-btn layui-btn-fluid permission-change-app">
+            <i class="iconfont icon-tool13"></i>&nbsp;@(Lang.sysQieHuan)&nbsp;&nbsp;[管理中心系统]
+        </button>
+    </div>
+</div>
+<div class="layui-card dxm-main-right ">
+    <div class="layui-card-header">@(Lang.basQuanXianGongNeng)</div>
+    <div class="layui-card-body permission-actions">
+        <ul class="clearfix">
+            <li>
+                <button class="layui-btn layui-btn-sm">
+                    功能1
+                    <span class="layui-badge layui-bg-gray"><a class="iconfont icon-tool3"></a></span>
+                </button>
+            </li>
+            <li>
+                <button class="layui-btn layui-btn-sm">
+                    功能1
+                    <span class="layui-badge layui-bg-gray"><a class="iconfont icon-tool3"></a></span>
+                </button>
+            </li>
+            <li>
+                <button class="layui-btn layui-btn-sm">
+                    功能1
+                    <span class="layui-badge layui-bg-gray"><a class="iconfont icon-tool3"></a></span>
+                </button>
+            </li>
+            <li>
+                <button class="layui-btn layui-btn-sm">功能4<span class="layui-badge layui-bg-gray">1</span></button>
+            </li>
+            <li>
+                <button class="layui-btn layui-btn-sm"><i class="iconfont icon-tool1"></i></button>
+            </li>
+        </ul>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript" src="~/lib/ztree_v3/js/jquery.ztree.all.min.js"></script>
+    <script type="text/javascript">
+        var pageView = {};
+        $(document).ready(function () { pageView.init(); pageView.event(); });
+        var zNodes = [
+            {
+                name: "父节点1 - 展开", open: true,
+                children: [
+                    {
+                        name: "父节点11 - 折叠",
+                        children: [
+                            { name: "叶子节点111" },
+                            { name: "叶子节点112" },
+                            { name: "叶子节点113" },
+                            { name: "叶子节点114" }
+                        ]
+                    },
+                    {
+                        name: "父节点12 - 折叠",
+                        children: [
+                            { name: "叶子节点121" },
+                            { name: "叶子节点122" },
+                            { name: "叶子节点123" },
+                            { name: "叶子节点124" }
+                        ]
+                    },
+                    { name: "父节点13 - 没有子节点", isParent: true }
+                ]
+            },
+            {
+                name: "父节点2 - 折叠",
+                children: [
+                    {
+                        name: "父节点21 - 展开", open: true,
+                        children: [
+                            { name: "叶子节点211" },
+                            { name: "叶子节点212" },
+                            { name: "叶子节点213" },
+                            { name: "叶子节点214" }
+                        ]
+                    },
+                    {
+                        name: "父节点22 - 折叠",
+                        children: [
+                            { name: "叶子节点221" },
+                            { name: "叶子节点222" },
+                            { name: "叶子节点223" },
+                            { name: "叶子节点224" }
+                        ]
+                    },
+                    {
+                        name: "父节点23 - 折叠",
+                        children: [
+                            { name: "叶子节点231" },
+                            { name: "叶子节点232" },
+                            { name: "叶子节点233" },
+                            { name: "叶子节点234" }
+                        ]
+                    }
+                ]
+            },
+            { name: "父节点3 - 没有子节点", isParent: true }
+
+        ];
+    </script>
+    <script type="text/javascript">
+
+        pageView.init = function () {
+            var setting = {
+                view: {
+                    addHoverDom: function (treeId, treeNode) {
+                        var nodeObj = $("#" + treeNode.tId + "_span");
+                        if (treeNode.editNameFlag || $("#removeBtn_" + treeNode.tId).length > 0 || $("#editBtn_" + treeNode.tId).length > 0) return;
+
+                        var removeHtml = "<a href=\"javascript:;\" id=\"removeBtn_" + treeNode.tId + "\" class=\"permission-btn\"><i class=\"iconfont icon-tool3\"></i></a>";
+                        nodeObj.after(removeHtml);
+
+                        var editHtml = "<a href=\"javascript:;\" id=\"editBtn_" + treeNode.tId + "\" class=\"permission-btn\"><i class=\"iconfont icon-tool10\"></i></a>";
+                        nodeObj.after(editHtml);
+
+                        var removeBtn = $("#removeBtn_" + treeNode.tId);
+                        if (removeBtn) removeBtn.bind("click", function () {
+                            alert('删除')
+                            return false;
+                        });
+
+                        var editBtn = $("#editBtn_" + treeNode.tId);
+                        if (editBtn) editBtn.bind("click", function () {
+                            alert('编辑')
+                            return false;
+                        });
+                    },
+                    removeHoverDom: function removeHoverDom(treeId, treeNode) {
+                        $("#removeBtn_" + treeNode.tId).unbind().remove();
+                        $("#editBtn_" + treeNode.tId).unbind().remove();
+                    },
+                    selectedMulti: false
+                },
+                edit: {
+                    enable: true,
+                    editNameSelectAll: true,
+                    showRemoveBtn: false,
+                    showRenameBtn: false
+                }
+            };
+            $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+        }
+
+        pageView.event = function () {
+            $("#btn-permission-nav-add").on("click", function () {
+                app.open("/basics/permission/navedit");
+            })
+
+        }
+
+    </script>
+}
+

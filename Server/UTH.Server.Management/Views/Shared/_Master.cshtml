@@ -18,16 +18,21 @@
     @RenderSection("Styles", required: false)
 </head>
 <body>
-    @RenderBody()
+    <div class="dxm-body">
+        @RenderBody()
+    </div>
     <environment include="Development">
+        <script src="~/culture/@(WebHelper.GetCulture().ToLower()).js"></script>
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/underscore/underscore.js"></script>
+        <script src="~/lib/underscore/underscore.string.js"></script>
         <script src="~/lib/underscore-contrib/dist/underscore-contrib.js"></script>
         <script src="~/lib/layui/layui.all.js"></script>
         <script src="~/js/app.js"></script>
         <script src="~/js/controller.js"></script>
     </environment>
     <environment exclude="Development">
+        <script src="~/culture/@(WebHelper.GetCulture().ToLower()).js" asp-append-version="true"></script>
         <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.js"
                 asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
                 asp-fallback-test="window.jQuery"
@@ -35,6 +40,7 @@
                 integrity="sha384-K+ctZQ+LL8q6tP7I94W+qzQsfRV2a+AfHIi9k8z8l9ggpc8X+Ytst4yBo/hH+8Fk">
         </script>
         <script src="~/lib/underscore/underscore.js" asp-append-version="true"></script>
+        <script src="~/lib/underscore/underscore.string.js" asp-append-version="true"></script>
         <script src="~/lib/underscore-contrib/dist/underscore-contrib.js" asp-append-version="true"></script>
         <script src="~/lib/layui/layui.all.js" asp-append-version="true"></script>
         <script src="~/js/app.js" asp-append-version="true"></script>

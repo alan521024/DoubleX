@@ -26,7 +26,19 @@
         /// <summary>
         /// 站点标题
         /// </summary>
-        public static string WebTitle { get; set; }
+        public static string WebTitle { get { return Lang.mgName; } }
+
+        #endregion
+
+        #region Web操作
+
+        public static bool IsMaster
+        {
+            get
+            {
+                return StringHelper.IsEqual(WebHelper.GetQueryValue(WebHelper.GetContext(), "_layout"), "master");
+            }
+        }
 
         #endregion
 

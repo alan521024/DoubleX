@@ -561,4 +561,7 @@
   <data name="userTuiChu" xml:space="preserve">
     <value>退出</value>
   </data>
+  <data name="mgName" xml:space="preserve">
+    <value>系统管理中心</value>
+  </data>
 </root>

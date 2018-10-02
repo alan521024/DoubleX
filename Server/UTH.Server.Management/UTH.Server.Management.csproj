@@ -5,7 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\lib\underscore\CODE_OF_CONDUCT.md" />
+    <None Include="wwwroot\lib\underscore\LICENSE" />
+    <None Include="wwwroot\lib\underscore\README.md" />
+    <None Include="wwwroot\lib\underscore\underscore-min.js" />
+    <None Include="wwwroot\lib\underscore\underscore-min.js.map" />
+    <None Include="wwwroot\lib\underscore\underscore.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
   </ItemGroup>
 
   <ItemGroup>
