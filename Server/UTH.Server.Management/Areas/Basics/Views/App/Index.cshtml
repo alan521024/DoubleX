@@ -19,11 +19,11 @@
             </div>
             <div class="right">
                 <div class="dxm-input-search layui-inline">
-                    <input type="text" placeholder="@(Lang.sysQingShuRuGuanJianZi)" autocomplete="off" class="layui-input">
+                    <input id="txt-key" type="text" placeholder="@(Lang.sysQingShuRuGuanJianZi)" autocomplete="off" class="layui-input">
                     <a><i class="iconfont icon-tool15"></i></a>
                 </div>
                 <div class="layui-inline">
-                    <a class="layui-btn layui-btn-sm"><i class="iconfont icon-tool1"></i>@(Lang.sysSouSuo)</a>
+                    <a id="btn-search" class="layui-btn layui-btn-sm"><i class="iconfont icon-tool1"></i>@(Lang.sysSouSuo)</a>
                 </div>
             </div>
         </div>
@@ -52,7 +52,7 @@
             { field: 'appType', title: '类型', },
             { title: '操作', width: 80 }
         ]];
-        $(document).ready(function () { pageView.init(); pageView.event(); })
+        $(document).ready(function () { pageView.init(); pageView.event(); });
     </script>
     <script type="text/javascript">
 
@@ -60,30 +60,30 @@
             list = control.list({
                 id: '#data-list',
                 columns: columns,
-                url: "/basics/app/paging",
+                url: "/common/do?action=/basics/app/paging",
                 param: { page: 1, size: 10 },
                 success: function (data) {
                     return data.rows;
                 },
                 checkAllCallback: pageView.status,
                 checkItemCallback: pageView.status,
-                resultCallback: function (result) {
+                resultCallback: function (result, par) {
                     var that = this;
                     control.paging({
                         elem: 'data-paging',
                         count: result.total,
-                        curr: that.param.page,
-                        limit: that.param.size,
+                        curr: par.page,
+                        limit: par.size,
                         jump: function (obj, first) {
                             if (!first) {
-                                list.query({ param: { page: obj.curr, size: obj.limit } });
+                                pageView.query(obj.curr, obj.limit);
                             }
                         }
                     });
                     pageView.clear();
                 }
             });
-            list.query();
+            pageView.query();
         };
 
         pageView.event = function () {
@@ -91,9 +91,15 @@
             $("#btn-add").on("click", pageView.add);
             $("#btn-update").on("click", pageView.update);
             $("#btn-delete").on("click", pageView.delete);
+            $("#btn-search").on("click", function () { list.query(); });
         };
 
-        pageView.query = function () {
+        pageView.query = function (page, size) {
+            if (!list)
+                return;
+            page = page || 1;
+            size = size || 10;
+            list.query({ param: function () { return { page: page, size: size, key: ($("#txt-key").val() || "") }; } });
         };
 
         pageView.add = function () {

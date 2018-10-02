@@ -4,10 +4,9 @@
 
     var layer = layui.layer, form = layui.form, paging = layui.laypage;
     var root = win;
-    
+
     var listObj = function (options) {
         var that = this;
-
 
         var _headerItemCallback = function (_type, _field, _title, _width) {
             var $item = $("<th></th>");
@@ -42,7 +41,7 @@
                 $item.html(_value);
             }
             return $item;
-        }
+        };
 
         that.config = $.extend({}, {
             id: null,
@@ -160,7 +159,7 @@
         that.header = $head;
     }
 
-    listObj.prototype.setData = function (rows) {
+    listObj.prototype.setData = function (rows, par) {
         var that = this;
         rows = rows || [];
 
@@ -189,7 +188,7 @@
         }
 
         if (app.util.isFunction(that.config.resultCallback)) {
-            that.config.resultCallback(that.result);
+            that.config.resultCallback(that.result, par);
         }
 
         that.event();
@@ -212,16 +211,22 @@
             that.setData(that.config.rows);
         }
         else if (that.config.url || that.config.remote) {
+
+            var _par = that.config.param;
+            if (app.util.isFunction(that.config.param)) {
+                _par = $.extend(true, {}, {}, that.config.param());
+            }
             var setting = $.extend({}, {
                 method: that.config.method,
-                data: that.config.param
+                data: _par
             }, that.config.remote);
+
             app.request(that.config.url, setting, function (data) {
                 that.result = data;
                 if (app.util.isFunction(that.config.success)) {
                     data = that.config.success(data);
                 }
-                that.setData(data);
+                that.setData(data, _par);
             }, function () {
                 if (app.util.isFunction(that.config.error)) {
                     that.config.error();
@@ -305,10 +310,6 @@
         form.render('checkbox', filter);
     }
 
-    /**
-     * paging 分页
-     * @param {any} options
-     */
     var pagingObj = function (options) {
 
         var that = this;

@@ -149,12 +149,14 @@
         }, opt);
 
         var jsonData = options.data;
+
         if (that.util.isFunction(options.data)) {
-            jsonData = options.data();
+            jsonData = $.extend(true, {}, {}, options.data());
         }
         if (that.util.isObject(jsonData)) {
             jsonData = JSON.stringify(jsonData);
         }
+
         options.data = jsonData;
 
         if (that.util.isString(url)) {
@@ -179,6 +181,7 @@
                 }
             }
         }
+
         $.ajax(options);
     };
 
