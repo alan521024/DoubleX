@@ -567,4 +567,7 @@
   <data name="mgName" xml:space="preserve">
     <value>系统管理中心</value>
   </data>
+  <data name="sysBianMa" xml:space="preserve">
+    <value>编码</value>
+  </data>
 </root>

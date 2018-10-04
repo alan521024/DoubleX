@@ -11,6 +11,7 @@
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Filters;
+    using Microsoft.AspNetCore.Html;
     using UTH.Infrastructure.Resource;
     using UTH.Infrastructure.Resource.Culture;
     using UTH.Infrastructure.Utility;
@@ -374,6 +375,44 @@
                 model.Message = ExceptionHelper.GetMessage(exception);
             }
             return model;
+        }
+
+        /// <summary>
+        /// 枚举Html代码
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static HtmlString GetEnumSelectHtml<T>(string id = null, string name = null, int? selected = null, KeyValueModel<string, int> first = null, bool isFirstNullHas = true)
+        {
+            var type = typeof(T);
+            if (!type.IsEnum)
+            {
+                return null;
+            }
+
+            if (first.IsNull() && isFirstNullHas)
+            {
+                first = new KeyValueModel<string, int>("请选择", 0);
+            }
+
+            var build = new StringBuilder();
+
+            build.AppendFormat("<select {0} {1}>", !id.IsNull() ? " id=\"" + id + "\" " : "", !name.IsNull() ? " name=\"" + name + "\" " : "");
+
+            if (!first.IsNull())
+            {
+                build.AppendFormat("<option value=\"{0}\" {2}>{1}</option>", first.Value, first.Key, !selected.IsNull() && selected.Value == first.Value ? "selected=\"selected\"" : "");
+            }
+
+            foreach (var item in Enum.GetValues(type))
+            {
+                int value = (int)item;
+                build.AppendFormat("<option value=\"{0}\" {2}>{1}</option>", value, item, !selected.IsNull() && selected.Value == value ? "selected=\"selected\"" : "");
+            }
+
+            build.AppendFormat("</select>");
+
+            return new HtmlString(build.ToString());
         }
 
     }

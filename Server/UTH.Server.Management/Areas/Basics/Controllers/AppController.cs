@@ -33,54 +33,28 @@ namespace UTH.Server.Management.Areas.Basics.Controllers
         /// <summary>
         /// 应用编辑
         /// </summary>
-        public IActionResult Edit()
+        public IActionResult Edit(Guid id)
         {
-            return View();
+            var model = new AppOutput() { AppType = EnumAppType.Web.GetValue() };
+            if (!id.IsEmpty())
+            {
+                var result = $"{PlugCoreHelper.ApiUrl.Basics.AppGetId}?id={id}".GetResult<AppOutput>();
+                if (result.Code == EnumCode.成功)
+                {
+                    return View(result.Obj);
+                }
+                else
+                {
+                    throw new DbxException(result.Code, result.Message);
+                }
+            }
+            return View(model);
+
         }
 
         #endregion
 
         #region HTTP
-
-        public AppOutput Insert([FromForm]AppEditInput input)
-        {
-            var result = PlugCoreHelper.ApiUrl.Basics.AppInsert.GetResult<AppOutput, AppEditInput>(input);
-            if (result.Code == EnumCode.成功)
-            {
-                return result.Obj;
-            }
-            throw new DbxException(result.Code, result.Message);
-        }
-
-        public AppOutput Modify([FromForm]AppEditInput input)
-        {
-            var result = PlugCoreHelper.ApiUrl.Basics.AppUpdate.GetResult<AppOutput, AppEditInput>(input);
-            if (result.Code == EnumCode.成功)
-            {
-                return result.Obj;
-            }
-            throw new DbxException(result.Code, result.Message);
-        }
-
-        public AppOutput Delete([FromForm]AppEditInput input)
-        {
-            var result = PlugCoreHelper.ApiUrl.Basics.AppDelete.GetResult<AppOutput, AppEditInput>(input);
-            if (result.Code == EnumCode.成功)
-            {
-                return result.Obj;
-            }
-            throw new DbxException(result.Code, result.Message);
-        }
-
-        public PagingModel<AppOutput> Paging([FromBody]QueryInput input)
-        {
-            var result = PlugCoreHelper.ApiUrl.Basics.AppPaging.GetResult<PagingModel<AppOutput>, QueryInput>(input);
-            if (result.Code == EnumCode.成功)
-            {
-                return result.Obj;
-            }
-            throw new DbxException(result.Code, result.Message);
-        }
 
         #endregion
     }

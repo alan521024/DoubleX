@@ -8,8 +8,8 @@
     var listObj = function (options) {
         var that = this;
 
-        var _headerItemCallback = function (_type, _field, _title, _width) {
-            var $item = $("<th></th>");
+        var _headerItemCallback = function (_type, _field, _title, _width, _align) {
+            var $item = $("<th class=\"txt-" + _align+"\"></th>");
             $item.attr("data-field", _field);
 
             if (_type === "checkbox") {
@@ -27,8 +27,8 @@
             }
             return $item;
         }
-        var _bodyItemCallback = function (_type, _data, _field, _value, _width) {
-            var $item = $("<td></td>");
+        var _bodyItemCallback = function (_type, _data, _field, _value, _width, _align) {
+            var $item = $("<td class=\"txt-" + _align +"\"></td>");
             $item.attr("data-field", _field);
             if (_type == "checkbox") {
                 $item.addClass("dxm-list-chk-item");
@@ -82,7 +82,7 @@
                     type: 'html',               //type: html(default),checkbox,
                     title: null,
                     width: 0,
-                    align: 'center',
+                    align: 'left',
                     fixed: null,                //fixed: 'left','right'
                     template: null
                 }, that.config.columns[i][j]));
@@ -144,8 +144,9 @@
             var _type = app.util.getProperty(that.cols[i]["type"]);
             var _title = app.util.getProperty(that.cols[i]["title"]);
             var _width = app.util.getProperty(that.cols[i]["width"]) || 0;
+            var _align = app.util.getProperty(that.cols[i]["align"]) || "center";
 
-            $collection.append(that.config.header.format(_type, _field, _title, _width));
+            $collection.append(that.config.header.format(_type, _field, _title, _width, _align));
         }
 
         $head.append($collection);
@@ -168,17 +169,22 @@
 
         for (var i = 0; i < rows.length; i++) {
             var $collection = $(that.config.item.collection);
+
             for (var j = 0; j < that.cols.length; j++) {
                 var _field = app.util.getProperty(that.cols[j]["field"]);
                 var _type = app.util.getProperty(that.cols[j]["type"]);
                 var _width = app.util.getProperty(that.cols[j]["width"]) || 0;
                 var _value = rows[i][_field];
+                var _align = app.util.getProperty(that.cols[j]["align"]) || "center";
+                var _title = app.util.getProperty(that.cols[j]["title"]) || "";
+
                 if (app.util.isFunction(that.cols[j]["template"])) {
-                    _value = that.cols[j]["template"](_value);
+                    _value = that.cols[j]["template"](rows[i]);
                 }
-                $collection.append(that.config.item.format(_type, rows[i], _field, _value, _width));
+
+                $collection.append(that.config.item.format(_type, rows[i], _field, _value, _width, _align));
             }
-            $body.append($collection)
+            $body.append($collection);
         }
         if (that.container.find("[data-for='_body']").length > 0) {
             $(that.container.find("[data-for='_body']")).replaceWith($body);

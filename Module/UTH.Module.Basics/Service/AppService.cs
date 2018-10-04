@@ -49,6 +49,9 @@
         {
             entity.Name = input.Name;
             entity.AppType = input.AppType;
+            entity.Code = input.Code;
+            entity.Key = input.Key;
+            entity.Secret = input.Secret;
             return entity;
         };
         public override Func<AppOutput, AppOutput> UpdateAfterCall => base.UpdateAfterCall;
@@ -99,7 +102,7 @@
             var currentVersion = appVersions.OrderByDescending(x => x.No).FirstOrDefault();
 
             var model = EngineHelper.Map<ApplicationModel>(app);
-            model.Versions= EngineHelper.Map<ApplicationVersion>(currentVersion);
+            model.Versions = EngineHelper.Map<ApplicationVersion>(currentVersion);
             model.Versions.No = new Version(currentVersion.No);
             return model;
         }

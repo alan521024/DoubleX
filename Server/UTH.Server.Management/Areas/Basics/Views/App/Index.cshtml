@@ -48,9 +48,10 @@
         var list;
         var columns = [[
             { field: 'id', type: 'checkbox', width: 80 },
-            { field: 'name', title: '名称', template: function (value) { return "<a href=''>" + value + "</a>"; } },
-            { field: 'appType', title: '类型', },
-            { title: '操作', width: 80 }
+            { field: 'name', title: '名称', template: function (row) { return "<a href=''>" + row["name"] + "</a>"; } },
+            { field: 'code', title: '编码' },
+            { field: 'appType', title: '类型' },
+            { title: '操作', width: 80, align: 'center', template: function (row) { return app.tableEditTemplate(row["id"]); } }
         ]];
         $(document).ready(function () { pageView.init(); pageView.event(); });
     </script>
@@ -87,10 +88,23 @@
 
         pageView.event = function () {
             $("#data-list-action-close").on("click", pageView.clear);
+
             $("#btn-add").on("click", pageView.add);
-            $("#btn-update").on("click", pageView.update);
-            $("#btn-delete").on("click", pageView.delete);
+            $("#btn-update").on("click", function () {
+                var ids = pageView.getCheckedIds();
+                pageView.update(ids.length === 1 ? ids[0] : "");
+            });
+            $("#btn-delete").on("click", function () {
+                var ids = pageView.getCheckedIds();
+                pageView.delete(ids);
+            });
             $("#btn-search").on("click", function () { list.query(); });
+            $("#data-list").on("click", ".dxm-table-item-update", function () {
+                pageView.update($(this).parent("span").attr("data-id"));
+            });
+            $("#data-list").on("click", ".dxm-table-item-delete", function () {
+                pageView.delete([$(this).parent("span").attr("data-id")]);
+            });
         };
 
         pageView.query = function (page, size) {
@@ -102,15 +116,29 @@
         };
 
         pageView.add = function () {
-            app.open("/basics/app/edit?callback=list.query");
+            app.open("/basics/app/edit?callback=list.query", { title: __language.basYingYongChengXu });
         };
 
-        pageView.update = function () {
-
+        pageView.update = function (id) {
+            id = id || "";
+            if (app.isEmpty(id)) {
+                app.message("请选择修改数据");
+                return;
+            }
+            app.open("/basics/app/edit?callback=list.query&id=" + id, { title: __language.basYingYongChengXu });
         };
 
-        pageView.delete = function () {
-
+        pageView.delete = function (ids) {
+            ids = ids || [];
+            if (ids.length === 0) {
+                app.message("请选择删除数据");
+                return;
+            }
+            app.confirm("是否删除数据", function () {
+                app.request("/common/do?action=/basics/app/delete", { data: { ids: ids } }, function (result) {
+                    list.query();
+                });
+            });
         };
 
         pageView.clear = function () {
@@ -132,6 +160,15 @@
                 $action.hide();
             }
             $action.find(".statices > em").html(chks.length);
+        };
+
+        pageView.getCheckedIds = function () {
+            var chks = $("input[name='list-chk-item']:checked");
+            var ids = [];
+            $(chks).each(function (i, v) {
+                ids.push($(v).val());
+            });
+            return ids;
         };
 
     </script>

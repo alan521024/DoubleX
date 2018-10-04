@@ -50,10 +50,11 @@
                 return true;
             }
 
-
             if (typeValue == "string") {
                 obj = _util.trim(obj);
                 if (obj.length == 0)
+                    return true;
+                if (obj == "00000000-0000-0000-0000-000000000000")
                     return true;
             }
         }
@@ -109,13 +110,10 @@
     _util.urlQueryAppend = function (url, obj) {
         var fixd = _util.urlPath(url), queryStr = _util.urlQuery(url);
         var queryObj = {};
-        console.log(queryStr);
-        console.log(_util.isEmpty(queryStr));
 
         if (!_util.isEmpty(queryStr)) {
             queryObj = _util.fromQuery(queryStr);
         }
-        console.log(queryObj);
         queryStr = _util.toQuery(_util.merge(queryObj, obj));
         return fixd + "?" + queryStr;
     };
@@ -130,6 +128,22 @@
         return fixd + "?" + queryStr;
     };
 
+    _util.getParent = function (win, p) {
+        if (p) {
+            try {
+                if (eval("win." + p)) {
+                    return win;
+                }
+            } catch (e) { ; }
+        }
+
+        if (win === window.top) {
+            if (p)
+                return null;
+            return win;
+        }
+        return _util.getParent(window.parent, p);
+    };
 
     app.util = _util;
 
@@ -199,12 +213,56 @@
         layer.open(setting);
     };
 
-    app.message = function (title, opt) {
+    app.message = function (msg, callback) {
+        layer.alert(msg || "", { title: "提示" }, function (index) {
+            if (callback) {
+                callback();
+            }
+            //关闭自身
+            layer.close(index); //它获取的始终是最新弹出的某个层，值是由layer内部动态递增计算的
 
-        layer.open({
-            title: '在线调试',
-            content: '可以填写任意的layer代码'
+            //如果你想关闭最新弹出的层，直接获取layer.index即可
+            //layer.close(layer.index);
+
+            //当你在iframe页面关闭自身时
+            try {
+                var parentIndex = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(parentIndex);
+            }
+            catch (e) { ; }
         });
+    };
+
+    app.confirm = function (msg, callback, cancel) {
+        layer.confirm(msg, {
+            title: "确认",
+            btn: ['确定', '取消'] //按钮
+        }, function (index) {
+            if (!app.isEmpty(callback)) {
+                callback();
+            }
+            layer.close(index);
+        }, function (index) {
+            if (!app.isEmpty(cancel)) {
+                cancel();
+            }
+            layer.close(index);
+        });
+    };
+
+    app.parentFunc = function (func, args) {
+        var callWin = _util.getParent(window, func);
+        if (callWin) {
+            if (args) {
+                eval("callWin." + callback + "(args)");
+            } else {
+                eval("callWin." + callback + "()");
+            }
+        }
+    };
+
+    app.tableEditTemplate = function (id) {
+        return "<span class='dxm-table-actions' data-id='" + id + "'><a href='javascript:;' class='dxm-table-item-update'>改</a><a href='javascript:;' class='dxm-table-item-delete'>删</a></span>";
     };
 
 })();

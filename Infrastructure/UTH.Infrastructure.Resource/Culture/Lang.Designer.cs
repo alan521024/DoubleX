@@ -349,6 +349,15 @@ namespace UTH.Infrastructure.Resource.Culture {
         }
         
         /// <summary>
+        ///   查找类似 编码 的本地化字符串。
+        /// </summary>
+        public static string sysBianMa {
+            get {
+                return ResourceManager.GetString("sysBianMa", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Operate 的本地化字符串。
         /// </summary>
         public static string sysCaoZuo {

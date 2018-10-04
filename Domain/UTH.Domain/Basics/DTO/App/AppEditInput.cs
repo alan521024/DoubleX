@@ -30,7 +30,7 @@
         public AppEditInputValidator()
         {
             RuleFor(o => o.Name).Configure(x => x.PropertyName = Lang.sysName)
-                .NotNull().NotEmpty();
+                .NotNull().NotEmpty().When(x => x.Ids == null);
         }
     }
 }
