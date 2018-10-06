@@ -143,7 +143,7 @@
         /// <summary>
         /// 查找集合
         /// </summary>
-        List<TOutput> Find(int top = 0, Expression<Func<TEntity, bool>> predicate = null, List<KeyValueModel> Sorting = null);
+        List<TOutput> Find(int top = 0, Expression<Func<TEntity, bool>> where = null, List<KeyValueModel> Sorting = null);
 
         #region 异步(可等待)操作
 
@@ -170,7 +170,7 @@
         /// <summary>
         /// 查找集合
         /// </summary>
-        Task<List<TOutput>> FindAsync(int top = 0, Expression<Func<TEntity, bool>> predicate = null, List<KeyValueModel> Sorting = null);
+        Task<List<TOutput>> FindAsync(int top = 0, Expression<Func<TEntity, bool>> where = null, List<KeyValueModel> Sorting = null);
 
         #endregion
 
@@ -184,13 +184,7 @@
         Func<TInput, TEntity, TEntity> UpdateBeforeCall { get; }
         Func<TOutput, TOutput> UpdateAfterCall { get; }
 
-        /// <summary>
-        /// 查询条件
-        /// </summary>
-        /// <param name="queryParam"></param>
-        /// <returns></returns>
-        Expression<Func<TEntity, bool>> FindPredicate(QueryInput queryParam);
-
+        Expression<Func<TEntity, bool>> FindWhere(QueryInput input);
 
         #endregion
     }

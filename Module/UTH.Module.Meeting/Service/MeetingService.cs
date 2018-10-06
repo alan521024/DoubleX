@@ -66,7 +66,7 @@
         };
         public override Func<MeetingOutput, MeetingOutput> UpdateAfterCall => base.UpdateAfterCall;
 
-        public override Expression<Func<MeetingEntity, bool>> FindPredicate(QueryInput param)
+        public override Expression<Func<MeetingEntity, bool>> FindWhere(QueryInput param)
         {
             var exp = ExpressHelper.Get<MeetingEntity>();
 

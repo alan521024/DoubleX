@@ -409,7 +409,7 @@
             throw new NotImplementedException();
         }
 
-        public Expression<Func<TEntity, bool>> FindPredicate(QueryInput queryParam)
+        public Expression<Func<TEntity, bool>> FindWhere(QueryInput queryParam)
         {
             throw new NotImplementedException();
         }

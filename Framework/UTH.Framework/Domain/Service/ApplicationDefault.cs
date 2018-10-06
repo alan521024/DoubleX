@@ -315,7 +315,7 @@
         /// </summary>
         public virtual List<TOutput> Query(QueryInput query)
         {
-            Expression<Func<TEntity, bool>> predicate = FindPredicate(query);
+            Expression<Func<TEntity, bool>> predicate = FindWhere(query);
 
             var entitys = repository.Find(query.Size, predicate: predicate, sorting: query.Sorting);
             return EngineHelper.Map<List<TOutput>>(entitys);
@@ -326,7 +326,7 @@
         /// </summary>
         public virtual PagingModel<TOutput> Paging(QueryInput query)
         {
-            Expression<Func<TEntity, bool>> predicate = FindPredicate(query);
+            Expression<Func<TEntity, bool>> predicate = FindWhere(query);
 
             PagingModel<TOutput> result = new PagingModel<TOutput>();
             var total = 0L;
@@ -370,7 +370,7 @@
         /// </summary>
         public virtual Task<List<TOutput>> QueryAsync(QueryInput query)
         {
-            Expression<Func<TEntity, bool>> predicate = FindPredicate(query);
+            Expression<Func<TEntity, bool>> predicate = FindWhere(query);
 
             var entitys = repository.Find(query.Size, predicate: predicate, sorting: query.Sorting);
             return Task.FromResult(EngineHelper.Map<List<TOutput>>(entitys));
@@ -381,7 +381,7 @@
         /// </summary>
         public virtual Task<PagingModel<TOutput>> PagingAsync(QueryInput query)
         {
-            Expression<Func<TEntity, bool>> predicate = FindPredicate(query);
+            Expression<Func<TEntity, bool>> predicate = FindWhere(query);
 
             PagingModel<TOutput> result = new PagingModel<TOutput>();
             var total = 0L;
@@ -412,7 +412,7 @@
         public virtual Func<TInput, TEntity, TEntity> UpdateBeforeCall { get; } = null;
         public virtual Func<TOutput, TOutput> UpdateAfterCall { get; } = null;
 
-        public virtual Expression<Func<TEntity, bool>> FindPredicate(QueryInput queryParam) { return null; }
+        public virtual Expression<Func<TEntity, bool>> FindWhere(QueryInput queryParam) { return null; }
 
         #endregion
 

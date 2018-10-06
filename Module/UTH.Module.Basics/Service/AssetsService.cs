@@ -49,7 +49,7 @@
             return entity;
         };
 
-        public override Expression<Func<AssetsEntity, bool>> FindPredicate(QueryInput input)
+        public override Expression<Func<AssetsEntity, bool>> FindWhere(QueryInput input)
         {
             if (!input.IsNull() && !input.Query.IsNull())
             {
@@ -64,7 +64,7 @@
                 return exp.ToExpression();
             }
 
-            return base.FindPredicate(input);
+            return base.FindWhere(input);
         }
 
         #endregion

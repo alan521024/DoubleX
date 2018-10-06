@@ -51,7 +51,7 @@
             return entity;
         };
 
-        public override Expression<Func<AppEntity, bool>> FindPredicate(QueryInput input)
+        public override Expression<Func<AppEntity, bool>> FindWhere(QueryInput input)
         {
             if (!input.IsNull() && !input.Query.IsNull())
             {
@@ -66,7 +66,7 @@
 
                 return exp.ToExpression();
             }
-            return base.FindPredicate(input);
+            return base.FindWhere(input);
 
         }
 
@@ -86,7 +86,7 @@
             }
 
             var appVersionService = EngineHelper.Resolve<IAppVersionService>();
-            var appVersions = appVersionService.Find(predicate: x => x.AppId == app.Id);
+            var appVersions = appVersionService.Find(where: x => x.AppId == app.Id);
             if (appVersions.IsEmpty())
             {
                 return null;

@@ -57,7 +57,7 @@
         public override Func<MeetingRecordEditInput, MeetingRecordEntity, MeetingRecordEntity> UpdateBeforeCall => base.UpdateBeforeCall;
         public override Func<MeetingRecordOutput, MeetingRecordOutput> UpdateAfterCall => base.UpdateAfterCall;
 
-        public override Expression<Func<MeetingRecordEntity, bool>> FindPredicate(QueryInput param)
+        public override Expression<Func<MeetingRecordEntity, bool>> FindWhere(QueryInput param)
         {
             var exp = ExpressHelper.Get<MeetingRecordEntity>();
 

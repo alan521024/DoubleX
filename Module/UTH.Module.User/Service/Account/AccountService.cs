@@ -123,7 +123,7 @@
         };
         public override Func<AccountOutput, AccountOutput> UpdateAfterCall => base.UpdateAfterCall;
 
-        public override Expression<Func<AccountEntity, bool>> FindPredicate(QueryInput param)
+        public override Expression<Func<AccountEntity, bool>> FindWhere(QueryInput param)
         {
             var exp = ExpressHelper.Get<AccountEntity>();
 
@@ -296,10 +296,10 @@
 
             if (!orgUUID.IsEmpty())
             {
-                queryOrgs = orgService.Find(predicate: x => x.UUID == orgUUID);
+                queryOrgs = orgService.Find(where: x => x.UUID == orgUUID);
                 if (!empUUID.IsEmpty())
                 {
-                    queryEmps = empService.Find(predicate: x => x.Organize == orgUUID && x.UUID == empUUID);
+                    queryEmps = empService.Find(where: x => x.Organize == orgUUID && x.UUID == empUUID);
                 }
             }
 
