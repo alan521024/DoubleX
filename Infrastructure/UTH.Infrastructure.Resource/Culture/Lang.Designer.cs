@@ -358,6 +358,15 @@ namespace UTH.Infrastructure.Resource.Culture {
         }
         
         /// <summary>
+        ///   查找类似 编码已存在 的本地化字符串。
+        /// </summary>
+        public static string sysBianMaYiCunZai {
+            get {
+                return ResourceManager.GetString("sysBianMaYiCunZai", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Operate 的本地化字符串。
         /// </summary>
         public static string sysCaoZuo {
@@ -592,6 +601,24 @@ namespace UTH.Infrastructure.Resource.Culture {
         }
         
         /// <summary>
+        ///   查找类似 结果为空 的本地化字符串。
+        /// </summary>
+        public static string sysJieGuoWeiKong {
+            get {
+                return ResourceManager.GetString("sysJieGuoWeiKong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Key 的本地化字符串。
+        /// </summary>
+        public static string sysKey {
+            get {
+                return ResourceManager.GetString("sysKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Type 的本地化字符串。
         /// </summary>
         public static string sysLeiXing {
@@ -633,6 +660,24 @@ namespace UTH.Infrastructure.Resource.Culture {
         public static string sysMingCheng {
             get {
                 return ResourceManager.GetString("sysMingCheng", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 名称已存在 的本地化字符串。
+        /// </summary>
+        public static string sysMingChengYiCunZai {
+            get {
+                return ResourceManager.GetString("sysMingChengYiCunZai", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 密钥 的本地化字符串。
+        /// </summary>
+        public static string sysMiYao {
+            get {
+                return ResourceManager.GetString("sysMiYao", resourceCulture);
             }
         }
         
@@ -700,6 +745,51 @@ namespace UTH.Infrastructure.Resource.Culture {
         }
         
         /// <summary>
+        ///   查找类似 请选择删除数据 的本地化字符串。
+        /// </summary>
+        public static string sysQingXuanZeShanChuShuJu {
+            get {
+                return ResourceManager.GetString("sysQingXuanZeShanChuShuJu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 请选择修改数据 的本地化字符串。
+        /// </summary>
+        public static string sysQingXuanZeXiuGaiShuJu {
+            get {
+                return ResourceManager.GetString("sysQingXuanZeXiuGaiShuJu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 确定 的本地化字符串。
+        /// </summary>
+        public static string sysQueDing {
+            get {
+                return ResourceManager.GetString("sysQueDing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 确认 的本地化字符串。
+        /// </summary>
+        public static string sysQueRen {
+            get {
+                return ResourceManager.GetString("sysQueRen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 取消 的本地化字符串。
+        /// </summary>
+        public static string sysQuXiao {
+            get {
+                return ResourceManager.GetString("sysQuXiao", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Delete 的本地化字符串。
         /// </summary>
         public static string sysShanChu {
@@ -714,6 +804,15 @@ namespace UTH.Infrastructure.Resource.Culture {
         public static string sysSheZhi {
             get {
                 return ResourceManager.GetString("sysSheZhi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 是否删除数据 的本地化字符串。
+        /// </summary>
+        public static string sysShiFouShanChuShuJu {
+            get {
+                return ResourceManager.GetString("sysShiFouShanChuShuJu", resourceCulture);
             }
         }
         

@@ -567,4 +567,37 @@
   <data name="sysBianMa" xml:space="preserve">
     <value>编码</value>
   </data>
+  <data name="sysBianMaYiCunZai" xml:space="preserve">
+    <value>编码已存在</value>
+  </data>
+  <data name="sysJieGuoWeiKong" xml:space="preserve">
+    <value>结果为空</value>
+  </data>
+  <data name="sysKey" xml:space="preserve">
+    <value>Key</value>
+  </data>
+  <data name="sysMingChengYiCunZai" xml:space="preserve">
+    <value>名称已存在</value>
+  </data>
+  <data name="sysMiYao" xml:space="preserve">
+    <value>密钥</value>
+  </data>
+  <data name="sysQingXuanZeShanChuShuJu" xml:space="preserve">
+    <value>请选择删除数据</value>
+  </data>
+  <data name="sysQingXuanZeXiuGaiShuJu" xml:space="preserve">
+    <value>请选择修改数据</value>
+  </data>
+  <data name="sysQueDing" xml:space="preserve">
+    <value>确定</value>
+  </data>
+  <data name="sysQueRen" xml:space="preserve">
+    <value>确认</value>
+  </data>
+  <data name="sysQuXiao" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="sysShiFouShanChuShuJu" xml:space="preserve">
+    <value>是否删除数据</value>
+  </data>
 </root>

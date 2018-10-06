@@ -48,10 +48,10 @@
         var list;
         var columns = [[
             { field: 'id', type: 'checkbox', width: 80 },
-            { field: 'name', title: '名称', template: function (row) { return "<a href=''>" + row["name"] + "</a>"; } },
-            { field: 'code', title: '编码' },
-            { field: 'appType', title: '类型' },
-            { title: '操作', width: 80, align: 'center', template: function (row) { return app.tableEditTemplate(row["id"]); } }
+            { field: 'name', title: __language.sysMingCheng, template: function (row) { return "<a href=''>" + row["name"] + "</a>"; } },
+            { field: 'code', title: __language.sysBianMa },
+            { field: 'appType', title: __language.sysLeiXing },
+            { title: __language.sysCaoZuo, width: 80, align: 'center', template: function (row) { return app.tableEditTemplate(row["id"]); } }
         ]];
         $(document).ready(function () { pageView.init(); pageView.event(); });
     </script>
@@ -112,7 +112,7 @@
                 return;
             page = page || 1;
             size = size || 10;
-            list.query({ param: function () { return { page: page, size: size, key: ($("#txt-key").val() || "") }; } });
+            list.query({ param: function () { return { page: page, size: size, query: { key: ($("#txt-key").val() || "") } }; } });
         };
 
         pageView.add = function () {
@@ -122,7 +122,7 @@
         pageView.update = function (id) {
             id = id || "";
             if (app.isEmpty(id)) {
-                app.message("请选择修改数据");
+                app.message(__language.sysQingXuanZeXiuGaiShuJu);
                 return;
             }
             app.open("/basics/app/edit?callback=list.query&id=" + id, { title: __language.basYingYongChengXu });
@@ -131,10 +131,10 @@
         pageView.delete = function (ids) {
             ids = ids || [];
             if (ids.length === 0) {
-                app.message("请选择删除数据");
+                app.message(__language.sysQingXuanZeShanChuShuJu);
                 return;
             }
-            app.confirm("是否删除数据", function () {
+            app.confirm(__language.sysShiFouShanChuShuJu, function () {
                 app.request("/common/do?action=/basics/app/delete", { data: { ids: ids } }, function (result) {
                     list.query();
                 });

@@ -41,13 +41,13 @@
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">Key：</label>
+                <label class="layui-form-label">@(Lang.sysKey)：</label>
                 <div class="layui-input-inline">
                     <input id="txt-key" autocomplete="off" class="layui-input" type="text" value="@(Model.Key)" />
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">密钥：</label>
+                <label class="layui-form-label">@(Lang.sysMiYao)：</label>
                 <div class="layui-input-inline">
                     <input id="txt-secret" autocomplete="off" class="layui-input" type="text" value="@(Model.Secret)" />
                 </div>
@@ -95,7 +95,7 @@
                 url = "/common/do?action=/basics/app/update";
             }
             app.request(url, { data: model }, function (result) {
-                app.message("保存成功", function () {
+                app.message(__language.sysBaoCunChengGong, function () {
                     if (!app.isEmpty(callback)) {
                         app.parentFunc(callback);
                     }

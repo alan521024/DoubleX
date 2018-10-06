@@ -52,9 +52,9 @@
 
             if (typeValue == "string") {
                 obj = _util.trim(obj);
-                if (obj.length == 0)
+                if (obj.length === 0)
                     return true;
-                if (obj == "00000000-0000-0000-0000-000000000000")
+                if (obj === "00000000-0000-0000-0000-000000000000")
                     return true;
             }
         }
@@ -97,11 +97,11 @@
 
     _util.urlQuery = function (url) {
         url = _util.urlDecode(url) || "";
-        if (url.indexOf("?") == -1 && url.indexOf('=') == -1)
+        if (url.indexOf("?") === -1 && url.indexOf('=') == -1)
             return "";
         var queryStr = url.substring(url.indexOf("?") + 1);
 
-        if (queryStr.indexOf("=") == -1)
+        if (queryStr.indexOf("=") === -1)
             queryStr = queryStr + "=";
 
         return queryStr;
@@ -180,20 +180,20 @@
         if (that.util.isFunction(success)) {
             options.success = function (res) {
                 if (that.isEmpty(res)) {
-                    alert('结果为空');
+                    alert(__language.sysJieGuoWeiKong);
                     return;
                 }
-                if (res.code == 0) {
+                if (res.code === 0) {
                     success(res.obj);
                 }
                 else {
                     if (that.util.isFunction(error)) {
-                        error(res)
+                        error(res);
                     } else {
                         alert(res.message);
                     }
                 }
-            }
+            };
         }
 
         $.ajax(options);
@@ -214,7 +214,7 @@
     };
 
     app.message = function (msg, callback) {
-        layer.alert(msg || "", { title: "提示" }, function (index) {
+        layer.alert(msg || "", { title: __language.sysTiShi }, function (index) {
             if (callback) {
                 callback();
             }
@@ -235,8 +235,8 @@
 
     app.confirm = function (msg, callback, cancel) {
         layer.confirm(msg, {
-            title: "确认",
-            btn: ['确定', '取消'] //按钮
+            title: __language.sysQueRen,
+            btn: [__language.sysQueDing, __language.sysQuXiao] //按钮
         }, function (index) {
             if (!app.isEmpty(callback)) {
                 callback();
@@ -262,7 +262,7 @@
     };
 
     app.tableEditTemplate = function (id) {
-        return "<span class='dxm-table-actions' data-id='" + id + "'><a href='javascript:;' class='dxm-table-item-update'>改</a><a href='javascript:;' class='dxm-table-item-delete'>删</a></span>";
+        return "<span class='dxm-table-actions' data-id='" + id + "'><a href='javascript:;' class='dxm-table-item-update'>" + __language.sysXiuGai + "</a><a href='javascript:;' class='dxm-table-item-delete'>" + __language.sysShanChu + "</a></span>";
     };
 
 })();
