@@ -327,27 +327,15 @@
         /// <param name="predicate">表达式</param>
         /// <param name="sorting">排序</param>
         /// <returns>IQueryable[TEntity] 集合 or new List[TEntity]</returns>
-        List<TEntity> Find(Expression<Func<TEntity, bool>> predicate = null, List<KeyValueModel> sorting = null);
+        List<TEntity> Find(int top = 0, Expression<Func<TEntity, bool>> predicate = null, List<KeyValueModel> sorting = null);
 
         /// <summary>
         /// 获取集合
         /// </summary>
-        /// <param name="top">数量</param>
         /// <param name="predicate">表达式</param>
         /// <param name="sorting">排序</param>
-        /// <returns>IQueryable[TEntity] 集合 new List[TEntity]</returns>
-        List<TEntity> Find(int top, Expression<Func<TEntity, bool>> predicate = null, List<KeyValueModel> sorting = null);
-
-        /// <summary>
-        /// 获取集合
-        /// </summary>
-        /// <param name="pageIndex">获取第几页 从0开始(小于0时强制为0)</param>
-        /// <param name="pageSize">每页数量 为0时所有</param>
-        /// <param name="predicate">表达式</param>
-        /// <param name="sorting">排序</param>
-        /// <param name="total">数据总数</param>
         /// <returns>IQueryable[TEntity] 集合 or new List[TEntity]</returns>
-        List<TEntity> Find(int pageIndex, int pageSize, Expression<Func<TEntity, bool>> predicate, List<KeyValueModel> sorting, out long total);
+        List<TEntity> Paging(int page, int size, Expression<Func<TEntity, bool>> predicate, List<KeyValueModel> sorting, ref int total);
 
         #region 异步(可等待)操作
 
@@ -364,7 +352,7 @@
         /// <param name="predicate">表达式</param>
         /// <param name="sorting">排序</param>
         /// <returns>IQueryable[TEntity] 集合 or new List[TEntity]</returns>
-        Task<List<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate = null, List<KeyValueModel> sorting = null);
+        Task<List<TEntity>> FindAsync(int top = 0, Expression<Func<TEntity, bool>> predicate = null, List<KeyValueModel> sorting = null);
 
         /// <summary>
         /// 获取集合
@@ -373,18 +361,7 @@
         /// <param name="predicate">表达式</param>
         /// <param name="sorting">排序</param>
         /// <returns>IQueryable[TEntity] 集合 new List[TEntity]</returns>
-        Task<List<TEntity>> FindAsync(int top, Expression<Func<TEntity, bool>> predicate = null, List<KeyValueModel> sorting = null);
-
-        /// <summary>
-        /// 获取集合
-        /// </summary>
-        /// <param name="pageIndex">获取第几页 从0开始(小于0时强制为0)</param>
-        /// <param name="pageSize">每页数量 为0时所有</param>
-        /// <param name="predicate">表达式</param>
-        /// <param name="sorting">排序</param>
-        /// <param name="total">数据总数</param>
-        /// <returns>IQueryable[TEntity] 集合 or new List[TEntity]</returns>
-        Task<KeyValuePair<List<TEntity>, int>> FindAsync(int pageIndex, int pageSize, Expression<Func<TEntity, bool>> predicate, List<KeyValueModel> sorting, int total);
+        Task<KeyValuePair<List<TEntity>, int>> PagingAsync(int page, int size, Expression<Func<TEntity, bool>> predicate, List<KeyValueModel> sorting, int total);
 
         #endregion
 

@@ -322,6 +322,15 @@
         }
 
         /// <summary>
+        /// 查找集合
+        /// </summary>
+        public virtual List<TOutput> Query(int top = 0, Expression<Func<TEntity, bool>> predicate = null, List<KeyValueModel> Sorting = null)
+        {
+            var entitys = repository.Find(top: top, predicate: predicate, sorting: Sorting);
+            return EngineHelper.Map<List<TOutput>>(entitys);
+        }
+
+        /// <summary>
         /// 分页查询
         /// </summary>
         public virtual PagingModel<TOutput> Paging(QueryInput query)
@@ -329,20 +338,11 @@
             Expression<Func<TEntity, bool>> predicate = FindWhere(query);
 
             PagingModel<TOutput> result = new PagingModel<TOutput>();
-            var total = 0L;
-            var rows = repository.Find(query.Page, query.Size, predicate, query.Sorting, out total);
+            var total = 0;
+            var rows = repository.Paging(query.Page, query.Size, predicate, query.Sorting, ref total);
             result.Rows = total > 0 ? EngineHelper.Map<List<TOutput>>(rows) : new List<TOutput>();
             result.Total = total;
             return result;
-        }
-
-        /// <summary>
-        /// 查找集合
-        /// </summary>
-        public virtual List<TOutput> Find(int top = 0, Expression<Func<TEntity, bool>> predicate = null, List<KeyValueModel> Sorting = null)
-        {
-            var entitys = repository.Find(top, predicate: predicate, sorting: Sorting);
-            return EngineHelper.Map<List<TOutput>>(entitys);
         }
 
         #region 异步(可等待)操作
@@ -377,27 +377,28 @@
         }
 
         /// <summary>
-        /// 分页查询
+        /// 查找集合
         /// </summary>
-        public virtual Task<PagingModel<TOutput>> PagingAsync(QueryInput query)
+        public virtual async Task<List<TOutput>> QueryAsync(int top = 0, Expression<Func<TEntity, bool>> predicate = null, List<KeyValueModel> Sorting = null)
         {
-            Expression<Func<TEntity, bool>> predicate = FindWhere(query);
-
-            PagingModel<TOutput> result = new PagingModel<TOutput>();
-            var total = 0L;
-            var rows = repository.Find(query.Page, query.Size, predicate, query.Sorting, out total);
-            result.Rows = total > 0 ? EngineHelper.Map<List<TOutput>>(rows) : new List<TOutput>();
-            result.Total = total;
-            return Task.FromResult(result);
+            var result = await repository.FindAsync(top: top, predicate: predicate, sorting: Sorting);
+            return EngineHelper.Map<List<TOutput>>(result);
         }
 
         /// <summary>
-        /// 查找集合
+        /// 分页查询
         /// </summary>
-        public virtual Task<List<TOutput>> FindAsync(int top = 0, Expression<Func<TEntity, bool>> predicate = null, List<KeyValueModel> Sorting = null)
+        public virtual async Task<PagingModel<TOutput>> PagingAsync(QueryInput query)
         {
-            var entitys = repository.Find(top == -1 ? 0 : top, predicate: predicate, sorting: Sorting);
-            return Task.FromResult(EngineHelper.Map<List<TOutput>>(entitys));
+            PagingModel<TOutput> model = new PagingModel<TOutput>();
+
+            var total = 0;
+            var result = await repository.PagingAsync(query.Page, query.Size, FindWhere(query), query.Sorting, total);
+
+            model.Rows = total > 0 ? EngineHelper.Map<List<TOutput>>(result) : new List<TOutput>();
+            model.Total = total;
+
+            return model;
         }
 
         #endregion

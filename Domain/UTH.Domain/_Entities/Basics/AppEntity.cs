@@ -17,6 +17,7 @@
     [SugarTable("BAS_App")]
     public class AppEntity : BaseGeneralEntity
     {
+
         /// <summary>
         /// 名称
         /// </summary>
@@ -41,5 +42,8 @@
         /// 应用密钥
         /// </summary>
         public string Secret { get; set; }
+
+        [SugarColumn(IsIgnore = true)]
+        public List<AppVersionEntity> Versions { get; set; } = new List<AppVersionEntity>();
     }
 }

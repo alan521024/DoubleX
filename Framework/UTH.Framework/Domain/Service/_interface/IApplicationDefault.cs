@@ -136,14 +136,14 @@
         List<TOutput> Query(QueryInput query);
 
         /// <summary>
+        /// 查找集合
+        /// </summary>
+        List<TOutput> Query(int top = 0, Expression<Func<TEntity, bool>> where = null, List<KeyValueModel> Sorting = null);
+
+        /// <summary>
         /// 分页查询
         /// </summary>
         PagingModel<TOutput> Paging(QueryInput query);
-
-        /// <summary>
-        /// 查找集合
-        /// </summary>
-        List<TOutput> Find(int top = 0, Expression<Func<TEntity, bool>> where = null, List<KeyValueModel> Sorting = null);
 
         #region 异步(可等待)操作
 
@@ -163,14 +163,14 @@
         Task<List<TOutput>> QueryAsync(QueryInput query);
 
         /// <summary>
+        /// 查找集合
+        /// </summary>
+        Task<List<TOutput>> QueryAsync(int top = 0, Expression<Func<TEntity, bool>> where = null, List<KeyValueModel> Sorting = null);
+
+        /// <summary>
         /// 分页查询
         /// </summary>
         Task<PagingModel<TOutput>> PagingAsync(QueryInput query);
-
-        /// <summary>
-        /// 查找集合
-        /// </summary>
-        Task<List<TOutput>> FindAsync(int top = 0, Expression<Func<TEntity, bool>> where = null, List<KeyValueModel> Sorting = null);
 
         #endregion
 

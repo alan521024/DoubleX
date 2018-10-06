@@ -56,6 +56,7 @@
         public void Install()
         {
             //App
+            EngineHelper.RegisterType<IAppRepository, AppRepository>(DomainConfiguration.Options.IocRepositoryOption);
             EngineHelper.RegisterType<IAppService, AppService>(DomainConfiguration.Options.IocServiceOption);
             EngineHelper.RegisterType<IAppVersionService, AppVersionService>(DomainConfiguration.Options.IocServiceOption);
 

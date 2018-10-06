@@ -379,7 +379,7 @@
             throw new NotImplementedException();
         }
 
-        public List<TOutput> Find(int top = 0, Expression<Func<TEntity, bool>> predicate = null, List<KeyValueModel> Sorting = null)
+        public List<TOutput> Query(int top = 0, Expression<Func<TEntity, bool>> predicate = null, List<KeyValueModel> Sorting = null)
         {
             throw new NotImplementedException();
         }
@@ -404,7 +404,7 @@
             throw new NotImplementedException();
         }
 
-        public Task<List<TOutput>> FindAsync(int top = 0, Expression<Func<TEntity, bool>> predicate = null, List<KeyValueModel> Sorting = null)
+        public Task<List<TOutput>> QueryAsync(int top = 0, Expression<Func<TEntity, bool>> predicate = null, List<KeyValueModel> Sorting = null)
         {
             throw new NotImplementedException();
         }

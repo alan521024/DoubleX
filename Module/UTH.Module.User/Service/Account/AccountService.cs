@@ -296,10 +296,10 @@
 
             if (!orgUUID.IsEmpty())
             {
-                queryOrgs = orgService.Find(where: x => x.UUID == orgUUID);
+                queryOrgs = orgService.Query(where: x => x.UUID == orgUUID);
                 if (!empUUID.IsEmpty())
                 {
-                    queryEmps = empService.Find(where: x => x.Organize == orgUUID && x.UUID == empUUID);
+                    queryEmps = empService.Query(where: x => x.Organize == orgUUID && x.UUID == empUUID);
                 }
             }
 

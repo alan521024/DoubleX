@@ -14,6 +14,9 @@
     using UTH.Infrastructure.Resource.Culture;
     using UTH.Infrastructure.Utility;
 
+    /// <summary>
+    /// SqlSugar 仓储
+    /// </summary>
     public class SqlSugarRepository : IRepository
     {
         #region 私有变量
@@ -236,7 +239,7 @@
     }
 
     /// <summary>
-    /// SqlSugar 仓储接口
+    /// SqlSugar 仓储
     /// </summary>
     public class SqlSugarRepository<TEntity, TKey> : SqlSugarRepository, IRepository<TEntity, TKey> where TEntity : class, IEntity<TKey>, new()
     {
@@ -402,8 +405,7 @@
             }
             return query;
         }
-
-
+        
         private IInsertable<TEntity> GetInsertable(TEntity entity)
         {
             var query = client.Insertable<TEntity>(entity);
@@ -520,6 +522,34 @@
                     }
                 }
             }
+        }
+
+
+        private ISugarQueryable<TEntity> GetQueryable(Expression<Func<TEntity, bool>> predicate = null, List<KeyValueModel> sorting = null)
+        {
+            var query = client.Queryable<TEntity>();
+
+            if (isDataCache)
+            {
+                query = query.WithCache();
+            }
+
+            if (predicate != null)
+            {
+                query = query.Where(predicate);
+            }
+
+            if (sorting != null && sorting.Count > 0)
+            {
+                StringBuilder builder = new StringBuilder();
+                sorting.ForEach((o) =>
+                {
+                    builder.AppendFormat(" {0} {1},", o.Key, ConvertOrderType(o.Value).GetName().ToUpper());
+                });
+                query = query.OrderBy(builder.TrimEnd(',').ToString());
+            }
+
+            return query;
         }
 
         #endregion
@@ -953,7 +983,7 @@
         /// <returns>TEntity 对象 or null</returns>
         public virtual TEntity Find(TKey key)
         {
-            return GetSource().InSingle(key);
+            return GetQueryable().InSingle(key);
         }
 
         /// <summary>
@@ -963,18 +993,7 @@
         /// <returns>TEntity 对象 or null</returns>
         public virtual TEntity Find(Expression<Func<TEntity, bool>> predicate)
         {
-            return GetSource().First(predicate);  //超过1条,使用Single会报错，First不会报错
-        }
-
-        /// <summary>
-        /// 获取集合
-        /// </summary>
-        /// <param name="predicate">表达式</param>
-        /// <param name="sorting">排序</param>
-        /// <returns>IQueryable[TEntity] 集合 or new List[TEntity]</returns>
-        public virtual List<TEntity> Find(Expression<Func<TEntity, bool>> predicate = null, List<KeyValueModel> sorting = null)
-        {
-            return Find(0, predicate: predicate, sorting: sorting);
+            return GetQueryable(predicate: predicate).First();  //超过1条,使用Single会报错，First不会报错
         }
 
         /// <summary>
@@ -984,80 +1003,29 @@
         /// <param name="predicate">表达式</param>
         /// <param name="sorting">排序</param>
         /// <returns>IQueryable[TEntity] 集合 new List[TEntity]</returns>
-        public virtual List<TEntity> Find(int top, Expression<Func<TEntity, bool>> predicate = null, List<KeyValueModel> sorting = null)
+        public virtual List<TEntity> Find(int top = 0, Expression<Func<TEntity, bool>> predicate = null, List<KeyValueModel> sorting = null)
         {
-            List<TEntity> list = new List<TEntity>();
-
-            ISugarQueryable<TEntity> query = GetSource();
-
-            if (predicate != null)
-            {
-                query = query.Where(predicate);
-            }
-
-            if (sorting != null && sorting.Count > 0)
-            {
-                StringBuilder builder = new StringBuilder();
-                sorting.ForEach((o) =>
-                {
-                    builder.AppendFormat(" {0} {1},", o.Key, ConvertOrderType(o.Value).GetName().ToUpper());
-                });
-                query = query.OrderBy(builder.TrimEnd(',').ToString());
-            }
-            else
-            {
-                query = query.OrderBy(x => x.Id);
-            }
+            ISugarQueryable<TEntity> query = GetQueryable(predicate: predicate, sorting: sorting);
 
             if (top > 0)
             {
                 query = query.Take(top);
             }
-
-            list = query.ToList();
-
-            return list == null ? new List<TEntity>() : list;
+            
+            return query.ToList();
         }
 
         /// <summary>
         /// 获取集合
         /// </summary>
-        /// <param name="pageIndex">获取第几页 从0开始(小于0时强制为0)</param>
-        /// <param name="pageSize">每页数量 为0时所有</param>
+        /// <param name="top">数量</param>
         /// <param name="predicate">表达式</param>
         /// <param name="sorting">排序</param>
-        /// <param name="total">数据总数</param>
-        /// <returns>IQueryable[TEntity] 集合 or new List[TEntity]</returns>
-        public virtual List<TEntity> Find(int pageIndex, int pageSize, Expression<Func<TEntity, bool>> predicate, List<KeyValueModel> sorting, out long total)
+        /// <returns>IQueryable[TEntity] 集合 new List[TEntity]</returns>
+        public virtual List<TEntity> Paging(int page, int size, Expression<Func<TEntity, bool>> predicate, List<KeyValueModel> sorting, ref int total)
         {
-            List<TEntity> list = new List<TEntity>();
-
-            ISugarQueryable<TEntity> query = GetSource();
-
-            if (predicate != null)
-            {
-                query = query.Where(predicate);
-            }
-
-            if (sorting != null && sorting.Count > 0)
-            {
-                StringBuilder builder = new StringBuilder();
-                sorting.ForEach((o) =>
-                {
-                    builder.AppendFormat(" {0} {1},", o.Key, ConvertOrderType(o.Value).GetName().ToUpper());
-                });
-                query = query.OrderBy(builder.TrimEnd(',').ToString());
-            }
-            else
-            {
-                query = query.OrderBy(x => x.Id);
-            }
-
-            int dataTotal = 0;
-            list = query.ToPageList(pageIndex, pageSize, ref dataTotal);
-            total = LongHelper.Get(dataTotal);
-
-            return list == null ? new List<TEntity>() : list;
+            var query = GetQueryable(predicate: predicate, sorting: sorting).ToPageList(page, size, ref total);
+            return query;
         }
 
         #region 异步(可等待)操作
@@ -1069,7 +1037,7 @@
         /// <returns>TEntity 对象 or null</returns>
         public virtual async Task<TEntity> FindAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return await GetSource().FirstAsync(predicate);  //超过1条,使用Single会报错，First不会报错
+            return await GetQueryable(predicate: predicate).FirstAsync();  //超过1条,使用Single会报错，First不会报错
         }
 
         /// <summary>
@@ -1078,9 +1046,16 @@
         /// <param name="predicate">表达式</param>
         /// <param name="sorting">排序</param>
         /// <returns>IQueryable[TEntity] 集合 or new List[TEntity]</returns>
-        public virtual async Task<List<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate = null, List<KeyValueModel> sorting = null)
+        public virtual async Task<List<TEntity>> FindAsync(int top = 0, Expression<Func<TEntity, bool>> predicate = null, List<KeyValueModel> sorting = null)
         {
-            return await FindAsync(0, predicate: predicate, sorting: sorting);
+            ISugarQueryable<TEntity> query = GetQueryable(predicate: predicate, sorting: sorting);
+
+            if (top > 0)
+            {
+                query = query.Take(top);
+            }
+
+            return await query.ToListAsync();
         }
 
         /// <summary>
@@ -1090,75 +1065,11 @@
         /// <param name="predicate">表达式</param>
         /// <param name="sorting">排序</param>
         /// <returns>IQueryable[TEntity] 集合 new List[TEntity]</returns>
-        public virtual async Task<List<TEntity>> FindAsync(int top, Expression<Func<TEntity, bool>> predicate = null, List<KeyValueModel> sorting = null)
+        public virtual async Task<KeyValuePair<List<TEntity>, int>> PagingAsync(int page, int size, Expression<Func<TEntity, bool>> predicate, List<KeyValueModel> sorting, int total)
         {
-            List<TEntity> list = new List<TEntity>();
-
-            ISugarQueryable<TEntity> query = GetSource();
-
-            if (top > 0)
-            {
-                query = query.Take(top);
-            }
-
-            if (predicate != null)
-            {
-                query = query.Where(predicate);
-            }
-
-            if (sorting != null && sorting.Count > 0)
-            {
-                StringBuilder builder = new StringBuilder();
-                sorting.ForEach((o) =>
-                {
-                    builder.AppendFormat(" {0} {1},", o.Key, ConvertOrderType(o.Value).GetName().ToUpper());
-                });
-                query = query.OrderBy(builder.TrimEnd(',').ToString());
-            }
-            else
-            {
-                query.OrderBy(x => x.Id);
-            }
-
-            return await query.ToListAsync();
+            return await GetQueryable(predicate: predicate, sorting: sorting).ToPageListAsync(page, size, total);
         }
-
-        /// <summary>
-        /// 获取集合
-        /// </summary>
-        /// <param name="pageIndex">获取第几页 从0开始(小于0时强制为0)</param>
-        /// <param name="pageSize">每页数量 为0时所有</param>
-        /// <param name="predicate">表达式</param>
-        /// <param name="sorting">排序</param>
-        /// <param name="total">数据总数</param>
-        /// <returns>IQueryable[TEntity] 集合 or new List[TEntity]</returns>
-        public virtual async Task<KeyValuePair<List<TEntity>, int>> FindAsync(int pageIndex, int pageSize, Expression<Func<TEntity, bool>> predicate, List<KeyValueModel> sorting, int total)
-        {
-            List<TEntity> list = new List<TEntity>();
-
-            ISugarQueryable<TEntity> query = GetSource();
-
-            if (predicate != null)
-            {
-                query = query.Where(predicate);
-            }
-
-            if (sorting != null && sorting.Count > 0)
-            {
-                StringBuilder builder = new StringBuilder();
-                sorting.ForEach((o) =>
-                {
-                    builder.AppendFormat(" {0} {1},", o.Key, ConvertOrderType(o.Value).GetName().ToUpper());
-                });
-                query = query.OrderBy(builder.TrimEnd(',').ToString());
-            }
-            else
-            {
-                query.OrderBy(x => x.Id);
-            }
-            return await query.ToPageListAsync(pageIndex, pageSize, total);
-        }
-
+        
         #endregion
 
         #endregion

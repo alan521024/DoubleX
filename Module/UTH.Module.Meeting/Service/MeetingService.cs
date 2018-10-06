@@ -97,7 +97,7 @@
         /// <returns></returns>
         public MeetingOutput GetByCode(MeetingEditInput input)
         {
-            return Find(predicate: x => x.Num == input.Num).FirstOrDefault();
+            return Query(predicate: x => x.Num == input.Num).FirstOrDefault();
         }
 
         /// <summary>

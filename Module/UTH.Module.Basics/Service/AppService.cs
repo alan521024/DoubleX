@@ -21,7 +21,7 @@
     {
         #region 构造函数
 
-        public AppService(IRepository<AppEntity> _repository) : base(_repository)
+        public AppService(IAppRepository _repository) : base(_repository)
         {
         }
 
@@ -43,7 +43,7 @@
 
         public override Action<AppEditInput> InsertBeforeCall => (input) =>
         {
-            var isExist = Find(predicate: x => x.Name == input.Name || x.Code == input.Code);
+            var isExist = Query(predicate: x => x.Name == input.Name || x.Code == input.Code);
             if (!isExist.IsEmpty())
             {
                 throw new DbxException(EnumCode.提示消息, isExist.Where(x => x.Name == input.Name).Count() > 0 ? Lang.sysMingChengYiCunZai : Lang.sysBianMaYiCunZai);
@@ -52,7 +52,7 @@
 
         public override Func<AppEditInput, AppEntity, AppEntity> UpdateBeforeCall => (input, entity) =>
         {
-            var isExist = Find(predicate: x => x.Name == input.Name || x.Code == input.Code);
+            var isExist = Query(predicate: x => x.Name == input.Name || x.Code == input.Code);
             if (!isExist.IsEmpty())
             {
                 if (isExist.Where(x => x.Name == input.Name && x.Id != input.Id).Count() > 0)
@@ -100,14 +100,14 @@
         /// <returns></returns>
         public ApplicationModel GetModel(string appCode)
         {
-            var app = Find(predicate: x => x.Code == appCode).FirstOrDefault();
+            var app = Query(predicate: x => x.Code == appCode).FirstOrDefault();
             if (app.IsNull())
             {
                 return null;
             }
 
             var appVersionService = EngineHelper.Resolve<IAppVersionService>();
-            var appVersions = appVersionService.Find(where: x => x.AppId == app.Id);
+            var appVersions = appVersionService.Query(where: x => x.AppId == app.Id);
             if (appVersions.IsEmpty())
             {
                 return null;
