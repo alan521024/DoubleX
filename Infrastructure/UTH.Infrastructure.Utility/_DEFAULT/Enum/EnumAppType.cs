@@ -11,6 +11,7 @@ namespace UTH.Infrastructure.Utility
     [Flags]
     public enum EnumAppType
     {
+        Default = 0,
         Console = 1,
         Service = 2,
         Winfrom = 3,

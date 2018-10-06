@@ -406,6 +406,9 @@
 
             foreach (var item in Enum.GetValues(type))
             {
+                if (StringHelper.Get(item).ToLower() == "default")
+                    continue;
+
                 int value = (int)item;
                 build.AppendFormat("<option value=\"{0}\" {2}>{1}</option>", value, item, !selected.IsNull() && selected.Value == value ? "selected=\"selected\"" : "");
             }

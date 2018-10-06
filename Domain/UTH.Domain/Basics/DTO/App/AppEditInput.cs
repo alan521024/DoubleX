@@ -28,8 +28,11 @@
     {
         public AppEditInputValidator()
         {
-            RuleFor(o => o.Name).Configure(x => x.PropertyName = Lang.sysName)
+            RuleFor(o => o.Name).Configure(x => x.PropertyName = Lang.sysMingCheng)
                 .NotNull().NotEmpty().When(x => x.Ids == null);
+
+            RuleFor(o => o.Code).Configure(x => x.PropertyName = Lang.sysBianMa)
+                .NotNull().NotEmpty().Length(6).When(x => x.Ids == null);
         }
     }
 }

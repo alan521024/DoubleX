@@ -50,7 +50,7 @@
             { field: 'id', type: 'checkbox', width: 80 },
             { field: 'name', title: __language.sysMingCheng, template: function (row) { return "<a href=''>" + row["name"] + "</a>"; } },
             { field: 'code', title: __language.sysBianMa },
-            { field: 'appType', title: __language.sysLeiXing },
+            { field: 'appTypeName', title: __language.sysLeiXing },
             { title: __language.sysCaoZuo, width: 80, align: 'center', template: function (row) { return app.tableEditTemplate(row["id"]); } }
         ]];
         $(document).ready(function () { pageView.init(); pageView.event(); });
@@ -112,7 +112,16 @@
                 return;
             page = page || 1;
             size = size || 10;
-            list.query({ param: function () { return { page: page, size: size, query: { key: ($("#txt-key").val() || "") } }; } });
+            list.query({
+                param: function () {
+                    return {
+                        page: page,
+                        size: size,
+                        query: { key: ($("#txt-key").val() || "") },
+                        sorting: [{key:"code",value:"asc"}]
+                    };
+                }
+            });
         };
 
         pageView.add = function () {

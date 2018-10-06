@@ -41,8 +41,30 @@
 
         #region 回调事件
 
+        public override Action<AppEditInput> InsertBeforeCall => (input) =>
+        {
+            var isExist = Find(predicate: x => x.Name == input.Name || x.Code == input.Code);
+            if (!isExist.IsEmpty())
+            {
+                throw new DbxException(EnumCode.提示消息, isExist.Where(x => x.Name == input.Name).Count() > 0 ? Lang.sysMingChengYiCunZai : Lang.sysBianMaYiCunZai);
+            }
+        };
+
         public override Func<AppEditInput, AppEntity, AppEntity> UpdateBeforeCall => (input, entity) =>
         {
+            var isExist = Find(predicate: x => x.Name == input.Name || x.Code == input.Code);
+            if (!isExist.IsEmpty())
+            {
+                if (isExist.Where(x => x.Name == input.Name && x.Id != input.Id).Count() > 0)
+                {
+                    throw new DbxException(EnumCode.提示消息, Lang.sysMingChengYiCunZai);
+                }
+                if (isExist.Where(x => x.Code == input.Code && x.Id != input.Id).Count() > 0)
+                {
+                    throw new DbxException(EnumCode.提示消息, Lang.sysBianMaYiCunZai);
+                }
+            }
+
             entity.Name = input.Name;
             entity.AppType = input.AppType;
             entity.Code = input.Code;
@@ -57,12 +79,11 @@
             {
                 var exp = ExpressHelper.Get<AppEntity>();
 
-                string key = input.Query.GetString("key"), name = input.Query.GetString("name");
-                int appType = input.Query.GetInt("appType");
+                var key = input.Query.GetString("key");
+                var appType = EnumsHelper.Get<EnumAppType>(input.Query.GetInt("appType"));
 
                 exp = exp.AndIF(!key.IsEmpty(), x => (x.Name).Contains(key));
-                exp = exp.AndIF(!name.IsEmpty(), x => x.Name.Contains(name));
-                exp = exp.AndIF(!appType.IsEmpty(), x => x.AppType == appType);
+                exp = exp.AndIF(appType != EnumAppType.Default, x => x.AppType == appType);
 
                 return exp.ToExpression();
             }

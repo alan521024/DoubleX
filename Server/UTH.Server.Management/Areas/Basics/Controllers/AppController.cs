@@ -35,7 +35,7 @@ namespace UTH.Server.Management.Areas.Basics.Controllers
         /// </summary>
         public IActionResult Edit(Guid id)
         {
-            var model = new AppOutput() { AppType = EnumAppType.Web.GetValue() };
+            var model = new AppOutput() { AppType = EnumAppType.Web };
             if (!id.IsEmpty())
             {
                 var result = $"{PlugCoreHelper.ApiUrl.Basics.AppGetId}?id={id}".GetResult<AppOutput>();

@@ -17,6 +17,9 @@
     /// </summary>
     public class AppOutput : AppBase, IOutput
     {
-
+        /// <summary>
+        /// 应用类型名称
+        /// </summary>
+        public string AppTypeName { get { return AppType.GetName(); } }
     }
 }

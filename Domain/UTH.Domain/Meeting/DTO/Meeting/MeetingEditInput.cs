@@ -29,7 +29,7 @@
     {
         public MeetingEditInputValidator()
         {
-            RuleFor(o => o.Name).Configure(x => x.PropertyName = Lang.sysName)
+            RuleFor(o => o.Name).Configure(x => x.PropertyName = Lang.sysMingCheng)
                 .NotNull().NotEmpty();
         }
     }

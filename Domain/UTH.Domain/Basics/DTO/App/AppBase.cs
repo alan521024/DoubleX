@@ -30,7 +30,7 @@
         /// <summary>
         /// 应用类型
         /// </summary>
-        public int AppType { get; set; }
+        public EnumAppType AppType { get; set; }
 
         /// <summary>
         /// 应用编码

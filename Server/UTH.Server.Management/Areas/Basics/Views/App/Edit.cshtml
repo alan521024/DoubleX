@@ -28,7 +28,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">@(Lang.sysLeiXing)：</label>
                 <div class="layui-input-inline">
-                    @(WebHelper.GetEnumSelectHtml<EnumAppType>(id: "ddl-appType", selected: Model.AppType))
+                    @(WebHelper.GetEnumSelectHtml<EnumAppType>(id: "ddl-appType", selected: Model.AppType.GetValue()))
                 </div>
             </div>
             <div class="layui-form-item">
