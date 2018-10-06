@@ -6,17 +6,23 @@
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using SqlSugar;
+    using System.ComponentModel;
+    using FluentValidation;
     using UTH.Infrastructure.Resource.Culture;
     using UTH.Infrastructure.Utility;
     using UTH.Framework;
 
     /// <summary>
-    /// 数据字典信息
+    /// 导航权限基本信息(DTO)
     /// </summary>
-    [SugarTable("BAS_Dictionary")]
-    public class DictionaryEntity : BaseGeneralEntity
+    [Serializable]
+    public class NavigationBase
     {
+        /// <summary>
+        /// Id
+        /// </summary>
+        public Guid Id { get; set; }
+
         /// <summary>
         /// 字典分类
         /// </summary>
@@ -46,6 +52,5 @@
         /// 序号
         /// </summary>
         public int Sort { get; set; }
-
     }
 }

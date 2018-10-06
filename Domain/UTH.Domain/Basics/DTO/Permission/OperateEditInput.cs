@@ -14,22 +14,22 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 权限操作编辑输入
+    /// 操作权限编辑输入
     /// </summary>
-    public class PermissionActionEditInput : PermissionNavDTO, IInput, IInputDelete, IInputUpdate, IInputTransaction
+    public class OperateEditInput : OperateBase, IInput, IInputDelete, IInputUpdate
     {
         public List<Guid> Ids { get; set; }
-        public bool IsTransaction { get; set; } = false;
     }
 
     /// <summary>
-    /// 权限操作编辑输入校验
+    /// 操作权限输入校验
     /// </summary>
-    public class PermissionActionEditInputValidator : AbstractValidator<PermissionActionEditInput>, IValidator<PermissionActionEditInput>
+    public class OperateEditInputValidator : OperateValidator<OperateEditInput>, IValidator<OperateEditInput>
     {
-        public PermissionActionEditInputValidator()
+        public OperateEditInputValidator()
         {
+            RuleFor(o => o.Name).Configure(x => x.PropertyName = Lang.sysName)
+                .NotNull().NotEmpty();
         }
-
     }
 }

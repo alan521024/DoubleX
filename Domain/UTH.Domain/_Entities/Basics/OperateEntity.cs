@@ -12,35 +12,25 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 权限导航信息
+    /// 操作权限信息
     /// </summary>
-    [SugarTable("BAS_PermissionNav")]
-    public class PermissionNavEntity : BaseSimpleEntity, IEntityTree
+    [SugarTable("BAS_Operate")]
+    public class OperateEntity : BaseGeneralEntity
     {
         /// <summary>
         /// 名称
         /// </summary>
-        public string Title { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
-        /// 父级
+        /// 操作类型
         /// </summary>
-        public Guid Parent { get; set; }
+        public int ActionType { get; set; }
 
         /// <summary>
-        /// 路径
+        /// 所属导航
         /// </summary>
-        public string Paths { get; set; }
-
-        /// <summary>
-        /// 深度
-        /// </summary>
-        public int Depth { get; set; }
-
-        /// <summary>
-        /// 导航值
-        /// </summary>
-        public string Navigate { get; set; }
+        public Guid NavigateId { get; set; }
 
         /// <summary>
         /// 序号

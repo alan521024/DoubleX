@@ -13,9 +13,9 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 权限操作输出信息
+    /// 导航权限输出信息
     /// </summary>
-    public class PermissionActionOutput : PermissionActionDTO, IOutput
+    public class NavigationOutput : NavigationBase, IOutput
     {
 
     }

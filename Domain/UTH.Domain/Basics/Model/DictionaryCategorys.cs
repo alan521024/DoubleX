@@ -12,9 +12,9 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 权限导航业务接口
+    /// 数据字典分类Code
     /// </summary>
-    public interface IPermissionNavService : IApplicationTree<PermissionNavEntity>
+    public class DictionaryCategorys
     {
 
     }

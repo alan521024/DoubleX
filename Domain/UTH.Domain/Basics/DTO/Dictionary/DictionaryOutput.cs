@@ -6,15 +6,16 @@
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using System.Security.Claims;
+    using System.ComponentModel;
+    using FluentValidation;
     using UTH.Infrastructure.Resource.Culture;
     using UTH.Infrastructure.Utility;
     using UTH.Framework;
 
     /// <summary>
-    /// 数据字典业务接口
+    /// 数据字典输出信息
     /// </summary>
-    public interface IDictionaryService : IApplicationDefault<DictionaryEntity, DictionaryEditInput, DictionaryOutput>
+    public class DictionaryOutput : DictionaryBase, IOutput
     {
 
     }

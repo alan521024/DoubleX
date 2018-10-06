@@ -63,14 +63,13 @@
             EngineHelper.RegisterType<IDictionaryService, DictionaryService>(DomainConfiguration.Options.IocServiceOption);
 
             //permission
-            EngineHelper.RegisterType<IPermissionNavService, PermissionNavService>(DomainConfiguration.Options.IocServiceOption);
 
         }
 
         /// <summary>
         /// 组件卸载
         /// </summary>
-        public void Shutdown()
+        public void Uninstall()
         {
 
         }

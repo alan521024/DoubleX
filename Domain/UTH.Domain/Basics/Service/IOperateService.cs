@@ -12,9 +12,9 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 数据字典Code
+    /// 操作权限业务接口
     /// </summary>
-    public class DictionaryCodes
+    public interface IOperateService : IApplicationDefault<OperateEntity, OperateEditInput, OperateOutput>
     {
 
     }

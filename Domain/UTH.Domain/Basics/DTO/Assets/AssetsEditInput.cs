@@ -16,10 +16,9 @@
     /// <summary>
     /// 资源编辑输入
     /// </summary>
-    public class AssetsEditInput : AssetsBase, IInput, IInputDelete, IInputUpdate, IInputTransaction
+    public class AssetsEditInput : AssetsBase, IInput, IInputDelete, IInputUpdate
     {
         public List<Guid> Ids { get; set; }
-        public bool IsTransaction { get; set; } = false;
     }
 
     /// <summary>

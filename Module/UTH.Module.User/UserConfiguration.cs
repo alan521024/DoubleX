@@ -72,7 +72,7 @@
         /// <summary>
         /// 组件卸载
         /// </summary>
-        public void Shutdown()
+        public void Uninstall()
         {
 
         }

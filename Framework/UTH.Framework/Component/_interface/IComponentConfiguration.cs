@@ -54,6 +54,6 @@
         /// <summary>
         /// 组件卸载
         /// </summary>
-        void Shutdown();
+        void Uninstall();
     }
 }

@@ -14,22 +14,22 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 应用版本编辑输入
+    /// 导航权限编辑输入
     /// </summary>
-    public class AppVersionEditInput : AppVersionBase, IInput, IInputDelete, IInputUpdate
+    public class NavigationEditInput : NavigationBase, IInput, IInputDelete, IInputUpdate
     {
         public List<Guid> Ids { get; set; }
     }
 
     /// <summary>
-    /// 应用版本编辑输入校验
+    /// 导航权限输入校验
     /// </summary>
-    public class AppVersionEditInputValidator : AbstractValidator<AppVersionEditInput>, IValidator<AppVersionEditInput>
+    public class NavigationEditInputValidator : NavigationValidator<NavigationEditInput>, IValidator<NavigationEditInput>
     {
-        public AppVersionEditInputValidator()
+        public NavigationEditInputValidator()
         {
-            //RuleFor(o => o.Name).Configure(x => x.PropertyName = Lang.sysName)
-            //    .NotNull().NotEmpty();
+            RuleFor(o => o.Name).Configure(x => x.PropertyName = Lang.sysName)
+                .NotNull().NotEmpty();
         }
     }
 }

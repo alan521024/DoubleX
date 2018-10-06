@@ -37,13 +37,9 @@
 
         #region 辅助操作
 
-
         #endregion
 
-        #region 重写操作
-
-        public override Action<AppEditInput> InsertBeforeCall => base.InsertBeforeCall;
-        public override Func<AppOutput, AppOutput> InsertAfterCall => base.InsertAfterCall;
+        #region 回调事件
 
         public override Func<AppEditInput, AppEntity, AppEntity> UpdateBeforeCall => (input, entity) =>
         {
@@ -54,27 +50,24 @@
             entity.Secret = input.Secret;
             return entity;
         };
-        public override Func<AppOutput, AppOutput> UpdateAfterCall => base.UpdateAfterCall;
 
-        public override Expression<Func<AppEntity, bool>> FindPredicate(QueryInput param)
+        public override Expression<Func<AppEntity, bool>> FindPredicate(QueryInput input)
         {
-            var exp = ExpressHelper.Get<AppEntity>();
-
-            #region AppInput
-
-            if (!param.IsNull() && !param.Query.IsNull())
+            if (!input.IsNull() && !input.Query.IsNull())
             {
-                string key = param.Query.GetString("key"), name = param.Query.GetString("name");
-                int appType = param.Query.GetInt("appType");
+                var exp = ExpressHelper.Get<AppEntity>();
+
+                string key = input.Query.GetString("key"), name = input.Query.GetString("name");
+                int appType = input.Query.GetInt("appType");
 
                 exp = exp.AndIF(!key.IsEmpty(), x => (x.Name).Contains(key));
                 exp = exp.AndIF(!name.IsEmpty(), x => x.Name.Contains(name));
                 exp = exp.AndIF(!appType.IsEmpty(), x => x.AppType == appType);
+
+                return exp.ToExpression();
             }
+            return base.FindPredicate(input);
 
-            #endregion
-
-            return exp.ToExpression();
         }
 
         #endregion

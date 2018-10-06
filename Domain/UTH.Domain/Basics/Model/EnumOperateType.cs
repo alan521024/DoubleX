@@ -7,7 +7,7 @@ namespace UTH.Domain
     /// <summary>
     /// 操作类型
     /// </summary>
-    public enum EnumActionType
+    public enum EnumOperateType
     {
         Default = 0,
         自定义 = 1,

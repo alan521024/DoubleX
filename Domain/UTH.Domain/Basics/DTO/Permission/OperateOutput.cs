@@ -13,19 +13,10 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 权限导航基本信息(DTO)
+    /// 操作权限输出信息
     /// </summary>
-    public class PermissionNavDTO
+    public class OperateOutput : OperateBase, IOutput
     {
-        /// <summary>
-        /// 主键
-        /// </summary>
-        public Guid Id { get; set; }
-
-        /// <summary>
-        /// 名称
-        /// </summary>
-        public string Title { get; set; }
 
     }
 }

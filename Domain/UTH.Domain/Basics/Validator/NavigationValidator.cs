@@ -4,17 +4,20 @@
     using System.Collections.Generic;
     using System.Text;
     using System.Linq;
+    using System.Linq.Expressions;
     using System.Threading;
     using System.Threading.Tasks;
-    using System.Security.Claims;
+    using System.ComponentModel;
+    using FluentValidation;
     using UTH.Infrastructure.Resource.Culture;
     using UTH.Infrastructure.Utility;
     using UTH.Framework;
 
     /// <summary>
-    /// 权限操作业务接口
+    /// 导航权限相关校验
     /// </summary>
-    public interface IPermissionActionService : IApplicationService
+    /// <typeparam name="T"></typeparam>
+    public class NavigationValidator<T> : AbstractValidator<T>
     {
 
     }

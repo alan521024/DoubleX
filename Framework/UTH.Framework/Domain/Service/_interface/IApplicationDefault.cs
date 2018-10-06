@@ -176,7 +176,7 @@
 
         #endregion
 
-        #region 映射对象/集合
+        #region 新增/更新/删除/查询 回调
 
         Action<TInput> InsertBeforeCall { get; }
         Func<TOutput, TOutput> InsertAfterCall { get; }

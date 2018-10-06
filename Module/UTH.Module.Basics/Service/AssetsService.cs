@@ -40,10 +40,7 @@
 
         #endregion
 
-        #region 重写操作
-
-        public override Action<AssetsEditInput> InsertBeforeCall => base.InsertBeforeCall;
-        public override Func<AssetsOutput, AssetsOutput> InsertAfterCall => base.InsertAfterCall;
+        #region 回调事件
 
         public override Func<AssetsEditInput, AssetsEntity, AssetsEntity> UpdateBeforeCall => (input, entity) =>
         {
@@ -51,27 +48,23 @@
             entity.AssetsType = input.AssetsType;
             return entity;
         };
-        public override Func<AssetsOutput, AssetsOutput> UpdateAfterCall => base.UpdateAfterCall;
 
-        public override Expression<Func<AssetsEntity, bool>> FindPredicate(QueryInput param)
+        public override Expression<Func<AssetsEntity, bool>> FindPredicate(QueryInput input)
         {
-            var exp = ExpressHelper.Get<AssetsEntity>();
-
-            #region AssetsInput
-
-            if (!param.IsNull() && !param.Query.IsNull())
+            if (!input.IsNull() && !input.Query.IsNull())
             {
-                string key = param.Query.GetString("key"), name = param.Query.GetString("name");
-                int AssetsType = param.Query.GetInt("AssetsType");
+                var exp = ExpressHelper.Get<AssetsEntity>();
+
+                string key = input.Query.GetString("key"), name = input.Query.GetString("name");
+                int AssetsType = input.Query.GetInt("assetsType");
 
                 exp = exp.AndIF(!key.IsEmpty(), x => (x.Name).Contains(key));
                 exp = exp.AndIF(!name.IsEmpty(), x => x.Name.Contains(name));
                 //exp = exp.AndIF(!AssetsType.IsEmpty(), x => x.AssetsType == AssetsType);
+                return exp.ToExpression();
             }
 
-            #endregion
-
-            return exp.ToExpression();
+            return base.FindPredicate(input);
         }
 
         #endregion

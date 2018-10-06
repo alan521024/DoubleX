@@ -16,10 +16,9 @@
     /// <summary>
     /// 应用程序编辑输入
     /// </summary>
-    public class AppEditInput : AppBase, IInput, IInputDelete, IInputUpdate, IInputTransaction
+    public class AppEditInput : AppBase, IInput, IInputDelete, IInputUpdate
     {
         public List<Guid> Ids { get; set; }
-        public bool IsTransaction { get; set; } = false;
     }
 
     /// <summary>

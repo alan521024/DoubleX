@@ -12,9 +12,9 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 数据字典业务接口
+    /// 导航权限业务接口
     /// </summary>
-    public interface IDictionaryService : IApplicationDefault<DictionaryEntity, DictionaryEditInput, DictionaryOutput>
+    public interface INavigationService : IApplicationDefault<NavigationEntity, NavigationEditInput, NavigationOutput>
     {
 
     }

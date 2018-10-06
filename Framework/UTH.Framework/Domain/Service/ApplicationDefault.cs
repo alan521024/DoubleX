@@ -404,10 +404,9 @@
 
         #endregion
 
-        #region 查询/新增/更新/删除 回调
+        #region 新增/更新/删除/查询 回调
 
         public virtual Action<TInput> InsertBeforeCall { get; } = null;
-
         public virtual Func<TOutput, TOutput> InsertAfterCall { get; } = null;
 
         public virtual Func<TInput, TEntity, TEntity> UpdateBeforeCall { get; } = null;
