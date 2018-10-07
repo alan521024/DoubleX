@@ -276,7 +276,11 @@
 
         #region 私有变量
 
-        bool isDataCache { get; set; }
+        protected bool isDataCache { get; set; }
+
+        protected virtual Func<TEntity, TEntity> FindItemFunc { get; set; }
+
+        protected virtual Func<List<TEntity>, List<TEntity>> FindListFunc { get; set; }
 
         #endregion
 
@@ -405,7 +409,7 @@
             }
             return query;
         }
-        
+
         private IInsertable<TEntity> GetInsertable(TEntity entity)
         {
             var query = client.Insertable<TEntity>(entity);
@@ -525,7 +529,7 @@
         }
 
 
-        private ISugarQueryable<TEntity> GetQueryable(Expression<Func<TEntity, bool>> predicate = null, List<KeyValueModel> sorting = null)
+        protected ISugarQueryable<TEntity> GetQueryable(Expression<Func<TEntity, bool>> predicate = null, List<KeyValueModel> sorting = null)
         {
             var query = client.Queryable<TEntity>();
 
@@ -551,6 +555,7 @@
 
             return query;
         }
+
 
         #endregion
 
@@ -983,7 +988,9 @@
         /// <returns>TEntity 对象 or null</returns>
         public virtual TEntity Find(TKey key)
         {
-            return GetQueryable().InSingle(key);
+            var entity = GetQueryable().InSingle(key);
+            FindItemFunc?.Invoke(entity);
+            return entity;
         }
 
         /// <summary>
@@ -993,7 +1000,9 @@
         /// <returns>TEntity 对象 or null</returns>
         public virtual TEntity Find(Expression<Func<TEntity, bool>> predicate)
         {
-            return GetQueryable(predicate: predicate).First();  //超过1条,使用Single会报错，First不会报错
+            var entity = GetQueryable(predicate: predicate).First();  //超过1条,使用Single会报错，First不会报错
+            FindItemFunc?.Invoke(entity);
+            return entity;
         }
 
         /// <summary>
@@ -1011,8 +1020,12 @@
             {
                 query = query.Take(top);
             }
-            
-            return query.ToList();
+
+            var list = query.ToList();
+
+            FindListFunc?.Invoke(list);
+
+            return list;
         }
 
         /// <summary>
@@ -1024,8 +1037,11 @@
         /// <returns>IQueryable[TEntity] 集合 new List[TEntity]</returns>
         public virtual List<TEntity> Paging(int page, int size, Expression<Func<TEntity, bool>> predicate, List<KeyValueModel> sorting, ref int total)
         {
-            var query = GetQueryable(predicate: predicate, sorting: sorting).ToPageList(page, size, ref total);
-            return query;
+            var list = GetQueryable(predicate: predicate, sorting: sorting).ToPageList(page, size, ref total);
+
+            FindListFunc?.Invoke(list);
+
+            return list;
         }
 
         #region 异步(可等待)操作
@@ -1069,7 +1085,7 @@
         {
             return await GetQueryable(predicate: predicate, sorting: sorting).ToPageListAsync(page, size, total);
         }
-        
+
         #endregion
 
         #endregion

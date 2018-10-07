@@ -40,25 +40,51 @@
 
         #region 辅助操作
 
+        /// <summary>
+        /// 设置应用集合的版本列表
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        protected List<AppEntity> SetVersions(List<AppEntity> list)
+        {
+            if (list.IsEmpty())
+                return list;
+
+            var ids = list.Select(x => x.Id).ToList();
+
+            var versions = client.Queryable<AppVersionEntity>().Where(x => ids.Contains(x.AppId)).ToList();
+
+
+            list.ForEach(item =>
+            {
+                item.Versions = versions.Where(x => x.AppId == item.Id).ToList();
+            });
+
+            return list;
+        }
+
         #endregion
+
+        #region 重写回调
+
+        #endregion
+
+        public override List<AppEntity> Find(int top = 0, Expression<Func<AppEntity, bool>> predicate = null, List<KeyValueModel> sorting = null)
+        {
+            var list = base.Find(top, predicate, sorting);
+
+            this.SetVersions(list);
+
+            return list;
+        }
 
         public override List<AppEntity> Paging(int page, int size, Expression<Func<AppEntity, bool>> predicate, List<KeyValueModel> sorting, ref int total)
         {
-            //var getAll = client.Queryable<AppVersionEntity, AppEntity>((st, sc) => new object[] {
-            //            JoinType.Left,st.AppId==sc.Id})
-            //            .Where(st => SqlFunc.Subqueryable<AppEntity>().Where(s => s.Id == st.AppId).Any())
-            //            .ToList();
+            var list = base.Paging(page, size, predicate, sorting, ref total);
 
-            //var subQuery = SqlFunc.Subqueryable<AppEntity>().Where(predicate);
-            
-            //var query = client.Queryable<AppVersionEntity, AppEntity>((st, sc) => new object[] {
-            //                JoinType.Left,st.AppId==sc.Id})
-            //                .Where(st => SqlFunc.Subqueryable<AppEntity>().Where(predicate.Body).Any());
+            this.SetVersions(list);
 
-            //int count = 0;
-            //var ss = query.ToPageList(page, size, ref count);
-
-            return base.Paging(page, size, predicate, sorting, ref total);
+            return list;
         }
     }
 }
