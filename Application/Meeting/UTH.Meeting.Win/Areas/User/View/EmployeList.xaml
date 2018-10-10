@@ -21,9 +21,9 @@
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" Margin="15,0,15,0">
-            <Border BorderThickness="0,0,0,1" BorderBrush="#FFD7D7D7">
-                <TextBlock Text="账号管理" Style="{StaticResource searchTitle}"></TextBlock>
+        <Grid Grid.Row="0">
+            <Border BorderThickness="0,0,0,1" BorderBrush="#FFD7D7D7" >
+                <local2:Crumbs x:Name="crumbs1" Margin="15,0,15,0"  ItemSelect="crumbs1_ItemSelect"></local2:Crumbs>
             </Border>
         </Grid>
         <Grid Grid.Row="1"  Margin="15,20,15,0">
@@ -34,22 +34,22 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,15,0">
-                <TextBlock Style="{StaticResource searchTxt}" Text="账号："></TextBlock>
+                <TextBlock Style="{StaticResource searchTxt}" Text="{x:Static culture:Lang.userYongHu}"></TextBlock>
                 <TextBox Style="{StaticResource searchTextbox}" Text=""></TextBox>
             </StackPanel>
-            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,15,0">
-                <TextBlock Style="{StaticResource searchTitle}" Text="状态："></TextBlock>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,15,0">
+                <TextBlock Style="{StaticResource searchTxt}" Text="{x:Static culture:Lang.sysZhuangTai}"></TextBlock>
                 <TextBox Style="{StaticResource searchTextbox}" Text=""></TextBox>
             </StackPanel>
-            <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,15,0" >
-                <Button Content="查询" Style="{StaticResource searchButton}" ></Button>
+            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,15,0" >
+                <Button Content="{x:Static culture:Lang.sysChaZhao}" Style="{StaticResource searchButton}" ></Button>
             </StackPanel>
         </Grid>
         <Grid Grid.Row="2"  Margin="15,20,15,0">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,15,0">
-                <Button Content="添加用户" Style="{StaticResource searchButton}" Margin="10,0,10,0"></Button>
-                <Button Content="批量添加" Style="{StaticResource searchButton}" Margin="10,0,10,0"></Button>
-                <Button Content="删除" Style="{StaticResource searchButton}" Margin="10,0,10,0"></Button>
+                <Button x:Name="btnAdd" Content="{x:Static culture:Lang.userYongHuTianJia}" Style="{StaticResource searchButton}" Margin="0,0,15,0" Click="btnAdd_Click"></Button>
+                <Button x:Name="btnAdds" Content="{x:Static culture:Lang.sysPiLiangTianJia}" Style="{StaticResource searchButton}" Margin="0,0,15,0"></Button>
+                <Button x:Name="btnDeletes" Content="{x:Static culture:Lang.sysShanChu}" Style="{StaticResource searchButton}" Margin="0,0,15,0"></Button>
             </StackPanel>
         </Grid>
         <Border Grid.Row="3" Margin="15,20,15,0" BorderBrush="#d7d7d7" BorderThickness="1">
@@ -60,9 +60,9 @@
                     <DataGridCheckBoxColumn Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=IsSelected, Mode=OneWay}"
                                         EditingElementStyle="{DynamicResource MetroDataGridCheckBox}"
                                         ElementStyle="{DynamicResource MetroDataGridCheckBox}"
-                                        Header="选择" Width="45" />
-                    <DataGridTextColumn Binding="{Binding Name}" Header="名称" Width="*" />
-                    <DataGridTextColumn Binding="{Binding Name}" Header="状态" Width="*"  />
+                                        Header="{x:Static culture:Lang.sysXuanZe}" Width="45" />
+                    <DataGridTextColumn Binding="{Binding Name}" Header="{x:Static culture:Lang.sysMingCheng}" Width="*" />
+                    <DataGridTextColumn Binding="{Binding Name}" Header="{x:Static culture:Lang.sysZhuangTai}" Width="*"  />
                 </DataGrid.Columns>
                 <DataGrid.ColumnHeaderStyle>
                     <Style BasedOn="{StaticResource MetroDataGridColumnHeader}" TargetType="{x:Type DataGridColumnHeader}">
@@ -85,7 +85,7 @@
                 </DataGrid.Style>
             </DataGrid>
         </Border>
-        <Grid Grid.Row="4" Margin="15,10,15,10" HorizontalAlignment="Right">
+        <Grid Grid.Row="4" Margin="15,20,15,15" HorizontalAlignment="Right">
             <local2:Pager2 x:Name="pager" PagerChanged="pager_PagerChanged" ></local2:Pager2>
         </Grid>
     </Grid>

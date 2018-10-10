@@ -15,10 +15,51 @@
     using UTH.Plug;
 
     /// <summary>
-    /// 组员业务
+    /// 人员业务
     /// </summary>
     public class EmployeService : ApplicationDefault<EmployeEntity, EmployeEditInput, EmployeOutput>, IEmployeService
     {
-        public EmployeService(IRepository<EmployeEntity> _repository) : base(_repository) { }
+        #region 构造函数
+
+        IAccountService accountService;
+
+        public EmployeService(IRepository<EmployeEntity> _repository, IAccountService _accountService) : base(_repository)
+        {
+            accountService = _accountService;
+        }
+
+        #endregion
+
+        #region 私有变量
+
+        #endregion
+
+        #region 公共属性
+
+        #endregion
+
+        #region 辅助操作
+
+        #endregion
+
+        #region 回调事件
+
+        #endregion
+
+        public override EmployeOutput Insert(EmployeEditInput input)
+        {
+            Session.CheckAccountOrganize(input.Organize);
+
+            var isExist = Query(predicate: x => x.Organize == input.Organize && x.No == input.No);
+            if (isExist.Count() > 0)
+            {
+                throw new DbxException(EnumCode.提示消息, Lang.userZhangHuYiCunZai);
+            }
+
+            var accountServer = DomainHelper.CreateTransactionService<IAccountService, AccountEntity>(repository);
+
+
+            return base.Insert(input);
+        }
     }
 }

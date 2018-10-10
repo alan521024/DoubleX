@@ -40,6 +40,7 @@ namespace UTH.Meeting.Win.View
         {
             InitializeComponent();
             Initialize();
+            this.Closing += Main_Closing;
         }
 
         MainViewModel viewModel;
@@ -50,24 +51,19 @@ namespace UTH.Meeting.Win.View
         {
             viewModel = DataContext as MainViewModel;
             viewModel.CheckNull();
-
             this.ShowMeeting();
-
-            this.Closing += Main_Closing;
         }
 
-        private void ShowMeeting()
+        public void ShowMeeting()
         {
-            //if (viewModel.CurrentUser.Type == EnumAccountType.组织.GetValue())
-            //{
-            //    mainFrame.Navigate(new Areas.Conference.View.Preside());
-            //}
-            //if (viewModel.CurrentUser.Type == EnumAccountType.组员.GetValue())
-            //{
-            //    mainFrame.Navigate(new Areas.Conference.View.Participant());
-            //}
-
-            mainFrame.Navigate(new Areas.Conference.View.Meeting());
+            if (viewModel.CurrentUser.User.Type == EnumAccountType.组织)
+            {
+                mainFrame.Navigate(new Areas.Conference.View.Preside());
+            }
+            if (viewModel.CurrentUser.User.Type == EnumAccountType.人员)
+            {
+                mainFrame.Navigate(new Areas.Conference.View.Participant());
+            }
         }
 
         private void btnEmploye_Click(object sender, RoutedEventArgs e)

@@ -61,14 +61,5 @@
         /// </summary>
 
         AccountEntity FindAccount(string account = null, string mobile = null, string email = null, string userName = null);
-
-
-        /// <summary>
-        /// 账户创建
-        /// </summary>
-        /// <param name="input">RegistInput</param>
-        /// <param name="isInnerTransaction"></param>
-        /// <returns></returns>
-        AccountEntity Create(RegistInput input, bool isInnerTransaction = true);
     }
 }

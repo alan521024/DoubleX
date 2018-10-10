@@ -7,6 +7,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using System.Security.Claims;
+    using System.Globalization;
     using Microsoft.AspNetCore.Http;
     using UTH.Infrastructure.Resource;
     using UTH.Infrastructure.Resource.Culture;
@@ -15,7 +16,7 @@
     /// <summary>
     /// Web应用程序访问器
     /// </summary>
-    public class WebAccessor : DefaultAccessor
+    public class WebAccessor : DefaultAccessor, IAccessor
     {
         public WebAccessor(IHttpContextAccessor httpContextAccessor)
         {
@@ -24,19 +25,30 @@
 
         private readonly IHttpContextAccessor _httpContextAccessor;
 
+
+        /// <summary>
+        /// 访问持有者(当事人信息/可有多个Identity)
+        /// </summary>
         public override ClaimsPrincipal Principal => _httpContextAccessor.HttpContext?.User ?? base.Principal;
 
-        public override Dictionary<string, string> Items
-        {
-            get
-            {
-                var _items = new Dictionary<string, string>();
-                _items.Add("Culture", WebHelper.GetCulture(_httpContextAccessor.HttpContext));
-                _items.Add("AppCode", WebHelper.GetAppCode(_httpContextAccessor.HttpContext));
-                _items.Add("ClientIp", WebHelper.GetClientIp(_httpContextAccessor.HttpContext));
-                return _items;
-            }
-        }
+        /// <summary>
+        /// 区域文化
+        /// </summary>
+        public override CultureInfo Culture { get { return new CultureInfo(WebHelper.GetCulture(_httpContextAccessor.HttpContext)); } }
 
+        /// <summary>
+        /// 客户端地址
+        /// </summary>
+        public override string ClientIp { get { return WebHelper.GetClientIp(_httpContextAccessor.HttpContext); } }
+
+        /// <summary>
+        /// 应用程序Code
+        /// </summary>
+        public override string AppCode { get { return WebHelper.GetAppCode(_httpContextAccessor.HttpContext); } }
+
+        /// <summary>
+        /// 访问Token
+        /// </summary>
+        public override string Token { get { return WebHelper.GetToken(_httpContextAccessor.HttpContext); } }
     }
 }

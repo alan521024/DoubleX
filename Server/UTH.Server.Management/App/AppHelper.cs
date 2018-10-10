@@ -58,7 +58,7 @@
             var jwtToken = EngineHelper.Resolve<ITokenService>().Resolve(token);
 
             var claims = jwtToken.Claims.ToList();
-            claims.Add(new Claim(ClaimTypesExtend.Token, token));
+            //claims.Add()……
 
             var identity = new ClaimsIdentity(claims, scheme);
             var principal = new ClaimsPrincipal(identity);

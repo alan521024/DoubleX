@@ -67,7 +67,6 @@ namespace UTH.Meeting.Win
                     throw ex;
                 }
             });
-
         }
 
         private void ToMain()

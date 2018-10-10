@@ -34,15 +34,15 @@ namespace UTH.Meeting.Win.Areas.Conference.View
     /// </summary>
     public partial class Meeting : UTHPage
     {
+        MeetingViewModel viewModel;
+        Win.View.Main parent;
+
         public Meeting(string code = null, MeetingOutput meeting = null)
         {
             InitializeComponent();
             Initialize(code, meeting);
         }
-
-        MeetingViewModel viewModel;
-        Win.View.Main parentWin;
-
+        
         private void Initialize(string code = null, MeetingOutput meeting = null)
         {
             viewModel = DataContext as MeetingViewModel;
@@ -53,11 +53,11 @@ namespace UTH.Meeting.Win.Areas.Conference.View
 
         private void Preside_Loaded(object sender, RoutedEventArgs e)
         {
-            parentWin = WpfHelper.GetPrament<UTH.Meeting.Win.View.Main>(this);
-            if (!parentWin.IsNull())
+            parent = this.GetParent<Win.View.Main>();
+            if (!parent.IsNull())
             {
-                parentWin.MeetingId = viewModel.Meeting.Id;
-                parentWin.CloseAction = (obj, closeEvent) =>
+                parent.MeetingId = viewModel.Meeting.Id;
+                parent.CloseAction = (obj, closeEvent) =>
                 {
                     viewModel.Cancel();
                 };

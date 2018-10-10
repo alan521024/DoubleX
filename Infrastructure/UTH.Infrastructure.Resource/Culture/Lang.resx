@@ -603,4 +603,37 @@
   <data name="sysShiFouShanChuShuJu" xml:space="preserve">
     <value>是否删除数据</value>
   </data>
+  <data name="userQingShuRuZhangHao" xml:space="preserve">
+    <value>请输入账号</value>
+  </data>
+  <data name="metHuiYiJieMian" xml:space="preserve">
+    <value>会议界面</value>
+  </data>
+  <data name="sysFanHuiShangJi" xml:space="preserve">
+    <value>返回上级</value>
+  </data>
+  <data name="sysPiLiangTianJia" xml:space="preserve">
+    <value>批量添加</value>
+  </data>
+  <data name="sysZhuangTai" xml:space="preserve">
+    <value>状态</value>
+  </data>
+  <data name="userYongHuGuanLi" xml:space="preserve">
+    <value>用户管理</value>
+  </data>
+  <data name="userYongHuTianJia" xml:space="preserve">
+    <value>用户添加</value>
+  </data>
+  <data name="sysChaZhao" xml:space="preserve">
+    <value>查找</value>
+  </data>
+  <data name="sysXuanZe" xml:space="preserve">
+    <value>选择</value>
+  </data>
+  <data name="userYongHu" xml:space="preserve">
+    <value>用户</value>
+  </data>
+  <data name="userXingMing" xml:space="preserve">
+    <value>姓名</value>
+  </data>
 </root>

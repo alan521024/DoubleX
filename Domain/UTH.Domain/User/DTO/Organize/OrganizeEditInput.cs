@@ -16,10 +16,9 @@
     /// <summary>
     /// 组织编辑输入
     /// </summary>
-    public class OrganizeEditInput : OrganizeDto, IInput, IInputDelete, IInputUpdate, IInputTransaction
+    public class OrganizeEditInput : OrganizeBase, IInput, IInputDelete, IInputUpdate
     {
         public List<Guid> Ids { get; set; }
-        public bool IsTransaction { get; set; } = false;
     }
 
     /// <summary>

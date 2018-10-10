@@ -18,9 +18,9 @@
     public class OperateEntity : BaseGeneralEntity
     {
         /// <summary>
-        /// 名称
+        /// 所属导航
         /// </summary>
-        public string Name { get; set; }
+        public Guid NavigateId { get; set; }
 
         /// <summary>
         /// 操作类型
@@ -28,14 +28,13 @@
         public int ActionType { get; set; }
 
         /// <summary>
-        /// 所属导航
+        /// 名称
         /// </summary>
-        public Guid NavigateId { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// 序号
         /// </summary>
         public int Sort { get; set; }
-
     }
 }

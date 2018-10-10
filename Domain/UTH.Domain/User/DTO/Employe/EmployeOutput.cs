@@ -13,9 +13,9 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 组员输出信息
+    /// 人员输出信息
     /// </summary>
-    public class EmployeOutput : EmployeDto, IOutput
+    public class EmployeOutput : EmployeBase, IOutput
     {
 
     }

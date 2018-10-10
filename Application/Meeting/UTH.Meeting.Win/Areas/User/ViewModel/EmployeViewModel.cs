@@ -27,7 +27,7 @@ namespace UTH.Meeting.Win.ViewModel
     /// </summary>
     public class EmployeViewModel : UTHViewModel
     {
-        public EmployeViewModel() : base(culture.Lang.sysGuanYuWoMen, "")
+        public EmployeViewModel() : base(culture.Lang.userYongHuGuanLi, "")
         {
             Initialize();
         }
@@ -75,7 +75,10 @@ namespace UTH.Meeting.Win.ViewModel
             var result = PlugCoreHelper.ApiUrl.User.EmployePaging.GetResult<PagingModel<EmployeOutput>, QueryInput>(new QueryInput()
             {
                 Page = page,
-                Size = size
+                Size = size,
+                Query = new JObject() {
+                    new JProperty("organize",CurrentUser.User.Organize)
+                }
             });
             if (result.Code == EnumCode.成功)
             {
@@ -93,6 +96,24 @@ namespace UTH.Meeting.Win.ViewModel
                 return result.Obj;
             }
             return null;
+        }
+
+        public bool Add(string no, string name, string password)
+        {
+            var input = new EmployeEditInput()
+            {
+                Organize = CurrentUser.User.Account,
+                No = no,
+                Name = name,
+                Password = password
+            };
+
+            var result = PlugCoreHelper.ApiUrl.User.EmployeInsert.GetResult<EmployeOutput, EmployeEditInput>(input);
+            if (result.Code == EnumCode.成功)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

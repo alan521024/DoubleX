@@ -102,14 +102,14 @@ namespace UTH.Meeting.Win.View
             }
             WpfHelper.Message(culture.Lang.userZhuCeChengGongXiaoXi, () =>
             {
-                WpfHelper.GetPrament<Window>(this).FindChild<Frame>("mainFrame")
+                WpfHelper.GetParent<Window>(this).FindChild<Frame>("mainFrame")
                     .Navigate(new Login());
             });
         }
 
         private void hlLogin_Click(object sender, RoutedEventArgs e)
         {
-            WpfHelper.GetPrament<Window>(this).FindChild<Frame>("mainFrame")
+            WpfHelper.GetParent<Window>(this).FindChild<Frame>("mainFrame")
                 .Navigate(new Login());
         }
 

@@ -9,14 +9,14 @@ using Microsoft.IdentityModel.Tokens;
 namespace UTH.Framework
 {
     /// <summary>
-    /// Token操作接口
+    /// Token业务接口
     /// </summary>
     public interface ITokenService
     {
         /// <summary>
         /// 生成Token
         /// </summary>
-        string Generate(string accountId, string account, string mobile, string email, string realName, string role,int type,int status);
+        string Generate(string appCode, Guid id, string account, string mobile, string email, string realName, string role, string organize, string employe, EnumAccountType type, EnumAccountStatus status);
 
         /// <summary>
         /// 移除Token
@@ -43,9 +43,9 @@ namespace UTH.Framework
         /// 校验Token
         /// </summary>
         /// <param name="token"></param>
-        /// <param name="storeModel">TokenModel(store)</param>
+        /// <param name="model">TokenModel(store)</param>
         /// <returns></returns>
-        EnumCode Verify(string token, out TokenModel storeModel);
+        EnumCode Verify(string token, out TokenModel model);
 
         /// <summary>
         /// 解析Token

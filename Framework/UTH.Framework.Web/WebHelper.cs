@@ -219,6 +219,26 @@
             return Thread.CurrentThread.CurrentCulture.Name;
         }
 
+        public static string GetToken(HttpContext context = null)
+        {
+            if (context.IsNull())
+                context = EngineHelper.Resolve<IHttpContextAccessor>().HttpContext;
+
+            if (context.IsNull())
+                throw new DbxException(EnumCode.不支持Http);
+
+            var request = context.Request;
+
+            string token = string.Empty;
+
+            if (!request.Headers["Authorization"].FirstOrDefault().IsEmpty())
+            {
+                token = StringHelper.FormatTrimStart(request.Headers["Authorization"].FirstOrDefault(), "Bearer ");
+            }
+
+            return token;
+        }
+
         /// <summary>
         /// 设置区域/环境多语言
         /// </summary>

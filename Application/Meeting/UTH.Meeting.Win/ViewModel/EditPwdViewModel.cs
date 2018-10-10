@@ -75,7 +75,7 @@ namespace UTH.Meeting.Win.ViewModel
         {
             var input = new EditPwdInput()
             {
-                AccountId = CurrentUser.AccountId,
+                AccountId = CurrentUser.User.Id,
                 OldPassword = OldPassword,
                 NewPassword = NewPassword,
                 AffirmPassword = AffirmPassword

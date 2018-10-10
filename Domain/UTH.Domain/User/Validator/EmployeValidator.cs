@@ -14,7 +14,7 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 组员校验
+    /// 人员校验
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class EmployeValidator<T> : AbstractValidator<T>

@@ -127,7 +127,7 @@
                 {
                     model.Records.ForEach(x =>
                     {
-                        if (recordService.Find(0, i => i.Id == x.RecordId).Count() == 0)
+                        if (recordService.Query(where: i => i.Id == x.RecordId).Count() == 0)
                         {
                             recordService.Insert(EngineHelper.Map<MeetingRecordEditInput>(x));
                         }
@@ -138,7 +138,7 @@
                 {
                     model.Translations.ForEach(x =>
                     {
-                        if (translationService.Find(0, i => i.Id == x.TranslationId).Count() == 0)
+                        if (translationService.Query(where: i => i.Id == x.TranslationId).Count() == 0)
                         {
                             translationService.Insert(EngineHelper.Map<MeetingTranslationEditInput>(x));
                         }
@@ -166,7 +166,7 @@
         {
             action?.Invoke(options);
         }
-        
+
         /// <summary>
         /// 设置会议信息
         /// </summary>

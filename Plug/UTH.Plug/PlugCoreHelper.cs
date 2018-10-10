@@ -226,7 +226,7 @@
         public static ResultModel<TModel> GetResult<TModel, TParam>(this string url, IApplicationSession session, TParam post = default(TParam), string contentType = "application/json")
         {
             return GetResult<TModel>(url, post: (post.IsNull() ? "" : JsonHelper.Serialize(post)), contentType: contentType,
-                culture: session?.Culture, appCode: session?.AppCode, clientIp: session?.ClientIp, token: session?.Token);
+                culture: session?.Accessor.Culture.Name, appCode: session?.Accessor.AppCode, clientIp: session?.Accessor.ClientIp, token: session?.Accessor.Token);
 
         }
 
@@ -236,7 +236,7 @@
         public static ResultModel<TModel> GetResult<TModel>(this string url, IApplicationSession session, string post = "", string contentType = "application/json")
         {
             return GetResult<TModel>(url, post: post, contentType: contentType,
-                culture: session?.Culture, appCode: session?.AppCode, clientIp: session?.ClientIp, token: session?.Token);
+                culture: session?.Accessor.Culture.Name, appCode: session?.Accessor.AppCode, clientIp: session?.Accessor.ClientIp, token: session?.Accessor.Token);
 
         }
 
@@ -249,10 +249,10 @@
             var session = EngineHelper.Resolve<IApplicationSession>();
             if (!session.IsNull())
             {
-                culture = culture.IsEmpty() && !session.Culture.IsEmpty() ? session.Culture : culture;
-                appCode = appCode.IsEmpty() && !session.AppCode.IsEmpty() ? session.AppCode : appCode;
-                clientIp = clientIp.IsEmpty() && !session.ClientIp.IsEmpty() ? session.ClientIp : clientIp;
-                token = token.IsEmpty() && !session.Token.IsEmpty() ? session.Token : token;
+                culture = culture.IsEmpty() && !session.Accessor.Culture.IsNull() ? session.Accessor.Culture.Name : culture;
+                appCode = appCode.IsEmpty() && !session.Accessor.AppCode.IsEmpty() ? session.Accessor.AppCode : appCode;
+                clientIp = clientIp.IsEmpty() && !session.Accessor.ClientIp.IsEmpty() ? session.Accessor.ClientIp : clientIp;
+                token = token.IsEmpty() && !session.Accessor.Token.IsEmpty() ? session.Accessor.Token : token;
             }
 
             if (!url.IsEmpty() && url.ToLower().IndexOf("://") == -1)

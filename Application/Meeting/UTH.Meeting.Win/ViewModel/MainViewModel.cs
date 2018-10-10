@@ -79,7 +79,7 @@ namespace UTH.Meeting.Win.ViewModel
         /// <summary>
         /// 是否组织账号
         /// </summary>
-        public Visibility IsOrganize { get { return CurrentUser.Type == EnumAccountType.组织.GetValue() ? Visibility.Visible : Visibility.Collapsed; } }
+        public Visibility IsOrganize { get { return CurrentUser.User.Type == EnumAccountType.组织 ? Visibility.Visible : Visibility.Collapsed; } }
 
         #endregion
 
@@ -122,7 +122,7 @@ namespace UTH.Meeting.Win.ViewModel
                     FilesHelper.DeleteFile(filePath);
                 }
 
-                var records = res.Find(0, null, new List<KeyValueModel>() { new KeyValueModel("CreateDt", "Asc") });
+                var records = res.Query(Sorting: new List<KeyValueModel>() { new KeyValueModel("CreateDt", "Asc") });
 
                 using (file = new StreamWriter(filePath, true))
                 {
@@ -131,7 +131,7 @@ namespace UTH.Meeting.Win.ViewModel
                         file.WriteLine(string.Format("{0}  ({1}){2}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                             record.Langue,
                             record.Content));
-                        var translations = trs.Find(0, t => t.RecordId == record.Id);
+                        var translations = trs.Query(where: t => t.RecordId == record.Id);
                         translations.ForEach(translation =>
                         {
                             file.WriteLine(string.Format("        ({0}){1}", translation.Langue, translation.Content));

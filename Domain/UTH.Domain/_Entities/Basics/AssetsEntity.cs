@@ -18,6 +18,11 @@
     public class AssetsEntity : BaseGeneralEntity
     {
         /// <summary>
+        /// 资源类型
+        /// </summary>
+        public EnumAssetsType AssetsType { get; set; }
+
+        /// <summary>
         /// 名称
         /// </summary>
         public string Name { get; set; }
@@ -26,10 +31,5 @@
         /// 资源MD5
         /// </summary>
         public string MD5 { get; set; }
-
-        /// <summary>
-        /// 资源类型
-        /// </summary>
-        public EnumAssetsType AssetsType { get; set; }
     }
 }

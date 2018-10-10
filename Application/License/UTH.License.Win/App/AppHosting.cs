@@ -84,7 +84,7 @@ namespace UTH.License.Win
 
             //(4)会话访问认证授权
             EngineHelper.RegisterType<IAccessor, WpfAccessor>();
-            EngineHelper.RegisterType<ISessionService, IdentifierSession>();
+            EngineHelper.RegisterType<IApplicationSession, IdentifierSession>();
             EngineHelper.RegisterType<ITokenService, TokenService>();
 
             //接口访问处理

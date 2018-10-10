@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using UTH.Infrastructure.Resource;
+using UTH.Infrastructure.Resource.Culture;
+using UTH.Infrastructure.Utility;
 
 namespace UTH.Framework
 {
@@ -10,64 +13,56 @@ namespace UTH.Framework
     [Serializable]
     public class DefaultSession : IApplicationSession
     {
-        /// <summary>
-        /// 访问语言环境
-        /// </summary>
-        public virtual string Culture { get; set; }
+        public DefaultSession(IAccessor accessor = null, IIdentifier user = null)
+        {
+            Accessor = accessor;
+            User = user;
+            IsAuthenticated = Accessor == null ? false : Accessor.Principal.Identity.IsAuthenticated;
+        }
 
         /// <summary>
-        /// 应用程序Id
+        /// 访问信息
         /// </summary>
-        public virtual string AppCode { get; set; }
+        public virtual IAccessor Accessor { get; set; }
 
         /// <summary>
-        /// 客户端Ip
+        /// 用户信息
         /// </summary>
-        public virtual string ClientIp { get; set; }
+        public virtual IIdentifier User { get; set; }
 
         /// <summary>
-        /// 会话Token
+        /// 是否认证
         /// </summary>
-        public virtual string Token { get; set; }
+        public virtual bool IsAuthenticated { get; set; }
 
         /// <summary>
-        /// 会话账号
+        /// 检查企业参数
         /// </summary>
-        public virtual string Account { get; set; }
+        /// <param name="organize"></param>
+        /// <param name="isThrow"></param>
+        /// <returns></returns>
+        public virtual bool CheckAccountOrganize(string organize, bool isThrow = true)
+        {
+            if (!IsAuthenticated) { throw new DbxException(EnumCode.认证过期); }
 
-        /// <summary>
-        /// 手机号码(认证通过)
-        /// </summary>
-        public virtual string Mobile { get; set; }
+            if (User.Type == EnumAccountType.管理员)
+            {
+                return true;
+            }
 
-        /// <summary>
-        /// 邮箱地址(认证通过)
-        /// </summary>
-        public virtual string Email { get; set; }
+            bool isCheck = false;
 
-        /// <summary>
-        /// 角色标识
-        /// </summary>
-        public virtual string Role { get; set; }
+            if (User.Type == EnumAccountType.组织 || User.Type == EnumAccountType.人员)
+            {
+                isCheck = !organize.IsEmpty() && User.Organize == organize;
+            }
 
-        /// <summary>
-        /// 类型
-        /// </summary>
-        public virtual int Type { get; set; }
+            if (!isCheck && isThrow)
+            {
+                throw new DbxException(EnumCode.参数异常, "organize");
+            }
 
-        /// <summary>
-        /// 状态
-        /// </summary>
-        public virtual int Status { get; set; }
-
-        /// <summary>
-        /// 账号Id
-        /// </summary>
-        public virtual Guid AccountId { get; set; }
-
-        /// <summary>
-        /// 租户Id
-        /// </summary>
-        public virtual Guid TenantId { get; set; }
+            return isCheck;
+        }
     }
 }

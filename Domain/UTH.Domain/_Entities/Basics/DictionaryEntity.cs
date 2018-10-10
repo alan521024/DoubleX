@@ -18,7 +18,7 @@
     public class DictionaryEntity : BaseGeneralEntity
     {
         /// <summary>
-        /// 字典分类
+        /// 所属分类
         /// </summary>
         public string Category { get; set; }
 
@@ -46,6 +46,5 @@
         /// 序号
         /// </summary>
         public int Sort { get; set; }
-
     }
 }

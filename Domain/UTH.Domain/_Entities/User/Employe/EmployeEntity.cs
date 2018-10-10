@@ -12,23 +12,23 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 组员信息
+    /// 人员信息
     /// </summary>
     [SugarTable("UC_Employe")]
     public class EmployeEntity : BaseFullEntity
     {
         /// <summary>
-        /// 所属组员UUID
+        /// 所属组织
         /// </summary>
         public string Organize { get; set; }
 
         /// <summary>
-        /// 唯一标识(组员简称或标识符号)
+        /// 员工编号
         /// </summary>
-        public string UUID { get; set; }
+        public string No { get; set; }
 
         /// <summary>
-        /// 组员名称
+        /// 人员名称
         /// </summary>
         public string Name { get; set; }
 
@@ -36,5 +36,6 @@
         /// 织组电话
         /// </summary>
         public string Phone { get; set; }
+
     }
 }

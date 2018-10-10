@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
+using System.Threading;
+using System.Linq;
+using System.Globalization;
 using UTH.Infrastructure.Resource.Culture;
 using UTH.Infrastructure.Utility;
 using UTH.Framework;
-using System.Threading;
 
 namespace UTH.Framework.Wpf
 {
@@ -12,17 +14,24 @@ namespace UTH.Framework.Wpf
     /// </summary>
     public class WpfAccessor : DefaultAccessor
     {
-        public override Dictionary<string, string> Items
-        {
-            get
-            {
-                var _items = new Dictionary<string, string>();
-                _items.Add("Culture", Thread.CurrentThread.CurrentCulture.Name);
-                _items.Add("AppCode", EngineHelper.Configuration.AppCode);
-                _items.Add("ClientIp", "127.0.0.1");
-                return _items;
-            }
-        }
+        /// <summary>
+        /// 区域文化
+        /// </summary>
+        public override CultureInfo Culture { get { return Thread.CurrentThread.CurrentCulture; } }
 
+        /// <summary>
+        /// 客户端地址
+        /// </summary>
+        public override string ClientIp { get { return "127.0.0.2"; } }
+
+        /// <summary>
+        /// 应用程序Code
+        /// </summary>
+        public override string AppCode { get { return EngineHelper.Configuration.AppCode; } }
+
+        /// <summary>
+        /// 访问Token
+        /// </summary>
+        public override string Token { get { return StringHelper.Get(Principal?.Claims.FirstOrDefault(c => c.Type == WpfClaimTypesExtend.LocalToken)?.Value); } }
     }
 }

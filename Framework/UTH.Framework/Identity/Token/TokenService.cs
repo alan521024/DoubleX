@@ -12,21 +12,18 @@ using UTH.Framework;
 namespace UTH.Framework
 {
     /// <summary>
-    /// Token操作服务
+    /// Token业务服务
     /// </summary>
     public class TokenService : ITokenService
     {
-        public TokenService(IAccessor accessor, IApplicationSession current, ITokenStore store)
+        public TokenService(ITokenStore store)
         {
-            Accessor = accessor;
-            Current = current;
             Store = store;
         }
 
-        protected IAccessor Accessor { get; set; }
-
-        protected IApplicationSession Current { get; }
-
+        /// <summary>
+        /// 存储
+        /// </summary>
         protected ITokenStore Store { get; }
 
         /// <summary>
@@ -34,7 +31,7 @@ namespace UTH.Framework
         /// </summary>
         /// <param name="identifier"></param>
         /// <returns></returns>
-        public string Generate(string accountId, string account, string mobile, string email, string realName, string role, int type, int status)
+        public string Generate(string appCode, Guid id, string account, string mobile, string email, string realName, string role, string organize, string employe, EnumAccountType type, EnumAccountStatus status)
         {
             EngineHelper.Configuration.Authentication.CheckNull();
 
@@ -58,34 +55,36 @@ namespace UTH.Framework
 
             #endregion
 
-            var tokenModel = new TokenModel();
-            tokenModel.Id = Guid.NewGuid().FormatString(removeSplit: true);
-            tokenModel.AccountId = GuidHelper.Get(accountId);
-            tokenModel.Account = account;
-            tokenModel.Mobile = mobile;
-            tokenModel.Email = email;
-            tokenModel.RealName = realName;
-            tokenModel.Role = role;
-            tokenModel.Type = type;
-            tokenModel.Status = status;
-            tokenModel.LastDt = nowDt;
-            tokenModel.ExpiresDt = expiresDt;
+
+            var model = new TokenModel() { _Key = Guid.NewGuid().FormatString(removeSplit: true), AppCode = appCode };
+            model.Id = id;
+            model.Account = account;
+            model.Mobile = mobile;
+            model.Email = email;
+            model.RealName = realName;
+            model.Role = role;
+            model.Organize = organize;
+            model.Employe = employe;
+            model.Type = type;
+            model.Status = status;
+            model.LastDt = nowDt;
+            model.ExpiresDt = expiresDt;
 
             var security = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(setting.SecretKey));
             var jwtToken = new JwtSecurityToken(
                    issuer: setting.Issuer,
-                   audience: Current.AppCode,
+                   audience: appCode,
                    //验证时间根据redis的有效期处理
                    //notBefore: nowDt,
                    //expires: expiresDt,
-                   claims: tokenModel.ToClaims(),
+                   claims: model.ToClaims(),
                    signingCredentials: new SigningCredentials(security, SecurityAlgorithms.HmacSha256));
+
             var token = (new JwtSecurityTokenHandler()).WriteToken(jwtToken);
 
-            tokenModel.Token = token;
-            Store.Set<TokenModel>(accountId, tokenModel, GetStoreExpireTime(nowDt));
+            Store.Set<TokenModel>(id.FormatString(), model, GetStoreExpireTime(nowDt));
 
-            return tokenModel.Token;
+            return token;
 
         }
 
@@ -96,10 +95,10 @@ namespace UTH.Framework
         /// <returns></returns>
         public bool Remove(string token)
         {
-            string accountId = GetAccountIdByToken(token);
-            if (!accountId.IsEmpty())
+            string id = GetAccountIdByToken(token);
+            if (!id.IsEmpty())
             {
-                Store.Remove(accountId);
+                Store.Remove(id);
             }
             return true;
         }
@@ -115,18 +114,18 @@ namespace UTH.Framework
             if (jwtToken.IsNull())
                 return string.Empty;
 
-            var accountId = GetAccountIdByToken(jwtToken);
-            if (accountId.IsEmpty())
+            var id = GetAccountIdByToken(jwtToken);
+            if (id.IsEmpty())
                 return string.Empty;
 
-            var storeModel = Store.Get<TokenModel>(accountId);
-            if (storeModel.IsNull())
+            var model = Store.Get<TokenModel>(id);
+            if (model.IsNull())
                 return string.Empty;
 
-            if (storeModel.AccountId.FormatString() != accountId)
+            if (model.Id.FormatString() != id)
                 return string.Empty;
 
-            return Generate(accountId, storeModel.Account, storeModel.Mobile, storeModel.Email, storeModel.RealName, storeModel.Role, storeModel.Type, storeModel.Status);
+            return Generate(model.AppCode, GuidHelper.Get(id), model.Account, model.Mobile, model.Email, model.RealName, model.Role, model.Organize, model.Employe, model.Type, model.Status);
         }
 
         /// <summary>
@@ -146,13 +145,13 @@ namespace UTH.Framework
         /// 验证成功后：按配置规则延长过期时间
         /// </summary>
         /// <param name="token"></param>
-        /// <param name="storeModel">TokenModel(store)</param>
+        /// <param name="model">TokenModel(store)</param>
         /// <returns></returns>
-        public EnumCode Verify(string token, out TokenModel storeModel)
+        public EnumCode Verify(string token, out TokenModel model)
         {
             EngineHelper.Configuration.Authentication.CheckNull();
 
-            storeModel = null;
+            model = null;
             var setting = EngineHelper.Configuration.Authentication;
             var nowDt = DateTime.Now;
 
@@ -162,31 +161,31 @@ namespace UTH.Framework
                 return EnumCode.认证失败;
             }
 
-            var accountId = GetAccountIdByToken(jwtToken);
-            if (accountId.IsEmpty())
+            var id = GetAccountIdByToken(jwtToken);
+            if (id.IsEmpty())
             {
                 return EnumCode.认证失败;
             }
 
-            storeModel = Store.Get<TokenModel>(accountId);
-            if (storeModel.IsNull())
+            model = Store.Get<TokenModel>(id);
+            if (model.IsNull())
             {
                 return EnumCode.认证失败;
             }
 
-            if (storeModel.AccountId.FormatString() != accountId)
+            if (model.Id.FormatString() != id)
             {
                 return EnumCode.认证失败;
             }
 
-            if (nowDt > storeModel.ExpiresDt)
+            if (nowDt > model.ExpiresDt)
             {
                 return EnumCode.认证过期;
             }
 
-            storeModel.LastDt = nowDt;
-            storeModel.ExpiresDt = nowDt.AddSeconds(setting.ExpireTime);
-            Store.Set<TokenModel>(accountId, storeModel, GetStoreExpireTime(nowDt));
+            model.LastDt = nowDt;
+            model.ExpiresDt = nowDt.AddSeconds(setting.ExpireTime);
+            Store.Set<TokenModel>(id, model, GetStoreExpireTime(nowDt));
 
             return EnumCode.成功;
         }
@@ -233,7 +232,7 @@ namespace UTH.Framework
         {
             if (!jwtToken.IsNull())
             {
-                var accountClaim = jwtToken.Claims.Where(x => x.Type == ClaimTypesExtend.AccountId).FirstOrDefault();
+                var accountClaim = jwtToken.Claims.Where(x => x.Type == ClaimTypesExtend.Id).FirstOrDefault();
                 if (!accountClaim.IsNull())
                 {
                     return accountClaim.Value;

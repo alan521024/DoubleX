@@ -50,7 +50,7 @@ namespace UTH.Meeting.Win.View
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
-            var mainWin = WpfHelper.GetPrament<UTH.Meeting.Win.View.Main>(this);
+            var mainWin = WpfHelper.GetParent<UTH.Meeting.Win.View.Main>(this);
             var msg = viewModel.Save(mainWin.IsNull() ? Guid.Empty : mainWin.MeetingId);
             if (!msg.IsEmpty())
             {

@@ -23,14 +23,14 @@
         public Guid Id { get; set; }
 
         /// <summary>
-        /// 名称
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
         /// 应用类型
         /// </summary>
         public EnumAppType AppType { get; set; }
+
+        /// <summary>
+        /// 名称
+        /// </summary>
+        public string Name { get; set; }
 
         /// <summary>
         /// 应用编码
@@ -46,6 +46,5 @@
         /// 应用密钥
         /// </summary>
         public string Secret { get; set; }
-
     }
 }

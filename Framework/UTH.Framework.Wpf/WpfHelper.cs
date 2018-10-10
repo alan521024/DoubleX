@@ -158,12 +158,12 @@ namespace UTH.Framework.Wpf
         #region 应用/窗体/控件操作
 
         /// <summary>
-        /// 获取父窗体
+        /// 获取父对象
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="reference"></param>
         /// <returns></returns>
-        public static T GetPrament<T>(DependencyObject reference) where T : DependencyObject
+        public static T GetParent<T>(this DependencyObject reference) where T : DependencyObject
         {
             DependencyObject parent = VisualTreeHelper.GetParent(reference);
             while (!(parent is T) && parent != null)
@@ -180,6 +180,17 @@ namespace UTH.Framework.Wpf
             else
                 return null;
         }
+
+        /// <summary>
+        /// 获取父窗体
+        /// </summary>
+        /// <param name="reference"></param>
+        /// <returns></returns>
+        public static Window GetParent(this DependencyObject reference)
+        {
+            return GetParent<Window>(reference);
+        }
+
 
         //TODO:MessageBox 位置(基本主窗体，非屏幕)
         //http://www.360doc.com/content/09/1117/16/466494_9221971.shtml
@@ -475,18 +486,21 @@ namespace UTH.Framework.Wpf
         {
             if (token.IsEmpty())
                 return;
-            //if (principal.IsNull())
-            //    principal = Thread.CurrentPrincipal;
+
+            var session1 = EngineHelper.Resolve<IApplicationSession>();
+
 
             var jwtToken = EngineHelper.Resolve<ITokenService>().Resolve(token);
 
             var claims = jwtToken.Claims.ToList();
-            claims.Add(new Claim(ClaimTypesExtend.Token, token));
             claims.Add(new Claim(GenericIdentity.DefaultNameClaimType, jwtToken.Subject));
             claims.Add(new Claim(GenericIdentity.DefaultRoleClaimType, ""));
+            claims.Add(new Claim(WpfClaimTypesExtend.LocalToken, token));
 
             Thread.CurrentPrincipal = new ClaimsPrincipal(new ClaimsIdentity(claims, "_win_use"));
 
+
+            var session2 = EngineHelper.Resolve<IApplicationSession>();
         }
 
         /// <summary>

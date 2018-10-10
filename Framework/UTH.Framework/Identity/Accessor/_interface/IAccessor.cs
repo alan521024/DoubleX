@@ -10,6 +10,7 @@
     using UTH.Infrastructure.Resource;
     using UTH.Infrastructure.Resource.Culture;
     using UTH.Infrastructure.Utility;
+    using System.Globalization;
 
     /// <summary>
     /// 访问器接口
@@ -22,9 +23,24 @@
         ClaimsPrincipal Principal { get; }
 
         /// <summary>
-        /// 访问数据项
+        /// 区域文化
         /// </summary>
-        Dictionary<string, string> Items { get; }
+        CultureInfo Culture { get; }
+
+        /// <summary>
+        /// 客户端地址
+        /// </summary>
+        string ClientIp { get; }
+
+        /// <summary>
+        /// 应用程序Code
+        /// </summary>
+        string AppCode { get;}
+
+        /// <summary>
+        /// 访问Token
+        /// </summary>
+        string Token { get; }
     }
 }
 

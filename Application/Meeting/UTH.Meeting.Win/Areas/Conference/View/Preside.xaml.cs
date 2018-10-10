@@ -38,26 +38,26 @@ namespace UTH.Meeting.Win.Areas.Conference.View
         {
             InitializeComponent();
             Initialize();
+            this.Loaded += Preside_Loaded;
         }
 
-        PresideViewModel viewModel;
-        Win.View.Main parentWin;
+        private PresideViewModel viewModel;
+        private Win.View.Main parent;
 
         private void Initialize()
         {
             viewModel = DataContext as PresideViewModel;
             viewModel.CheckNull();
-            this.Loaded += Preside_Loaded;
         }
 
         private void Preside_Loaded(object sender, RoutedEventArgs e)
         {
-            parentWin = WpfHelper.GetPrament<UTH.Meeting.Win.View.Main>(this);
+            parent = this.GetParent<Win.View.Main>();
         }
 
         private void btnStart_Click(object sender, RoutedEventArgs e)
         {
-            parentWin.mainFrame.Navigate(new Areas.Conference.View.Meeting());
+            parent.mainFrame.Navigate(new Areas.Conference.View.Meeting());
         }
     }
 }

@@ -22,9 +22,14 @@
         }
 
         /// <summary>
+        /// 账户类型(EnumAccountType)
+        /// </summary>
+        public int Type { get; set; }
+
+        /// <summary>
         /// 账号编号
         /// </summary>
-        public string Num { get; set; }
+        public string No { get; set; }
 
         /// <summary>
         /// 登录账号
@@ -137,11 +142,6 @@
         /// 最后登录Ip
         /// </summary>
         public string LoginLastIp { get; set; }
-
-        /// <summary>
-        /// 账户类型(EnumAccountType)
-        /// </summary>
-        public int Type { get; set; }
 
         /// <summary>
         /// 账户状态(EnumAccountStatus)

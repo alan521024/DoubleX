@@ -305,10 +305,14 @@
       <DependentUpon>Preside.xaml</DependentUpon>
     </Compile>
     <Compile Include="Areas\User\ViewModel\EmployeViewModel.cs" />
+    <Compile Include="Areas\User\View\EmployeEdit.xaml.cs">
+      <DependentUpon>EmployeEdit.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Areas\User\View\EmployeList.xaml.cs">
       <DependentUpon>EmployeList.xaml</DependentUpon>
     </Compile>
     <Compile Include="Areas\_Locator.cs" />
+    <Compile Include="Controls\Crumbs.cs" />
     <Compile Include="Controls\Pager.cs" />
     <Compile Include="Help.xaml.cs">
       <DependentUpon>Help.xaml</DependentUpon>
@@ -425,6 +429,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Areas\User\View\EmployeEdit.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Areas\User\View\EmployeList.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -495,7 +503,7 @@
     <Resource Include="Assets\Image\logo1.png" />
     <Resource Include="Assets\Image\logo2.png" />
     <Resource Include="Assets\Image\main.gif" />
-    <Resource Include="Assets\Image\main0.png" />
+    <Resource Include="Assets\Image\main10.png" />
     <Resource Include="Assets\Image\main1.png" />
     <Resource Include="Assets\Image\main2.png" />
     <Resource Include="Assets\Image\tool1.png" />
@@ -526,6 +534,7 @@
     <Content Include="Assets\Document\reg-agreement.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Assets\Image\main0.png" />
     <None Include="Tool\UTH.Update.Win.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -15,7 +15,7 @@
     /// <summary>
     /// 账号输出信息
     /// </summary>
-    public class AccountOutput : AccountDto, IOutput
+    public class AccountOutput : AccountBase, IOutput
     {
 
     }

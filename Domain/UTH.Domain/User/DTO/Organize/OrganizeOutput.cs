@@ -15,7 +15,7 @@
     /// <summary>
     /// 组织输出信息
     /// </summary>
-    public class OrganizeOutput : OrganizeDto, IOutput
+    public class OrganizeOutput : OrganizeBase, IOutput
     {
 
     }

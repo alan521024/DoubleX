@@ -5,68 +5,35 @@ using System.Text;
 namespace UTH.Framework
 {
     /// <summary>
-    /// 应用程序会话信息接口
+    /// 应用程序用户会话信息接口
     /// </summary>
-    public interface IApplicationSession //ISessionService
+    public interface IApplicationSession
     {
-        /// <summary>
-        /// 访问语言环境
-        /// </summary>
-        string Culture { get; set; }
 
         /// <summary>
-        /// 应用程序Id
+        /// 访问信息
         /// </summary>
-        string AppCode { get; set; }
+        IAccessor Accessor { get; set; }
 
         /// <summary>
-        /// 客户端Ip
+        /// 访问用户
         /// </summary>
-        string ClientIp { get; set; }
+        IIdentifier User { get; set; }
 
         /// <summary>
-        /// Token票据
+        /// 是否认证
         /// </summary>
-        string Token { get; set; }
+        bool IsAuthenticated { get; set; }
+
 
         /// <summary>
-        /// 会话账号
+        /// 检查企业参数
         /// </summary>
-        string Account { get; set; }
+        /// <param name="organize"></param>
+        /// <param name="isThrow"></param>
+        /// <returns></returns>
+        bool CheckAccountOrganize(string organize, bool isThrow = true);
 
-        /// <summary>
-        /// 手机号码(认证通过)
-        /// </summary>
-        string Mobile { get; set; }
 
-        /// <summary>
-        /// 邮箱地址(认证通过)
-        /// </summary>
-        string Email { get; set; }
-
-        /// <summary>
-        /// 角色标识
-        /// </summary>
-        string Role { get; set; }
-
-        /// <summary>
-        /// 类型
-        /// </summary>
-        int Type { get; set; }
-
-        /// <summary>
-        /// 状态
-        /// </summary>
-        int Status { get; set; }
-
-        /// <summary>
-        /// 账号Id
-        /// </summary>
-        Guid AccountId { get; set; }
-
-        /// <summary>
-        /// 租户Id
-        /// </summary>
-        Guid TenantId { get; set; }
     }
 }

@@ -65,9 +65,17 @@
 
         #endregion
 
-        #region 重写回调
+        #region 重写方法
 
-        #endregion
+        public override AppEntity Find(Guid key)
+        {
+            return base.Find(key);
+        }
+
+        public override AppEntity Find(Expression<Func<AppEntity, bool>> predicate)
+        {
+            return base.Find(predicate);
+        }
 
         public override List<AppEntity> Find(int top = 0, Expression<Func<AppEntity, bool>> predicate = null, List<KeyValueModel> sorting = null)
         {
@@ -86,5 +94,8 @@
 
             return list;
         }
+        
+        #endregion
+
     }
 }

@@ -35,17 +35,24 @@ namespace UTH.Meeting.Win.View
     public partial class Login : UTHPage
     {
         LoginViewModel viewModel;
+        Window parent;
 
         public Login()
         {
             InitializeComponent();
             Initialize();
+            this.Loaded += Login_Loaded;
         }
 
         private void Initialize()
         {
             viewModel = DataContext as LoginViewModel;
             viewModel.CheckNull();
+        }
+
+        private void Login_Loaded(object sender, RoutedEventArgs e)
+        {
+            parent = this.GetParent();
         }
 
         private void btnLogin_Click(object sender, RoutedEventArgs e)
@@ -63,21 +70,20 @@ namespace UTH.Meeting.Win.View
 
         private void hlFindPwd_Click(object sender, RoutedEventArgs e)
         {
-            WpfHelper.GetPrament<Window>(this).FindChild<Frame>("mainFrame")
-                .Navigate(new FindPwd());
+            parent.FindChild<Frame>("mainFrame").Navigate(new FindPwd());
         }
 
         private void hlRegist_Click(object sender, RoutedEventArgs e)
         {
-            WpfHelper.GetPrament<Window>(this).FindChild<Frame>("mainFrame")
-                .Navigate(new Regist());
+            parent.FindChild<Frame>("mainFrame").Navigate(new Regist());
         }
 
         private void ToMain()
         {
             Main mainForm = new Main();
             mainForm.Show();
-            WpfHelper.GetPrament<Window>(this).Close();
+
+            parent.Close();
         }
     }
 }

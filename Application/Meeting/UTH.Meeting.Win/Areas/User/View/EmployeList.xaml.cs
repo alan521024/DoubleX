@@ -13,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Collections.ObjectModel;
 using Newtonsoft.Json.Linq;
 using MahApps.Metro.Controls;
 using GalaSoft.MvvmLight;
@@ -34,20 +35,28 @@ namespace UTH.Meeting.Win.Areas.User.View
     /// </summary>
     public partial class EmployeList : UTHPage
     {
-        EmployeViewModel viewModel;
-        Win.View.Main parentWin;
-
         public EmployeList()
         {
             InitializeComponent();
             Initialize();
+            this.Loaded += EmployeList_Loaded;
         }
+
+        EmployeViewModel viewModel;
+        Win.View.Main parent;
 
         private void Initialize()
         {
             viewModel = DataContext as EmployeViewModel;
             viewModel.CheckNull();
+
             pager.Configuration(1, 10);
+            crumbs1.Items = AppHelper.GetMainNavigationCrumbs(new CrumbData() { Text = "用户管理", IsText = true, Split = "" });
+        }
+
+        private void EmployeList_Loaded(object sender, RoutedEventArgs e)
+        {
+            parent = this.GetParent<Win.View.Main>();
         }
 
         private void pager_PagerChanged(object sender, RoutedEventArgs e)
@@ -61,6 +70,23 @@ namespace UTH.Meeting.Win.Areas.User.View
                 pager.SetTotal((int)model.Total);
             }
         }
-    }
 
+        private void crumbs1_ItemSelect(object sender, RoutedEventArgs e)
+        {
+            var orgSource = e.OriginalSource as Hyperlink;
+            orgSource.CheckNull();
+
+            var data = orgSource.DataContext as CrumbData;
+            data.CheckNull();
+
+            AppHelper.MainNavigationCrumbsAction(parent, data);
+        }
+
+        private void btnAdd_Click(object sender, RoutedEventArgs e)
+        {
+            EmployeEdit edit = new EmployeEdit();
+            edit.Owner = parent;
+            edit.ShowDialog();
+        }
+    }
 }

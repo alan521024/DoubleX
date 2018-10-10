@@ -44,11 +44,6 @@
         public string Organize { get; set; }
 
         /// <summary>
-        /// 子账号
-        /// </summary>
-        public string Sub { get; set; }
-
-        /// <summary>
         /// 图片验证码
         /// </summary>
         public string ImgCode { get; set; }

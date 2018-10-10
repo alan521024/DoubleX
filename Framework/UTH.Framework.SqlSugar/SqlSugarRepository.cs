@@ -278,10 +278,6 @@
 
         protected bool isDataCache { get; set; }
 
-        protected virtual Func<TEntity, TEntity> FindItemFunc { get; set; }
-
-        protected virtual Func<List<TEntity>, List<TEntity>> FindListFunc { get; set; }
-
         #endregion
 
         #region 辅助操作
@@ -499,14 +495,14 @@
                     {
                         case EnumOperateType.Insert:
                             auditedItem.CreateDt = auditedItem.CreateDt.IsEmpty() ? DateTime.Now : auditedItem.CreateDt;
-                            auditedItem.CreateId = !Session.IsNull() ? Session.AccountId : Guid.Empty;
+                            auditedItem.CreateId = !Session.IsNull() ? Session.User.Id : Guid.Empty;
                             auditedItem.LastDt = auditedItem.LastDt.IsEmpty() ? DateTime.Now : auditedItem.LastDt;
-                            auditedItem.LastId = !Session.IsNull() ? Session.AccountId : Guid.Empty;
+                            auditedItem.LastId = !Session.IsNull() ? Session.User.Id : Guid.Empty;
                             break;
                         case EnumOperateType.Update:
                         case EnumOperateType.Delete:
                             auditedItem.LastDt = DateTime.Now; //auditedItem.LastDt.IsEmpty() ?  : auditedItem.LastDt;
-                            auditedItem.LastId = !Session.IsNull() ? Session.AccountId : Guid.Empty;
+                            auditedItem.LastId = !Session.IsNull() ? Session.User.Id : Guid.Empty;
                             break;
                     }
                 }
@@ -517,7 +513,7 @@
                     switch (operate)
                     {
                         case EnumOperateType.Insert:
-                            tenantItem.TenantId = !Session.IsNull() ? Session.TenantId : Guid.Empty;
+                            tenantItem.TenantId = !Session.IsNull() ? Session.User.TenantId : Guid.Empty;
                             break;
                         case EnumOperateType.Update:
                         case EnumOperateType.Delete:
@@ -989,7 +985,6 @@
         public virtual TEntity Find(TKey key)
         {
             var entity = GetQueryable().InSingle(key);
-            FindItemFunc?.Invoke(entity);
             return entity;
         }
 
@@ -1001,7 +996,6 @@
         public virtual TEntity Find(Expression<Func<TEntity, bool>> predicate)
         {
             var entity = GetQueryable(predicate: predicate).First();  //超过1条,使用Single会报错，First不会报错
-            FindItemFunc?.Invoke(entity);
             return entity;
         }
 
@@ -1021,11 +1015,7 @@
                 query = query.Take(top);
             }
 
-            var list = query.ToList();
-
-            FindListFunc?.Invoke(list);
-
-            return list;
+            return query.ToList();
         }
 
         /// <summary>
@@ -1038,9 +1028,6 @@
         public virtual List<TEntity> Paging(int page, int size, Expression<Func<TEntity, bool>> predicate, List<KeyValueModel> sorting, ref int total)
         {
             var list = GetQueryable(predicate: predicate, sorting: sorting).ToPageList(page, size, ref total);
-
-            FindListFunc?.Invoke(list);
-
             return list;
         }
 

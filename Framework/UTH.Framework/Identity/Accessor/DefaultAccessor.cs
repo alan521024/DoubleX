@@ -10,6 +10,7 @@
     using UTH.Infrastructure.Resource;
     using UTH.Infrastructure.Resource.Culture;
     using UTH.Infrastructure.Utility;
+    using System.Globalization;
 
     /// <summary>
     /// 默认访问器
@@ -17,24 +18,29 @@
     public class DefaultAccessor : IAccessor, ISingletonDependency
     {
         /// <summary>
-        /// 访问者(当事人信息)
+        /// 访问持有者(当事人信息/可有多个Identity)
         /// </summary>
         public virtual ClaimsPrincipal Principal => Thread.CurrentPrincipal as ClaimsPrincipal;
 
         /// <summary>
-        /// 访问数据项
+        /// 区域文化
         /// </summary>
-        public virtual Dictionary<string, string> Items
-        {
-            get
-            {
-                var _items = new Dictionary<string, string>();
-                _items.Add("Culture", Thread.CurrentThread.CurrentCulture.Name);
-                _items.Add("AppCode", EngineHelper.Configuration.AppCode);
-                _items.Add("ClientIp", "127.0.0.1");
-                return _items;
-            }
-        }
+        public virtual CultureInfo Culture { get { return Thread.CurrentThread.CurrentCulture; } }
+
+        /// <summary>
+        /// 客户端地址
+        /// </summary>
+        public virtual string ClientIp { get { return "127.0.0.1"; } }
+
+        /// <summary>
+        /// 应用程序Code
+        /// </summary>
+        public virtual string AppCode { get { return EngineHelper.Configuration.AppCode; } }
+
+        /// <summary>
+        /// 访问Token
+        /// </summary>
+        public virtual string Token { get; }
 
     }
 }

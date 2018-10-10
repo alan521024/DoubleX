@@ -14,12 +14,12 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 组员编辑输入
+    /// 人员编辑输入
     /// </summary>
-    public class EmployeEditInput : EmployeDto, IInput, IInputDelete, IInputUpdate, IInputTransaction
+    public class EmployeEditInput : EmployeBase, IInput, IInputDelete, IInputUpdate
     {
         public List<Guid> Ids { get; set; }
-        public bool IsTransaction { get; set; } = false;
+        public string Password { get; set; }
     }
 
     /// <summary>

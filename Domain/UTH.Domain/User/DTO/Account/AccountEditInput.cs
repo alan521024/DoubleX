@@ -16,10 +16,9 @@
     /// <summary>
     /// 账号编辑输入
     /// </summary>
-    public class AccountEditInput : AccountDto, IInput, IInputDelete, IInputUpdate, IInputTransaction
+    public class AccountEditInput : AccountBase, IInput, IInputDelete, IInputUpdate
     {
         public List<Guid> Ids { get; set; }
-        public bool IsTransaction { get; set; } = false;
     }
 
     /// <summary>

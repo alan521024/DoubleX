@@ -58,6 +58,9 @@
         <Setter Property="Margin" Value="0,0,10,0"></Setter>
         <Setter Property="Margin" Value="0,0,10,0"></Setter>
     </Style>
+    <Style x:Key="formTitleMin" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource formTitle}">
+        <Setter Property="Width" Value="50"></Setter>
+    </Style>
 
     <!--search-->
     <Style x:Key="searchTitle" TargetType="{x:Type TextBlock}">
@@ -67,7 +70,7 @@
     <Style x:Key="searchTxt" TargetType="{x:Type TextBlock}">
         <Setter Property="VerticalAlignment" Value="Center"></Setter>
         <Setter Property="HorizontalAlignment" Value="Right"></Setter>
-        <Setter Property="Margin" Value="10,0,10,0"></Setter>
+        <Setter Property="Margin" Value="0"></Setter>
     </Style>
     <Style x:Key="searchTextbox" TargetType="{x:Type TextBox}">
         <Setter Property="MinWidth" Value="160"></Setter>
@@ -312,6 +315,70 @@
                         </TextBox>
                         <TextBlock Text="条" />
                     </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--crumbs-->
+    <Style x:Key="CrumbsView" TargetType="{x:Type ListView}" BasedOn="{x:Null}">
+        <Setter Property="Background" Value="Transparent"></Setter>
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"></Setter>
+    </Style>
+    <Style x:Key="CrumbsViewItem" TargetType="{x:Type ListViewItem}" BasedOn="{x:Null}">
+        <Setter Property="OverridesDefaultStyle" Value="True"></Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListViewItem">
+                    <Border x:Name="Border" BorderThickness="0" Margin="0" Padding="0">
+                        <ContentPresenter VerticalAlignment="Center" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="CrumbsLink" TargetType="{x:Type Hyperlink}">
+        <Setter Property="TextBlock.TextDecorations" Value="{x:Null}"></Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="Red"></Setter>
+                <Setter Property="TextBlock.TextDecorations">
+                    <Setter.Value>
+                        <TextDecorationCollection>
+                            <TextDecoration Location="Underline"/>
+                        </TextDecorationCollection>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="CrumbsText" TargetType="{x:Type TextBlock}">
+        <Setter Property="Margin" Value="0,15,5,15"></Setter>
+    </Style>
+
+    <Style TargetType="{x:Type local:Crumbs}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:Crumbs}">
+                    <ListView Style="{DynamicResource CrumbsView}" ItemContainerStyle="{DynamicResource CrumbsViewItem}"
+                              Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}"
+                              ItemsSource="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Items,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal" IsItemsHost="True"/>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Style="{DynamicResource CrumbsText}">
+                                    <Hyperlink NavigateUri="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Url}" ToolTip="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Tip}" Command="{x:Static local:Crumbs.SelectCommand}" Style="{DynamicResource CrumbsLink}">
+                                        <TextBlock Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Text}"></TextBlock>
+                                    </Hyperlink>
+                                    <TextBlock Margin="2,0,0,0" Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Content.Split}"></TextBlock>
+                                </TextBlock>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

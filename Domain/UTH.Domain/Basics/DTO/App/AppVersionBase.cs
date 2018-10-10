@@ -38,17 +38,6 @@
         public string Descript { get; set; }
 
         /// <summary>
-        /// 更新类型
-        /// </summary>
-        public EnumUpdateType UpdateType { get; set; }
-
-        /// <summary>
-        /// 发布时间
-        /// </summary>
-        public DateTime ReleaseDt { get; set; }
-
-
-        /// <summary>
         /// 版本大小(KB)
         /// </summary>
         public long FileSize { get; set; }
@@ -67,6 +56,16 @@
         /// 文件名称
         /// </summary>
         public string FileName { get; set; }
+
+        /// <summary>
+        /// 发布时间
+        /// </summary>
+        public DateTime ReleaseDt { get; set; }
+
+        /// <summary>
+        /// 更新类型
+        /// </summary>
+        public EnumUpdateType UpdateType { get; set; }
 
     }
 }

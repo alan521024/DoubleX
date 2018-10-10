@@ -28,13 +28,12 @@
 
     <controls:MetroWindow.RightWindowCommands>
         <controls:WindowCommands>
-            <!--Visibility="{Binding IsOrganize}"-->
-            <Button x:Name="btnEmploye" Content="{x:Static culture:Lang.userZhangHaoGuanLi}" ToolTip="{x:Static culture:Lang.userZhangHaoGuanLi}" Click="btnEmploye_Click" Visibility="Collapsed" />
+            <Button x:Name="btnEmploye" Content="{x:Static culture:Lang.userZhangHaoGuanLi}" ToolTip="{x:Static culture:Lang.userZhangHaoGuanLi}" Click="btnEmploye_Click" Visibility="{Binding IsOrganize}" />
             <Button x:Name="btnExport" Content="{x:Static culture:Lang.sysDaoChu}" ToolTip="{x:Static culture:Lang.sysDaoChu}" Click="btnExport_Click" />
             <Button x:Name="btnSetting" Content="{x:Static culture:Lang.sysSheZhi}" ToolTip="{x:Static culture:Lang.sysSheZhi}" Click="btnSetting_Click" />
-            <Button x:Name="btnLogout" Content="{x:Static culture:Lang.userTuiChu}" ToolTip="{x:Static culture:Lang.userTuiChu}" Click="btnLogout_Click" Visibility="Collapsed" />
             <Button x:Name="btnHelp" Content="{x:Static culture:Lang.sysBangZhu}" ToolTip="{x:Static culture:Lang.sysBangZhu}" Click="btnHelp_Click" />
             <Button x:Name="btnAbout" Content="{x:Static culture:Lang.sysGuanYu}" ToolTip="{x:Static culture:Lang.sysGuanYu}" Click="btnAbout_Click" />
+            <Button x:Name="btnLogout" Content="{x:Static culture:Lang.userTuiChu}" ToolTip="{x:Static culture:Lang.userTuiChu}" Click="btnLogout_Click" />
         </controls:WindowCommands>
     </controls:MetroWindow.RightWindowCommands>
 

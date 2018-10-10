@@ -18,6 +18,7 @@
     using System.Runtime.Remoting;
     using System.Runtime.Remoting.Channels;
     using System.Runtime.Remoting.Channels.Ipc;
+    using System.Collections.ObjectModel;
     using Microsoft.Win32;
     using Newtonsoft.Json.Linq;
     using MahApps.Metro.Controls;
@@ -140,6 +141,37 @@
             }
         }
 
+        public static ObservableCollection<CrumbData> GetMainNavigationCrumbs(params CrumbData[] navs)
+        {
+            var items = new ObservableCollection<CrumbData>();
+
+            items.Add(new CrumbData() { Text = culture.Lang.sysFanHuiShangJi, IsBack = true, Split = "|" });
+            items.Add(new CrumbData() { Text = culture.Lang.metHuiYiJieMian, IsHome = true });
+            Array.ForEach(navs, x =>
+            {
+                items.Add(x);
+            });
+            return items;
+        }
+
+        public static void MainNavigationCrumbsAction(Win.View.Main main, CrumbData data)
+        {
+            main.CheckNull();
+            data.CheckNull();
+
+            if (!main.IsNull())
+            {
+                if (data.IsBack)
+                {
+                    main.mainFrame.GoBack();
+                }
+                if (data.IsHome)
+                {
+                    main.ShowMeeting();
+                }
+            }
+        }
+
         #endregion
 
         #region 服务/设备/语音
@@ -155,7 +187,7 @@
             {
                 ProcessHelper.Kill(server);
             }
-            
+
             //System.Runtime.Remoting.RemotingException:“向 IPC 端口写入失败: 管道正在被关闭。
             //System.Runtime.Remoting.RemotingException:“连接到 IPC 端口失败: 系统找不到指定的文件。
             var progress = ProcessHelper.Start($"{AppDomain.CurrentDomain.BaseDirectory}{server}.exe", style: EngineHelper.Configuration.IsDebugger ? ProcessWindowStyle.Minimized : ProcessWindowStyle.Hidden);
@@ -216,7 +248,7 @@
             return serverObj;
         }
         static ServerMarshalByRefObject serverObj = null;
-        
+
         #endregion
 
         #region 会议业务资料

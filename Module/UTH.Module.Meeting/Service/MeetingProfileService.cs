@@ -85,14 +85,14 @@
         /// <returns></returns>
         public MeetingProfileOutput GetLoginAccountProfile()
         {
-            Session.AccountId.CheckEmpty();
+            Session.User.Id.CheckEmpty();
 
-            var entity = repository.Find(x => x.AccountId == Session.AccountId);
+            var entity = repository.Find(x => x.AccountId == Session.User.Id);
             if (entity.IsNull())
             {
                 entity = new MeetingProfileEntity()
                 {
-                    AccountId = Session.AccountId,
+                    AccountId = Session.User.Id,
                     SourceLang = "zs",
                     TargetLangs = "en",
                     Speed = 5,
@@ -112,9 +112,9 @@
         /// <returns></returns>
         public MeetingProfileOutput SaveLoginAccountProfile(MeetingProfileEditInput input)
         {
-            Session.AccountId.CheckEmpty();
+            Session.User.Id.CheckEmpty();
 
-            var entity = repository.Find(x => x.AccountId == Session.AccountId);
+            var entity = repository.Find(x => x.AccountId == Session.User.Id);
             entity.CheckNull();
 
             input.Id = entity.Id;

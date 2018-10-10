@@ -35,25 +35,25 @@ namespace UTH.Meeting.Win.Areas.Conference.View
     /// </summary>
     public partial class Participant : UTHPage
     {
+        ParticipantViewModel viewModel;
+        Win.View.Main parent;
+
         public Participant()
         {
             InitializeComponent();
             Initialize();
+            this.Loaded += Participant_Loaded;
         }
-
-        ParticipantViewModel viewModel;
-        Win.View.Main parentWin;
 
         private void Initialize()
         {
             viewModel = DataContext as ParticipantViewModel;
             viewModel.CheckNull();
-            this.Loaded += Participant_Loaded;
         }
 
         private void Participant_Loaded(object sender, RoutedEventArgs e)
         {
-            parentWin = WpfHelper.GetPrament<UTH.Meeting.Win.View.Main>(this);
+            parent = this.GetParent<Win.View.Main>();
         }
 
         private void btnStart_Click(object sender, RoutedEventArgs e)
@@ -69,7 +69,7 @@ namespace UTH.Meeting.Win.Areas.Conference.View
                 throw new DbxException(EnumCode.提示消息, culture.Lang.metHuiYiCuoWu);
             }
 
-            parentWin.mainFrame.Navigate(new Areas.Conference.View.Meeting(meeting: model));
+            parent.mainFrame.Navigate(new Areas.Conference.View.Meeting(meeting: model));
         }
     }
 }

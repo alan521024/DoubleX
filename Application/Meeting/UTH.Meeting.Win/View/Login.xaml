@@ -27,14 +27,14 @@
             <Image Source="pack://application:,,,/UTH.Meeting.Win;component/Assets/Image/account1.png"></Image>
         </StackPanel>
         <StackPanel Grid.Row="1" Margin="35,15,35,0">
-            <TextBox x:Name="txtAccount" Text="{Binding Account}">
+            <TextBox x:Name="txtAccount" Text="{Binding Account}" controls:TextBoxHelper.Watermark="{x:Static culture:Lang.userQingShuRuZhangHao}">
                 <!--<TextBox.InputBindings>
                     <KeyBinding Command="{Binding OnLogin}" Key="Enter"/>
                 </TextBox.InputBindings>-->
             </TextBox>
         </StackPanel>
         <StackPanel Grid.Row="2" Margin="35,15,35,0">
-            <PasswordBox x:Name="txtPwd"  behaviors:PasswordBoxBindingBehavior.Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></PasswordBox>
+            <PasswordBox x:Name="txtPwd"  behaviors:PasswordBoxBindingBehavior.Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" controls:TextBoxHelper.Watermark="{x:Static culture:Lang.userQingShuRuMiMa }"></PasswordBox>
         </StackPanel>
         <DockPanel Grid.Row="3"  Margin="35,15,35,0">
             <CheckBox DockPanel.Dock="Left" Content="{x:Static culture:Lang.userJiZhuMiMa}" IsChecked="{Binding IsRead, Converter={StaticResource BooleanConverter}}"></CheckBox>

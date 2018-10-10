@@ -83,7 +83,7 @@ namespace UTH.Update.Win
 
             //(3)访问处理
             EngineHelper.RegisterType<IAccessor, WpfAccessor>();
-            EngineHelper.RegisterType<ISessionService, IdentifierSession>();
+            EngineHelper.RegisterType<IApplicationSession, IdentifierSession>();
             EngineHelper.RegisterType<ITokenService, TokenService>();
 
             //IOC注入

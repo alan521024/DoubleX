@@ -14,7 +14,7 @@
     /// <summary>
     /// 基础信息（Key + Audited + SoftDeleteEntity）
     /// </summary>
-    public class BaseGeneralEntity<TKey> : ModelContext, IEntity<TKey>, IAuditedEntity<TKey>, ISoftDeleteEntity
+    public class BaseGeneralEntity<TKey> : IEntity<TKey>, IAuditedEntity<TKey>, ISoftDeleteEntity
     {
         /// <summary>
         /// 主键

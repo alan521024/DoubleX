@@ -17,16 +17,15 @@
     [SugarTable("BAS_App")]
     public class AppEntity : BaseGeneralEntity
     {
+        /// <summary>
+        /// 应用类型
+        /// </summary>
+        public EnumAppType AppType { get; set; }
 
         /// <summary>
         /// 名称
         /// </summary>
         public string Name { get; set; }
-
-        /// <summary>
-        /// 应用类型
-        /// </summary>
-        public EnumAppType AppType { get; set; }
 
         /// <summary>
         /// 应用编码
@@ -43,6 +42,9 @@
         /// </summary>
         public string Secret { get; set; }
 
+        /// <summary>
+        /// 应用版本(列忽略)
+        /// </summary>
         [SugarColumn(IsIgnore = true)]
         public List<AppVersionEntity> Versions { get; set; } = new List<AppVersionEntity>();
     }

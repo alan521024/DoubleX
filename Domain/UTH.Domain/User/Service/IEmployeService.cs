@@ -12,7 +12,7 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 组员业务接口
+    /// 人员业务接口
     /// </summary>
     public interface IEmployeService : IApplicationDefault<EmployeEntity, EmployeEditInput, EmployeOutput>
     {

@@ -30,7 +30,7 @@
 
         public IActionResult Index(string id = null)
         {
-            if (Current.Token.IsEmpty())
+            if (Current.Accessor.Token.IsEmpty())
             {
                 WebHelper.GetContext().SignOutAsync();
                 return Redirect($"~/wap/home/sign?id={id}");

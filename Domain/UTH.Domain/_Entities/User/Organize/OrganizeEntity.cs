@@ -18,9 +18,9 @@
     public class OrganizeEntity : BaseFullEntity
     {
         /// <summary>
-        /// 唯一标识(组织简称或标识符号)
+        /// 组织编号
         /// </summary>
-        public string UUID { get; set; }
+        public string No { get; set; }
 
         /// <summary>
         /// 组织名称

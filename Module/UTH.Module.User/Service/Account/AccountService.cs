@@ -21,8 +21,12 @@
     {
         #region 构造函数
 
-        public AccountService(IAccountRepository _repository, ITokenService _tokenService) : base(_repository)
+        IEmployeService employeService;
+        ITokenService tokenService;
+
+        public AccountService(IAccountRepository _repository, IEmployeService _employeService, ITokenService _tokenService) : base(_repository)
         {
+            employeService = _employeService;
             tokenService = _tokenService;
         }
 
@@ -33,8 +37,6 @@
         #endregion
 
         #region 私有变量
-
-        ITokenService tokenService;
 
         #endregion
 
@@ -103,14 +105,14 @@
 
         public override Action<AccountEditInput> InsertBeforeCall => (input) =>
         {
-            var maxNum = repository.Max<string>(field: x => x.Num, predicate: x => x.Type == input.Type);
+            var maxNum = repository.Max<string>(field: x => x.No, predicate: x => x.Type == input.Type);
             if (maxNum.IsEmpty())
             {
-                input.Num = $"{input.Type}00000000";
+                input.No = $"{input.Type}00000000";
             }
             else
             {
-                input.Num = StringHelper.Get(IntHelper.Get(maxNum) + 1);
+                input.No = StringHelper.Get(IntHelper.Get(maxNum) + 1);
             }
         };
         public override Func<AccountOutput, AccountOutput> InsertAfterCall => base.InsertAfterCall;
@@ -145,8 +147,7 @@
         }
 
         #endregion
-
-
+        
         /// <summary>
         /// 账户签入
         /// </summary>
@@ -175,11 +176,32 @@
 
             account.LoginCount++;
             account.LoginLastDt = DateTime.Now;
-            account.LoginLastIp = Session.ClientIp;
+            account.LoginLastIp = Session.Accessor.ClientIp;
+
             repository.Update(account);
 
+            var mebService = DomainHelper.CreateTransactionService<IMemberService, MemberEntity>(repository);
+            var orgService = DomainHelper.CreateTransactionService<IOrganizeService, OrganizeEntity>(repository);
+            var empService = DomainHelper.CreateTransactionService<IEmployeService, EmployeEntity>(repository);
+
+            var type = EnumsHelper.Get<EnumAccountType>(account.Type);
+            var status = EnumsHelper.Get<EnumAccountStatus>(account.Status);
+            string organize = string.Empty, employe = string.Empty;
+            if (type == EnumAccountType.组织)
+            {
+                var org = orgService.Get(account.Id);
+                organize = org?.No;
+            }
+            if (type == EnumAccountType.人员)
+            {
+                var emp = empService.Get(account.Id);
+                employe = emp?.No;
+            }
+
             var result = EngineHelper.Map<SignInOutput>(account);
-            result.Token = tokenService.Generate(account.Id.FormatString(), account.Account, account.Mobile, account.Email, account.RealName, "", account.Type, account.Status);
+
+            result.Token = tokenService.Generate(Session.Accessor.AppCode, account.Id, account.Account, account.Mobile, account.Email, account.RealName, "", organize, employe, type, status);
+
             return result;
         }
 
@@ -208,14 +230,6 @@
         //[Notification(EnumNotificationCategory.Regist, EnumNotificationType.Sms)]
         public virtual RegistOutput Regist(RegistInput input)
         {
-            return EngineHelper.Map<RegistOutput>(Create(input));
-        }
-
-        /// <summary>
-        /// 账户创建
-        /// </summary>
-        public virtual AccountEntity Create(RegistInput input, bool isInnerTransaction = true)
-        {
             input.CheckNull();
             TrimRegistInputSpace(input);
 
@@ -223,17 +237,16 @@
             var orgService = DomainHelper.CreateTransactionService<IOrganizeService, OrganizeEntity>(repository);
             var empService = DomainHelper.CreateTransactionService<IEmployeService, EmployeEntity>(repository);
 
-            var orgUUID = input.Organize?.ToLower();
-            var empUUID = input.Sub?.ToLower();
-
             //输入校验
             if ((input.Account + input.Mobile + input.Email).IsEmpty())
             {
                 throw new DbxException(EnumCode.提示消息, Lang.userQingShuRuZhangHaoShouJiHaoMaYouXiangDiZhi);
             }
-            if (!empUUID.IsEmpty() && orgUUID.IsEmpty())
+
+            var organize = input.Organize?.ToLower();
+            if (!organize.IsEmpty() && orgService.Query(where: x => x.No == organize).Count() > 0)
             {
-                throw new DbxException(EnumCode.提示消息, Lang.userZhangHaoCuoWu);
+                throw new DbxException(EnumCode.提示消息, Lang.userZhangHuYiCunZai);
             }
 
             //账号信息
@@ -287,59 +300,17 @@
             mebInput.Nickname = actInput.Account;
             mebInput.Gender = EnumGender.男.GetValue();
 
-            //组织组员
+            //组织信息
             OrganizeEditInput orgInput = null;
-            EmployeEditInput empInput = null;
-
-            List<OrganizeOutput> queryOrgs = null;
-            List<EmployeOutput> queryEmps = null;
-
-            if (!orgUUID.IsEmpty())
+            if (!organize.IsEmpty())
             {
-                queryOrgs = orgService.Query(where: x => x.UUID == orgUUID);
-                if (!empUUID.IsEmpty())
-                {
-                    queryEmps = empService.Query(where: x => x.Organize == orgUUID && x.UUID == empUUID);
-                }
-            }
-
-            //组织注册
-            if (!orgUUID.IsEmpty() && empUUID.IsEmpty())
-            {
-                if (queryOrgs.Count() > 0)
-                {
-                    throw new DbxException(EnumCode.提示消息, Lang.userZhangHuYiCunZai);
-                }
-
                 actInput.Type = EnumAccountType.组织.GetValue();
-
                 orgInput = new OrganizeEditInput();
                 orgInput.Id = actInput.Id;
-                orgInput.UUID = orgUUID;
-                orgInput.Name = orgInput.Name.IsEmpty() ? orgUUID : orgInput.Name;
+                orgInput.No = organize;
+                orgInput.Name = "";
             }
 
-            //组员注册
-            if (!orgUUID.IsEmpty() && !empUUID.IsEmpty())
-            {
-                if (queryOrgs.Count() != 1)
-                {
-                    throw new DbxException(EnumCode.提示消息, Lang.userZhangHaoCuoWu);
-                }
-
-                actInput.Type = EnumAccountType.组员.GetValue();
-
-                empInput = new EmployeEditInput();
-                empInput.Id = actInput.Id;
-                empInput.Organize = orgUUID;
-                empInput.UUID = empUUID;
-                empInput.Name = empUUID;
-            }
-
-            //账号状态
-            actInput.Status = EnumAccountStatus.正常.GetValue();
-
-            //事务提交
             var result = repository.UseTransaction((obj) =>
             {
                 Insert(actInput);
@@ -350,19 +321,13 @@
                 {
                     orgService.Insert(orgInput);
                 }
-
-                if (empInput != null)
-                {
-                    empService.Insert(empInput);
-                }
             });
-
             if (!result)
             {
                 throw new DbxException(EnumCode.提示消息, Lang.userZhuCeShiBai);
             }
 
-            return actInput;
+            return EngineHelper.Map<RegistOutput>(actInput);
         }
 
         /// <summary>
@@ -411,7 +376,8 @@
         }
 
         /// <summary>
-        /// 账户查找(account/mobile/email-[userName])
+        /// 账户查找
+        /// (account/mobile/email-[userName])
         /// </summary>
         public virtual AccountEntity FindAccount(string account = null, string mobile = null, string email = null, string userName = null)
         {
@@ -442,7 +408,6 @@
 
             return entity;
         }
-
 
     }
 }
