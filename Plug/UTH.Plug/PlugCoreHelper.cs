@@ -279,10 +279,10 @@
                     ApiServerAuthError?.Invoke(token);
                     break;
                 case EnumCode.认证过期:
-                    if (!ApiServerAuthExpire.IsNull() && url.ToLower().IndexOf(ApiUrl.User.SignRefresh.ToLower()) == -1)
+                    if (!ApiServerAuthExpire.IsNull() && url.ToLower().IndexOf(ApiUrl.User.Refresh.ToLower()) == -1)
                     {
                         var newToken = string.Empty;
-                        var tokenResult = GetResult<string>(ApiUrl.User.SignRefresh, post: JsonHelper.Serialize(new { Token = token }), contentType: contentType);
+                        var tokenResult = GetResult<string>(ApiUrl.User.Refresh, post: JsonHelper.Serialize(new { Token = token }), contentType: contentType);
                         if (tokenResult.Code == EnumCode.成功)
                         {
                             newToken = tokenResult.Obj;

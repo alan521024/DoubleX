@@ -12,10 +12,10 @@
     using UTH.Infrastructure.Utility;
 
     /// <summary>
-    /// 应用服务基类实现
+    /// 领域服务接口
     /// </summary>
-    public abstract class ApplicationService : BaseService, IApplicationService
+    public interface IDomainService : IDependency
     {
-
     }
 }
+

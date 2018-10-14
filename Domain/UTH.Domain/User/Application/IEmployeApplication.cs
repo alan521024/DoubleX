@@ -6,17 +6,19 @@
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using System.ComponentModel;
-    using FluentValidation;
+    using System.Security.Claims;
     using UTH.Infrastructure.Resource.Culture;
     using UTH.Infrastructure.Utility;
     using UTH.Framework;
 
     /// <summary>
-    /// 账号输出信息
+    /// 人员应用业务接口
     /// </summary>
-    public class AccountOutput : AccountDTO, IOutput
+    public interface IEmployeApplication : IApplicationService, IApplicationCrudService<EmployeDTO>
     {
-
+        /// <summary>
+        /// 创建人员
+        /// </summary>
+        EmployeDTO Create(EmployeEditInput input);
     }
 }

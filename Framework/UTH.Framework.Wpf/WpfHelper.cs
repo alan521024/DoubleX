@@ -195,16 +195,28 @@ namespace UTH.Framework.Wpf
         //TODO:MessageBox 位置(基本主窗体，非屏幕)
         //http://www.360doc.com/content/09/1117/16/466494_9221971.shtml
 
-        public static void Message(string msg, Action action = null, Window owner = null)
+        /// <summary>
+        /// 弹出消息
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="title"></param>
+        /// <param name="action"></param>
+        /// <param name="owner"></param>
+        public static void Message(string msg, string title = null, Action action = null, Window owner = null)
         {
             MessageBoxResult status = MessageBoxResult.No;
+            if (title.IsEmpty())
+            {
+                title = Lang.sysTiShi;
+            }
+
             if (owner.IsNull())
             {
-                status = MessageBox.Show(msg, Lang.sysTiShi, MessageBoxButton.OK, MessageBoxImage.Information);
+                status = MessageBox.Show(msg, title, MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else
             {
-                status = MessageBox.Show(owner, msg, Lang.sysTiShi, MessageBoxButton.OK, MessageBoxImage.Information);
+                status = MessageBox.Show(owner, msg, title, MessageBoxButton.OK, MessageBoxImage.Information);
             }
 
             if (status == MessageBoxResult.OK)
@@ -212,16 +224,29 @@ namespace UTH.Framework.Wpf
                 action?.Invoke();
             }
         }
-        public static void Success(string msg, Action action = null, Window owner = null)
+
+        /// <summary>
+        /// 弹出成功信息
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="title"></param>
+        /// <param name="action"></param>
+        /// <param name="owner"></param>
+        public static void Success(string msg, string title = null, Action action = null, Window owner = null)
         {
             MessageBoxResult status = MessageBoxResult.No;
+            if (title.IsEmpty())
+            {
+                title = Lang.sysTiShi;
+            }
+
             if (owner.IsNull())
             {
-                status = MessageBox.Show(msg, Lang.sysTiShi, MessageBoxButton.OK, MessageBoxImage.Information);
+                status = MessageBox.Show(msg, title, MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else
             {
-                status = MessageBox.Show(owner, msg, Lang.sysTiShi, MessageBoxButton.OK, MessageBoxImage.Information);
+                status = MessageBox.Show(owner, msg, title, MessageBoxButton.OK, MessageBoxImage.Information);
             }
 
             if (status == MessageBoxResult.OK)
@@ -229,16 +254,29 @@ namespace UTH.Framework.Wpf
                 action?.Invoke();
             }
         }
-        public static void Error(string msg, Action action = null, Window owner = null)
+
+        /// <summary>
+        /// 弹出错误信息
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="title"></param>
+        /// <param name="action"></param>
+        /// <param name="owner"></param>
+        public static void Error(string msg, string title = null, Action action = null, Window owner = null)
         {
             MessageBoxResult status = MessageBoxResult.No;
+            if (title.IsEmpty())
+            {
+                title = Lang.sysTiShi;
+            }
+
             if (owner.IsNull())
             {
-                status = MessageBox.Show(msg, Lang.sysTiShi, MessageBoxButton.OK, MessageBoxImage.Error);
+                status = MessageBox.Show(msg, title, MessageBoxButton.OK, MessageBoxImage.Error);
             }
             else
             {
-                status = MessageBox.Show(owner, msg, Lang.sysTiShi, MessageBoxButton.OK, MessageBoxImage.Error);
+                status = MessageBox.Show(owner, msg, title, MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
             if (status == MessageBoxResult.OK)
@@ -246,16 +284,30 @@ namespace UTH.Framework.Wpf
                 action?.Invoke();
             }
         }
-        public static void Confirm(string msg, Action okAction = null, Action cancelAction = null, Window owner = null)
+
+        /// <summary>
+        /// 弹出确认框
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="title"></param>
+        /// <param name="okAction"></param>
+        /// <param name="cancelAction"></param>
+        /// <param name="owner"></param>
+        public static void Confirm(string msg, string title = null, Action okAction = null, Action cancelAction = null, Window owner = null)
         {
             MessageBoxResult status = MessageBoxResult.No;
+            if (title.IsEmpty())
+            {
+                title = Lang.sysTiShi;
+            }
+
             if (owner.IsNull())
             {
-                status = MessageBox.Show(msg, Lang.sysTiShi, MessageBoxButton.OKCancel, MessageBoxImage.Question);
+                status = MessageBox.Show(msg, title, MessageBoxButton.OKCancel, MessageBoxImage.Question);
             }
             else
             {
-                status = MessageBox.Show(owner, msg, Lang.sysTiShi, MessageBoxButton.OKCancel, MessageBoxImage.Question);
+                status = MessageBox.Show(owner, msg, title, MessageBoxButton.OKCancel, MessageBoxImage.Question);
             }
 
             if (status == MessageBoxResult.OK)
@@ -268,74 +320,7 @@ namespace UTH.Framework.Wpf
             }
         }
 
-        public static void ViewMessage(this UTHViewModel view, string msg, Action action = null, bool isError = false)
-        {
-            if (action.IsNull())
-            {
-                CommonEventModel.MessageTip.SendAction<string>(view, msg);
-            }
-            else
-            {
-                CommonEventModel.MessageCall.SendAction<TParam<string, Action, bool>>(view, new TParam<string, Action, bool>()
-                {
-                    Param1 = msg,
-                    Param2 = action,
-                    Param3 = isError
-                });
-            }
-        }
 
-        public static void ViewSuccess(this UTHViewModel view, string msg, Action action = null)
-        {
-            if (action.IsNull())
-            {
-                CommonEventModel.SuccessTip.SendAction<string>(view, msg);
-            }
-            else
-            {
-                CommonEventModel.SuccessTip.SendAction<TParam<string, Action>>(view, new TParam<string, Action>()
-                {
-                    Param1 = msg,
-                    Param2 = action
-                });
-            }
-        }
-
-        public static void ViewError(this UTHViewModel view, string msg, Action action = null)
-        {
-            if (action.IsNull())
-            {
-                CommonEventModel.ErrorTip.SendAction<string>(view, msg);
-            }
-            else
-            {
-                CommonEventModel.ErrorCall.SendAction<TParam<string, Action>>(view, new TParam<string, Action>()
-                {
-                    Param1 = msg,
-                    Param2 = action
-                });
-            }
-        }
-
-        public static void ViewConfirm(this UTHViewModel view, string msg, Action okAction = null, Action cancelAction = null)
-        {
-            if (okAction.IsNull() && cancelAction.IsNull())
-            {
-                CommonEventModel.ConfirmTip.SendAction<string>(view, msg);
-            }
-            else
-            {
-                CommonEventModel.ConfirmCall.SendAction<TParam<string, Action, Action>>(view, new TParam<string, Action, Action>()
-                {
-                    Param1 = msg,
-                    Param2 = okAction,
-                    Param3 = cancelAction
-                });
-            }
-        }
-
-
-        //DispatcherHelper.CheckBeginInvokeOnUI(()=>{});
         /// <summary>
         /// 通知主线程去完成更新(执行方法)
         /// </summary>
@@ -410,10 +395,7 @@ namespace UTH.Framework.Wpf
             if (exception != null && exception.Code == EnumCode.初始失败)
             {
                 e.Handled = true;
-                Error("初始化错误，请检查设备/服务/会议信息并重启应用程序 ", () =>
-                {
-                    action();
-                });
+                Error("初始化错误，请检查设备/服务/会议信息并重启应用程序 ", action: action);
                 return;
             }
 
@@ -427,10 +409,7 @@ namespace UTH.Framework.Wpf
             {
                 msgText = "未知错误";
             }
-            WpfHelper.Error(string.Format("System Error: {0} {1}", Environment.NewLine, msgText), () =>
-            {
-                action();
-            });
+            WpfHelper.Error(string.Format("System Error: {0} {1}", Environment.NewLine, msgText), action: action);
         }
 
         /// <summary>

@@ -6,27 +6,20 @@
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using System.ComponentModel;
-    using FluentValidation;
+    using SqlSugar;
     using UTH.Infrastructure.Resource.Culture;
     using UTH.Infrastructure.Utility;
     using UTH.Framework;
 
     /// <summary>
-    /// 账号信息(DTO)
+    /// 账号信息
     /// </summary>
-    [Serializable]
-    public class AccountDTO : IEntityKeys
+    [SugarTable("UC_Account")]
+    public class AccountEntity : BaseFullEntity
     {
-        /// <summary>
-        /// Id
-        /// </summary>
-        public Guid Id { get; set; }
-
-        /// <summary>
-        /// Ids
-        /// </summary>
-        public List<Guid> Ids { get; set; }
+        public AccountEntity()
+        {
+        }
 
         /// <summary>
         /// 账户类型(EnumAccountType)

@@ -24,6 +24,7 @@
     using UTH.Infrastructure.Resource.Culture;
     using UTH.Infrastructure.Utility;
     using UTH.Framework;
+    using System.Windows.Input;
 
     /// <summary>
     /// ViewModel 基类
@@ -33,17 +34,16 @@
         /// <summary>
         /// 构造函数
         /// </summary>
-        public UTHViewModel() { }
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        public UTHViewModel(string title, string descript)
+        public UTHViewModel(string title = null, string descript = null)
         {
             Title = title;
             Descript = descript;
         }
 
-        #region 公共属性
+        /// <summary>
+        /// 访问会话
+        /// </summary>
+        public IApplicationSession Session { get { return CurrentUser; } }
 
         /// <summary>
         /// 访问会话
@@ -55,6 +55,8 @@
                 return EngineHelper.Resolve<IApplicationSession>();
             }
         }
+
+        #region 窗体控件
 
         /// <summary>
         /// 窗体标题
@@ -75,6 +77,63 @@
             set { _descript = value; RaisePropertyChanged(() => Descript); }
         }
         private string _descript = "";
+
+        /// <summary>
+        /// 关闭当前
+        /// </summary>
+        /// <param name="name"></param>
+        protected void Close(string name)
+        {
+            DispatcherHelper.CheckBeginInvokeOnUI(() =>
+            {
+                Messenger.Default.Send<object>(this, $"{name}_CLOSE");
+            });
+        }
+
+        /// <summary>
+        /// 弹出消息
+        /// </summary>
+        /// <param name="txt"></param>
+        /// <param name="title"></param>
+        /// <param name="img"></param>
+        /// <param name="owner"></param>
+        /// <param name="okAction"></param>
+        /// <param name="cancelAction"></param>
+        protected void Message(string txt, string title = null, MessageBoxImage img = MessageBoxImage.None, Window owner = null, Action okAction = null, Action cancelAction = null)
+        {
+            switch (img)
+            {
+                case MessageBoxImage.Information:
+                    DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                    {
+                        WpfHelper.Success(txt, title, okAction, owner);
+                    });
+                    break;
+                case MessageBoxImage.Error:
+                    DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                    {
+                        WpfHelper.Error(txt, title, okAction, owner);
+                    });
+                    break;
+                case MessageBoxImage.Question:
+                    DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                    {
+                        WpfHelper.Confirm(txt, title, okAction, cancelAction, owner);
+                    });
+                    break;
+                case MessageBoxImage.None:
+                default:
+                    DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                    {
+                        WpfHelper.Message(txt, title, okAction, owner);
+                    });
+                    break;
+            }
+        }
+
+        #endregion
+
+        #region 遮罩操作(Mask)
 
         /// <summary>
         /// 是否显示遮罩
@@ -99,8 +158,6 @@
             }
         }
         private string _maskTip;
-
-        #endregion
 
         /// <summary>
         /// 是示Mask
@@ -127,5 +184,7 @@
             }
             MaskTip = "";
         }
+
+        #endregion
     }
 }

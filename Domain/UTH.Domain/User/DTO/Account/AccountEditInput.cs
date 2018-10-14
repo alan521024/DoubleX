@@ -16,7 +16,7 @@
     /// <summary>
     /// 账号编辑输入
     /// </summary>
-    public class AccountEditInput : AccountBase, IInput, IInputDelete, IInputUpdate
+    public class AccountEditInput : AccountDTO, IInput, IInputDelete, IInputUpdate
     {
         public List<Guid> Ids { get; set; }
     }

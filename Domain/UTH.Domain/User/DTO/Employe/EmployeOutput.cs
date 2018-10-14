@@ -15,7 +15,7 @@
     /// <summary>
     /// 人员输出信息
     /// </summary>
-    public class EmployeOutput : EmployeBase, IOutput
+    public class EmployeOutput : EmployeDTO, IOutput
     {
 
     }

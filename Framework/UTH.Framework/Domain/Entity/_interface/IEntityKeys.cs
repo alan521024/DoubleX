@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Text;
     using System.Linq;
-    using System.Linq.Expressions;
     using System.Threading;
     using System.Threading.Tasks;
     using UTH.Infrastructure.Resource;
@@ -12,10 +11,17 @@
     using UTH.Infrastructure.Utility;
 
     /// <summary>
-    /// 应用服务基类实现
+    /// 实体接口
     /// </summary>
-    public abstract class ApplicationService : BaseService, IApplicationService
+    public interface IEntityKeys<TKey> : IEntity<TKey>
     {
+        List<TKey> Ids { get; set; }
+    }
 
+    /// <summary>
+    /// 实体接口
+    /// </summary>
+    public interface IEntityKeys : IEntityKeys<Guid>, IEntity<Guid>
+    {
     }
 }

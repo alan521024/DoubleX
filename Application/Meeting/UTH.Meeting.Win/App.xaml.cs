@@ -99,7 +99,7 @@ namespace UTH.Meeting.Win
             if (exception != null && exception.Code == EnumCode.初始失败)
             {
                 e.Handled = true;
-                WpfHelper.Error("初始化错误，请检查设备/服务/会议信息并重启应用程序 ", () =>
+                WpfHelper.Error("初始化错误，请检查设备/服务/会议信息并重启应用程序 ", action: () =>
                 {
                     AppShutdown();
                 });
@@ -117,7 +117,7 @@ namespace UTH.Meeting.Win
             }
             EngineHelper.LoggingError(msgText);
             
-            WpfHelper.Error(string.Format("System Error: {0} {1}", Environment.NewLine, msgText), () =>
+            WpfHelper.Error(string.Format("System Error: {0} {1}", Environment.NewLine, msgText), action: () =>
             {
                 AppShutdown();
             });

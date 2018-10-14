@@ -29,13 +29,13 @@ namespace UTH.Meeting.Win.ViewModel
         public void UserInstall()
         {
             SimpleIoc.Default.Register<EmployeViewModel>();
+            SimpleIoc.Default.Register<EmployeEditViewModel>();
 
             SimpleIoc.Default.Register<MeetingViewModel>();
             SimpleIoc.Default.Register<PresideViewModel>();
             SimpleIoc.Default.Register<ParticipantViewModel>();
         }
 
-        #region User
 
         public EmployeViewModel EmployeModel
         {
@@ -44,10 +44,13 @@ namespace UTH.Meeting.Win.ViewModel
                 return ServiceLocator.Current.GetInstance<EmployeViewModel>();
             }
         }
-
-        #endregion
-
-        #region Conference
+        public EmployeEditViewModel EmployeEditModel
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<EmployeEditViewModel>();
+            }
+        }
 
         public MeetingViewModel MeetingModel
         {
@@ -72,9 +75,6 @@ namespace UTH.Meeting.Win.ViewModel
                 return ServiceLocator.Current.GetInstance<ParticipantViewModel>();
             }
         }
-
-
-        #endregion
     }
 }
 

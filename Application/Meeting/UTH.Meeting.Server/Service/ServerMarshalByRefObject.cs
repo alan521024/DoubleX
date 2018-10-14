@@ -189,7 +189,7 @@
                 ConnectionString = string.Format("Data Source={0};", MeetingHelper.GetMeetingDatabaseFile(meeting.IsNull() ? Guid.Empty : meeting.Id))
             }));
             recordService = EngineHelper.Resolve<IMeetingRecordService>(new KeyValueModel<string, object>("_repository", recordRepository));
-            recordService.SetSession(session);
+            //recordService.SetSession(session);
 
             var translationRepository = EngineHelper.Resolve<IRepository<MeetingTranslationEntity>>(new KeyValueModel<string, object>("connectionModel", new ConnectionModel()
             {
@@ -197,7 +197,7 @@
                 ConnectionString = string.Format("Data Source={0};", MeetingHelper.GetMeetingDatabaseFile(meeting.IsNull() ? Guid.Empty : meeting.Id))
             }));
             translationService = EngineHelper.Resolve<IMeetingTranslationService>(new KeyValueModel<string, object>("_repository", translationRepository));
-            translationService.SetSession(session);
+            //translationService.SetSession(session);
 
             var remotingTask = new Thread(() =>
            {

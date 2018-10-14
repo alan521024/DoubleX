@@ -43,6 +43,20 @@
         private int _index;
 
         /// <summary>
+        /// 选中
+        /// </summary>
+        public bool IsSelected
+        {
+            get { return _isSelected; }
+            set
+            {
+                _isSelected = value;
+                RaisePropertyChanged(() => IsSelected);
+            }
+        }
+        private bool _isSelected;
+
+        /// <summary>
         /// 数据Id
         /// </summary>
         public Guid Id
@@ -57,6 +71,20 @@
         private Guid _id;
 
         /// <summary>
+        /// 编号  
+        /// </summary>
+        public string No
+        {
+            get { return _no; }
+            set
+            {
+                _no = value;
+                RaisePropertyChanged(() => No);
+            }
+        }
+        private string _no;
+
+        /// <summary>
         /// 名称
         /// </summary>
         public string Name
@@ -69,5 +97,22 @@
             }
         }
         private string _name;
+        
+        /// <summary>
+        /// 状态
+        /// </summary>
+        public EnumAccountStatus Status
+        {
+            get { return _status; }
+            set
+            {
+                _status = value;
+                RaisePropertyChanged(() => Status);
+            }
+        }
+        private EnumAccountStatus _status;
+
+
+
     }
 }

@@ -14,8 +14,7 @@
     /// <summary>
     /// 应用服务基类实现
     /// </summary>
-    public abstract class ApplicationService : BaseService, IApplicationService
+    public abstract class DomainService : BaseService, IDomainService
     {
-
     }
 }

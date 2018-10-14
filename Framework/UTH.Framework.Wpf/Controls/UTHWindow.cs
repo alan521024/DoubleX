@@ -35,11 +35,18 @@ namespace UTH.Framework.Wpf
         /// </summary>
         public UTHWindow()
         {
-            //regist common event
-            CommonEventModel.Regist(this);
+            var type = this.GetType();
 
-            //uninstall common event
+            #region Event Regist & Uninstall
+
+            Messenger.Default.Register<object>(this, $"{type.FullName}_CLOSE", (obj) =>
+            {
+                this.Close();
+            });
+
             this.Unloaded += (sender, e) => Messenger.Default.Unregister(this);
+
+            #endregion
         }
 
         /// <summary>

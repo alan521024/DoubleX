@@ -1,21 +1,20 @@
-﻿namespace UTH.Framework
+﻿namespace UTH.Domain
 {
     using System;
     using System.Collections.Generic;
     using System.Text;
     using System.Linq;
-    using System.Linq.Expressions;
     using System.Threading;
     using System.Threading.Tasks;
-    using UTH.Infrastructure.Resource;
+    using System.Security.Claims;
     using UTH.Infrastructure.Resource.Culture;
     using UTH.Infrastructure.Utility;
+    using UTH.Framework;
 
     /// <summary>
-    /// 应用服务基类实现
+    /// 人员业务接口
     /// </summary>
-    public abstract class ApplicationService : BaseService, IApplicationService
+    public interface IEmployeDomain : IDomainDefaultService<EmployeEntity>
     {
-
     }
 }

@@ -289,7 +289,6 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="App\AppEvent.cs" />
     <Compile Include="App\AppHelper.cs" />
     <Compile Include="App\AppHosting.cs" />
     <Compile Include="Areas\Conference\ViewModel\ParticipantViewModel.cs" />
@@ -305,6 +304,7 @@
       <DependentUpon>Preside.xaml</DependentUpon>
     </Compile>
     <Compile Include="Areas\User\ViewModel\EmployeViewModel.cs" />
+    <Compile Include="Areas\User\ViewModel\EmployeEditViewModel.cs" />
     <Compile Include="Areas\User\View\EmployeEdit.xaml.cs">
       <DependentUpon>EmployeEdit.xaml</DependentUpon>
     </Compile>

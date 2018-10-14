@@ -103,7 +103,7 @@
     {
         public string SignIn { get; set; } = "/api/user/account/signin";
         public string SignOut { get; set; } = "/api/user/account/signout";
-        public string SignRefresh { get; set; } = "/api/user/account/signrefresh";
+        public string Refresh { get; set; } = "/api/user/account/refresh";
         public string Regist { get; set; } = "/api/user/account/regist";
         public string FindPwd { get; set; } = "/api/user/account/findpwd";
         public string EditPwd { get; set; } = "/api/user/account/editpwd";

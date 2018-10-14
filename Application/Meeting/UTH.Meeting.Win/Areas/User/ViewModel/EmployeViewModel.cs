@@ -10,6 +10,7 @@ namespace UTH.Meeting.Win.ViewModel
     using System.Threading.Tasks;
     using System.ComponentModel;
     using Newtonsoft.Json.Linq;
+    using System.Windows.Input;
     using GalaSoft.MvvmLight;
     using GalaSoft.MvvmLight.Command;
     using GalaSoft.MvvmLight.Threading;
@@ -29,10 +30,7 @@ namespace UTH.Meeting.Win.ViewModel
     {
         public EmployeViewModel() : base(culture.Lang.userYongHuGuanLi, "")
         {
-            Initialize();
         }
-
-        #region 公共属性
 
         /// <summary>
         /// 员工列表
@@ -48,19 +46,16 @@ namespace UTH.Meeting.Win.ViewModel
         }
         private ObservableCollection<EmployeObservable> _items = new ObservableCollection<EmployeObservable>();
 
-        #endregion
-
-        #region 私有变量
-
-        #endregion
-
-        #region 辅助操作
-
-        private void Initialize()
+        public ICommand OnDeleteCommand
         {
+            get
+            {
+                return new RelayCommand<object>((obj) =>
+                {
+                    Delete(obj);
+                });
+            }
         }
-
-        #endregion
 
         /// <summary>
         /// 数据查询
@@ -82,38 +77,77 @@ namespace UTH.Meeting.Win.ViewModel
             });
             if (result.Code == EnumCode.成功)
             {
-                var i = 1;
-                result.Obj.Rows.ForEach((x) =>
+                var _index = 1;
+                Items = new ObservableCollection<EmployeObservable>();
+                result.Obj.Rows.ForEach(item =>
                 {
                     Items.Add(new EmployeObservable()
                     {
-                        Index = i,
-                        Id = x.Id,
-                        Name = x.Name
+                        Index = _index,
+                        Id = item.Id,
+                        No = item.No,
+                        Name = item.Name,
+                        Status = item.Status,
+                        IsSelected = false
                     });
-                    i++;
+                    _index++;
                 });
                 return result.Obj;
             }
             return null;
         }
 
-        public bool Add(string no, string name, string password)
+        public void Delete(object obj)
         {
-            var input = new EmployeEditInput()
+            Message("是否删除?", img: System.Windows.MessageBoxImage.Question, okAction: () =>
             {
-                Organize = CurrentUser.User.Account,
-                No = no,
-                Name = name,
-                Password = password
-            };
+                var input = new EmployeEditInput()
+                {
+                    Organize = CurrentUser.User.Organize,
+                    Ids = Items.Where(x => x.IsSelected).Select(x => x.Id).ToList()
+                };
 
-            var result = PlugCoreHelper.ApiUrl.User.EmployeInsert.GetResult<EmployeOutput, EmployeEditInput>(input);
-            if (result.Code == EnumCode.成功)
-            {
-                return true;
-            }
-            return false;
+                var result = "/api/user/employe/delete".GetResult<int, EmployeEditInput>(input);
+                if (result.Code == EnumCode.成功)
+                {
+                    Message("成功", okAction: () =>
+                    {
+                        new AppViewModelLocator().EmployeModel.Query(1);
+                    });
+                }
+                else
+                {
+                    throw new DbxException(EnumCode.提示消息, result.Message);
+                }
+
+                //new AppViewModelLocator().EmployeManageModel.Query(1);
+            });
+
+            //var input = new EmployeEditInput()
+            //{
+            //    Organize = CurrentUser.User.Organize,
+            //    No = No,
+            //    Name = Name,
+            //    Password = Password
+            //};
+
+            //var result = "/api/user/employe/create".GetResult<EmployeOutput, EmployeEditInput>(input);
+            //if (result.Code == EnumCode.成功)
+            //{
+            //    No = string.Empty;
+            //    Name = string.Empty;
+            //    Password = string.Empty;
+
+            //    Message("成功", okAction: () =>
+            //    {
+            //        new AppViewModelLocator().EmployeManageModel.Query(1);
+            //    });
+            //    Close(obj.GetType().FullName);
+            //}
+            //else
+            //{
+            //    throw new DbxException(EnumCode.提示消息, result.Message);
+            //}
         }
     }
 }

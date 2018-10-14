@@ -100,10 +100,9 @@ namespace UTH.Meeting.Win.View
                 WpfHelper.Message(msg);
                 return;
             }
-            WpfHelper.Message(culture.Lang.userZhuCeChengGongXiaoXi, () =>
+            WpfHelper.Message(culture.Lang.userZhuCeChengGongXiaoXi, action:() =>
             {
-                WpfHelper.GetParent<Window>(this).FindChild<Frame>("mainFrame")
-                    .Navigate(new Login());
+                WpfHelper.GetParent<Window>(this).FindChild<Frame>("mainFrame").Navigate(new Login());
             });
         }
 

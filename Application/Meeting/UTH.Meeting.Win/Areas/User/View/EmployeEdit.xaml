@@ -10,7 +10,7 @@
         xmlns:framework="clr-namespace:UTH.Framework.Wpf;assembly=UTH.Framework.Wpf"
         xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
         mc:Ignorable="d"
-        DataContext="{Binding Source={StaticResource Locator}, Path=EmployeModel}"
+        DataContext="{Binding Source={StaticResource Locator}, Path=EmployeEditModel}"
         Title="{Binding Title}" Width="400" Height="300"
         ShowIconOnTitleBar="True"  WindowTransitionsEnabled="False" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
 
@@ -26,23 +26,23 @@
 
         <DockPanel Grid.Row="0" Margin="0,10,0,10">
             <TextBlock  DockPanel.Dock="Left"  Style="{StaticResource formTitleMin}" Text="{x:Static culture:Lang.sysBianMa}"></TextBlock>
-            <TextBox x:Name="txtNo" DockPanel.Dock="Right"></TextBox>
+            <TextBox DockPanel.Dock="Right" Text="{Binding No}"></TextBox>
         </DockPanel>
 
         <DockPanel Grid.Row="1" Margin="0,10,0,10">
             <TextBlock DockPanel.Dock="Left" Style="{StaticResource formTitleMin}" Text="{x:Static culture:Lang.userXingMing}"></TextBlock>
-            <TextBox x:Name="txtName" DockPanel.Dock="Right" ></TextBox>
+            <TextBox DockPanel.Dock="Right"  Text="{Binding Name}"></TextBox>
         </DockPanel>
 
         <DockPanel Grid.Row="2" Margin="0,10,0,10">
             <TextBlock DockPanel.Dock="Left" Style="{StaticResource formTitleMin}" Text="{x:Static culture:Lang.userMiMa}"></TextBlock>
-            <TextBox x:Name="txtPassword" DockPanel.Dock="Right"></TextBox>
+            <TextBox DockPanel.Dock="Right" Text="{Binding Password}"></TextBox>
         </DockPanel>
 
         <DockPanel Grid.Row="3" Margin="0,10,0,10">
             <TextBlock DockPanel.Dock="Left" Style="{StaticResource formTitleMin}" Text=""></TextBlock>
             <WrapPanel DockPanel.Dock="Right" VerticalAlignment="Center" HorizontalAlignment="Left">
-                <Button x:Name="btnSave" Content="{x:Static culture:Lang.sysBaoCun}" Width="{StaticResource ButtonDefaultSize}" Click="btnSave_Click" ></Button>
+                <Button Content="{x:Static culture:Lang.sysBaoCun}" Width="{StaticResource ButtonDefaultSize}" Command="{Binding SaveCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"></Button>
             </WrapPanel>
         </DockPanel>
 

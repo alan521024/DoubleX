@@ -126,7 +126,7 @@
                 ConnectionString = string.Format("Data Source={0};", GetMeetingDatabaseFile(meetingId))
             }));
             var service = EngineHelper.Resolve<IMeetingRecordService>(new KeyValueModel<string, object>("_repository", repository));
-            service.SetSession(session);
+            //service.SetSession(session);
             return service;
         }
 
@@ -138,7 +138,7 @@
                 ConnectionString = string.Format("Data Source={0};", GetMeetingDatabaseFile(meetingId))
             }));
             var service = EngineHelper.Resolve<IMeetingTranslationService>(new KeyValueModel<string, object>("_repository", repository));
-            service.SetSession(session);
+            //service.SetSession(session);
             return service;
         }
 

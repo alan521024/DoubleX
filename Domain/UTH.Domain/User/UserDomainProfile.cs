@@ -18,7 +18,7 @@ namespace UTH.Domain
     {
         public void Mapper(IMapperConfigurationExpression config)
         {
-            config.CreateMap<AccountBase, AccountEditInput>();
+            config.CreateMap<AccountDTO, AccountEditInput>();
             config.CreateMap<AccountEditInput, AccountEntity>();
             config.CreateMap<AccountEntity, AccountOutput>();
 
@@ -30,9 +30,10 @@ namespace UTH.Domain
             config.CreateMap<OrganizeEditInput, OrganizeEntity>();
             config.CreateMap<OrganizeEntity, OrganizeOutput>();
 
-            config.CreateMap<EmployeBase, EmployeEditInput>();
+            config.CreateMap<EmployeDTO, EmployeEditInput>();
             config.CreateMap<EmployeEditInput, EmployeEntity>();
-            config.CreateMap<EmployeEntity, EmployeOutput>();
+            config.CreateMap<EmployeEntity, EmployeDTO>();
+            config.CreateMap<EmployeEntity, EmployeOutput>(); 
         }
 
         public void Configuration()

@@ -17,7 +17,7 @@
     /// <summary>
     /// SqlSugar 仓储
     /// </summary>
-    public class SqlSugarRepository : IRepository
+    public  class SqlSugarRepository : IRepository
     {
         #region 私有变量
 
@@ -241,7 +241,7 @@
     /// <summary>
     /// SqlSugar 仓储
     /// </summary>
-    public class SqlSugarRepository<TEntity, TKey> : SqlSugarRepository, IRepository<TEntity, TKey> where TEntity : class, IEntity<TKey>, new()
+    public  class SqlSugarRepository<TEntity, TKey> : SqlSugarRepository, IRepository<TEntity, TKey> where TEntity : class, IEntity<TKey>, new()
     {
         public SqlSugarRepository(string connectionStr = null, ConnectionModel connectionModel = null, SqlSugarClient connectionClient = null, IApplicationSession session = null)
         {
@@ -525,18 +525,21 @@
         }
 
 
-        protected ISugarQueryable<TEntity> GetQueryable(Expression<Func<TEntity, bool>> predicate = null, List<KeyValueModel> sorting = null)
+        protected virtual ISugarQueryable<TEntity> GetQueryable(ISugarQueryable<TEntity> query = null, Expression<Func<TEntity, bool>> where = null, List<KeyValueModel> sorting = null)
         {
-            var query = client.Queryable<TEntity>();
+            if (query.IsNull())
+            {
+                query = client.Queryable<TEntity>();
+            }
 
             if (isDataCache)
             {
                 query = query.WithCache();
             }
 
-            if (predicate != null)
+            if (where != null)
             {
-                query = query.Where(predicate);
+                query = query.Where(where);
             }
 
             if (sorting != null && sorting.Count > 0)
@@ -995,7 +998,7 @@
         /// <returns>TEntity 对象 or null</returns>
         public virtual TEntity Find(Expression<Func<TEntity, bool>> predicate)
         {
-            var entity = GetQueryable(predicate: predicate).First();  //超过1条,使用Single会报错，First不会报错
+            var entity = GetQueryable(where: predicate).First();  //超过1条,使用Single会报错，First不会报错
             return entity;
         }
 
@@ -1008,7 +1011,7 @@
         /// <returns>IQueryable[TEntity] 集合 new List[TEntity]</returns>
         public virtual List<TEntity> Find(int top = 0, Expression<Func<TEntity, bool>> predicate = null, List<KeyValueModel> sorting = null)
         {
-            ISugarQueryable<TEntity> query = GetQueryable(predicate: predicate, sorting: sorting);
+            ISugarQueryable<TEntity> query = GetQueryable(where: predicate, sorting: sorting);
 
             if (top > 0)
             {
@@ -1027,7 +1030,7 @@
         /// <returns>IQueryable[TEntity] 集合 new List[TEntity]</returns>
         public virtual List<TEntity> Paging(int page, int size, Expression<Func<TEntity, bool>> predicate, List<KeyValueModel> sorting, ref int total)
         {
-            var list = GetQueryable(predicate: predicate, sorting: sorting).ToPageList(page, size, ref total);
+            var list = GetQueryable(where: predicate, sorting: sorting).ToPageList(page, size, ref total);
             return list;
         }
 
@@ -1040,7 +1043,7 @@
         /// <returns>TEntity 对象 or null</returns>
         public virtual async Task<TEntity> FindAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return await GetQueryable(predicate: predicate).FirstAsync();  //超过1条,使用Single会报错，First不会报错
+            return await GetQueryable(where: predicate).FirstAsync();  //超过1条,使用Single会报错，First不会报错
         }
 
         /// <summary>
@@ -1051,7 +1054,7 @@
         /// <returns>IQueryable[TEntity] 集合 or new List[TEntity]</returns>
         public virtual async Task<List<TEntity>> FindAsync(int top = 0, Expression<Func<TEntity, bool>> predicate = null, List<KeyValueModel> sorting = null)
         {
-            ISugarQueryable<TEntity> query = GetQueryable(predicate: predicate, sorting: sorting);
+            ISugarQueryable<TEntity> query = GetQueryable(where: predicate, sorting: sorting);
 
             if (top > 0)
             {
@@ -1070,7 +1073,7 @@
         /// <returns>IQueryable[TEntity] 集合 new List[TEntity]</returns>
         public virtual async Task<KeyValuePair<List<TEntity>, int>> PagingAsync(int page, int size, Expression<Func<TEntity, bool>> predicate, List<KeyValueModel> sorting, int total)
         {
-            return await GetQueryable(predicate: predicate, sorting: sorting).ToPageListAsync(page, size, total);
+            return await GetQueryable(where: predicate, sorting: sorting).ToPageListAsync(page, size, total);
         }
 
         #endregion
@@ -1386,7 +1389,7 @@
     /// <summary>
     /// SqlSugar 仓储接口
     /// </summary>
-    public class SqlSugarRepository<TEntity> : SqlSugarRepository<TEntity, Guid>, IRepository<TEntity> where TEntity : class, IEntity, new()
+    public  class SqlSugarRepository<TEntity> : SqlSugarRepository<TEntity, Guid>, IRepository<TEntity> where TEntity : class, IEntity, new()
     {
         public SqlSugarRepository(string connectionStr = null, ConnectionModel connectionModel = null, SqlSugarClient connectionClient = null, IApplicationSession session = null)
             : base(connectionStr, connectionModel, connectionClient, session)

@@ -42,23 +42,20 @@ namespace UTH.Meeting.Win.Areas.User.View
             this.Loaded += EmployeEdit_Loaded;
         }
 
-        EmployeViewModel viewModel;
+        EmployeEditViewModel viewModel;
         Win.View.Main parent;
 
         private void Initialize()
         {
-            viewModel = DataContext as EmployeViewModel;
+            viewModel = DataContext as EmployeEditViewModel;
             viewModel.CheckNull();
+            var ddd = viewModel.Title;
+            viewModel.MaskHide();
         }
 
         private void EmployeEdit_Loaded(object sender, RoutedEventArgs e)
         {
             parent = this.GetParent<Win.View.Main>();
-        }
-
-        private void btnSave_Click(object sender, RoutedEventArgs e)
-        {
-            viewModel.Add(txtNo.Text, txtName.Text, txtPassword.Text);
         }
     }
 }

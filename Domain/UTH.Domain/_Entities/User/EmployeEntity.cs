@@ -6,36 +6,24 @@
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using System.ComponentModel;
-    using FluentValidation;
+    using SqlSugar;
     using UTH.Infrastructure.Resource.Culture;
     using UTH.Infrastructure.Utility;
     using UTH.Framework;
 
     /// <summary>
-    /// 人员信息(DTO)
+    /// 人员信息
     /// </summary>
-    [Serializable]
-    public class EmployeDTO : IEntityKeys
+    [SugarTable("UC_Employe")]
+    public class EmployeEntity : BaseFullEntity
     {
-        /// <summary>
-        /// Id
-        /// </summary>
-        public Guid Id { get; set; }
-
-
-        /// <summary>
-        /// Ids
-        /// </summary>
-        public List<Guid> Ids { get; set; }
-
         /// <summary>
         /// 所属组织
         /// </summary>
         public string Organize { get; set; }
 
         /// <summary>
-        /// 人员编号
+        /// 员工编号
         /// </summary>
         public string No { get; set; }
 
@@ -50,10 +38,10 @@
         public string Phone { get; set; }
 
         /// <summary>
-        /// 人员账号状态
+        /// 状态
         /// </summary>
+        [SugarColumn(IsIgnore = true)]
         public EnumAccountStatus Status { get; set; }
 
-        public bool IsChecked { get; set; } = false;
     }
 }

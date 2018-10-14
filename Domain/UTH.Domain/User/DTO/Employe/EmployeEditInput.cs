@@ -16,7 +16,7 @@
     /// <summary>
     /// 人员编辑输入
     /// </summary>
-    public class EmployeEditInput : EmployeBase, IInput, IInputDelete, IInputUpdate
+    public class EmployeEditInput : EmployeDTO, IInput, IInputDelete, IInputUpdate
     {
         public List<Guid> Ids { get; set; }
         public string Password { get; set; }

@@ -107,6 +107,10 @@
             {
                 EngineHelper.RegisterGeneric(x.Key, x.Value, Options.IocRepositoryOption);
             });
+
+            EngineHelper.RegisterType<IDomainService, DomainService>(Options.IocServiceOption);
+            EngineHelper.RegisterGeneric(typeof(IDomainDefaultService<>), typeof(DomainDefaultService<>), Options.IocServiceOption);
+
             EngineHelper.RegisterType<IApplicationService, ApplicationService>(Options.IocServiceOption);
             EngineHelper.RegisterGeneric(typeof(IApplicationDefault<>), typeof(ApplicationDefault<>), Options.IocServiceOption);
 

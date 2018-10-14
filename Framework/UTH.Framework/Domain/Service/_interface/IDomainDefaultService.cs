@@ -7,147 +7,15 @@
     using System.Linq.Expressions;
     using System.Threading;
     using System.Threading.Tasks;
-    using System.Data.Common;
-    using System.Data;
     using UTH.Infrastructure.Resource;
     using UTH.Infrastructure.Resource.Culture;
     using UTH.Infrastructure.Utility;
 
     /// <summary>
-    /// 仓储默认接口
+    /// 领域服务接口
     /// </summary>
-    public interface IRepository : IDependency
+    public interface IDomainDefaultService<TEntity> : IDomainService where TEntity : class, IEntity<Guid>
     {
-        #region 公共属性
-
-        /// <summary>
-        /// 连接信息
-        /// </summary>
-        ConnectionModel Connection { get; }
-
-        /// <summary>
-        /// 访问会话
-        /// </summary>
-        IApplicationSession Session { get; }
-
-        #endregion
-
-        #region 脚本执行
-
-        /// <summary>
-        /// 脚本执行
-        /// </summary>
-        /// <param name="sql"></param>
-        /// <param name="parameters"></param>
-        /// <returns></returns>
-        int SqlExecuteCommand(string sql, params DbParameter[] parameters);
-
-        /// <summary>
-        /// 脚本查询
-        /// </summary>
-        /// <param name="sql"></param>
-        /// <param name="parameters"></param>
-        /// <returns></returns>
-        dynamic SqlQueryDynamic(string sql, params DbParameter[] parameters);
-
-        #endregion
-
-        #region 事务操作
-
-        /// <summary>
-        /// 事务仓储参数对象
-        /// </summary>
-        KeyValueModel<string, object>[] TranParams { get; }
-
-        /// <summary>
-        /// 开始事务
-        /// </summary>
-        void BeginTran(IsolationLevel? iso = null, string transactionName = null);
-
-        /// <summary>
-        /// 事务回滚
-        /// </summary>
-        void RollbackTran();
-
-        /// <summary>
-        /// 事务提交
-        /// </summary>
-        void CommitTran();
-
-
-        /// <summary>
-        /// 事务操作
-        /// </summary>
-        /// <param name="action"></param>
-        /// <returns></returns>
-        bool UseTransaction(Action<IRepository> action);
-
-        /// <summary>
-        /// 事务操作
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="func"></param>
-        /// <returns></returns>
-        T UseTransaction<T>(Func<T> func);
-
-        #endregion
-
-        #region 仓储操作
-
-        /// <summary>
-        /// 获取仓储连接对象
-        /// </summary>
-        /// <returns></returns>
-        object GetClient();
-
-        /// <summary>
-        /// 获取仓储连接对象
-        /// </summary>
-        /// <returns></returns>
-        T GetClient<T>() where T : class;
-
-        /// <summary>
-        /// 设置仓储连接对象
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="t"></param>
-        void SetClient<T>(T t) where T : class;
-
-        #endregion
-
-        #region 会话操作
-
-        /// <summary>
-        /// 设置会话
-        /// </summary>
-        /// <param name="session"></param>
-        void SetSession(IApplicationSession session);
-
-        #endregion
-    }
-
-    /// <summary>
-    /// 仓储接口
-    /// </summary>
-    public interface IRepository<TEntity, TKey> : IRepository where TEntity : class, IEntity<TKey>
-    {
-        /****
-        //仓储实现构造函数 可参考 SqlSugarRepository
-        //public SqlSugarRepository(string connectionStr = null, ConnectionModel connectionModel = null, SqlSugarClient connectionClient = null) { }
-        //不建义分类写public SqlSugarRepository(string connectionStr) { },public SqlSugarRepository(ConnectionModel connectionModel) { },………………
-        //Autofac解析会导致参数不能在具有相同长度1的多个构造函数之间进行选择(未详细测试)
-        //
-        //初始Ioc注册实，设置默认connectionModel(connectionStr/connectionClient 为空 null)
-        //例：
-        //Parameters = new List<KeyValueModel<string, object>>(){
-        //    new KeyValueModel<string, object>("connectionStr",null),
-        //    new KeyValueModel<string, object>("connectionModel", repositoryConnection),
-        //    new KeyValueModel<string, object>("connectionClient", null)
-        //}
-        //Service业务类中，仓储事务操作可传入，Server的主仓储获取到的 KeyValueModel<string, object> ClientParams { get; } [防止事务不能跨连接对象]
-        //
-        **/
-
         #region 添加对象/集合
 
         /// <summary>
@@ -242,13 +110,13 @@
         /// 删除对象
         /// </summary>
         /// <param name="id">Id</param>
-        int Delete(TKey id);
+        int Delete(Guid id);
 
         /// <summary>
         /// 删除对象
         /// </summary>
         /// <param name="ids">Ids</param>
-        int Delete(List<TKey> ids);
+        int Delete(List<Guid> ids);
 
         /// <summary>
         /// 删除对象
@@ -274,13 +142,13 @@
         /// 删除对象
         /// </summary>
         /// <param name="id">Id</param>
-        Task<int> DeleteAsync(TKey id);
+        Task<int> DeleteAsync(Guid id);
 
         /// <summary>
         /// 删除对象
         /// </summary>
         /// <param name="ids">Ids</param>
-        Task<int> DeleteAsync(List<TKey> ids);
+        Task<int> DeleteAsync(List<Guid> ids);
 
         /// <summary>
         /// 删除对象
@@ -312,7 +180,7 @@
         /// </summary>
         /// <param name="key">主键</param>
         /// <returns>TEntity 对象 or null</returns>
-        TEntity Find(TKey key);
+        TEntity Find(Guid key);
 
         /// <summary>
         /// 获取对象
@@ -328,15 +196,7 @@
         /// <param name="sorting">排序</param>
         /// <returns>IQueryable[TEntity] 集合 or new List[TEntity]</returns>
         List<TEntity> Find(int top = 0, Expression<Func<TEntity, bool>> where = null, List<KeyValueModel> sorting = null);
-
-        /// <summary>
-        /// 获取集合
-        /// </summary>
-        /// <param name="where">表达式</param>
-        /// <param name="sorting">排序</param>
-        /// <returns>IQueryable[TEntity] 集合 or new List[TEntity]</returns>
-        List<TEntity> Paging(int page, int size, Expression<Func<TEntity, bool>> where, List<KeyValueModel> sorting, ref int total);
-
+        
         #region 异步(可等待)操作
 
         /// <summary>
@@ -353,16 +213,7 @@
         /// <param name="sorting">排序</param>
         /// <returns>IQueryable[TEntity] 集合 or new List[TEntity]</returns>
         Task<List<TEntity>> FindAsync(int top = 0, Expression<Func<TEntity, bool>> where = null, List<KeyValueModel> sorting = null);
-
-        /// <summary>
-        /// 获取集合
-        /// </summary>
-        /// <param name="top">数量</param>
-        /// <param name="where">表达式</param>
-        /// <param name="sorting">排序</param>
-        /// <returns>IQueryable[TEntity] 集合 new List[TEntity]</returns>
-        Task<KeyValuePair<List<TEntity>, int>> PagingAsync(int page, int size, Expression<Func<TEntity, bool>> where, List<KeyValueModel> sorting, int total);
-
+        
         #endregion
 
         #endregion
@@ -498,11 +349,5 @@
 
         #endregion
     }
-
-    /// <summary>
-    /// 仓储接口
-    /// </summary>
-    public interface IRepository<TEntity> : IRepository<TEntity, Guid> where TEntity : class, IEntity
-    {
-    }
 }
+
