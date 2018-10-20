@@ -14,7 +14,7 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 源资相关校验
+    /// 源资校验
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class AssetsValidator<T> : AbstractValidator<T>

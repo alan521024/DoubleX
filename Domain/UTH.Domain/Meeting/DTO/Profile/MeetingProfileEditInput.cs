@@ -14,13 +14,10 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 会议编辑输入
+    /// 会议输入
     /// </summary>
-    public class MeetingProfileEditInput : MeetingProfileBase, IInput, IInputDelete, IInputUpdate, IInputTransaction
+    public class MeetingProfileEditInput : MeetingProfileDTO, IInput
     {
-        public List<Guid> Ids { get; set; }
-        public bool IsTransaction { get; set; } = false;
-        
         /// <summary>
         /// 当前所处会议ID(将同步更新所在会议配置) 
         /// </summary>

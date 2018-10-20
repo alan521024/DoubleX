@@ -29,18 +29,26 @@
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0" Margin="0,15,0,0">
                 <Image Source="pack://application:,,,/UTH.Meeting.Win;component/Assets/Image/main1.png" Width="55" Height="75"></Image>
             </StackPanel>
             <StackPanel Grid.Row="1" Margin="0,15,0,0">
-                <Image Source="{Binding MeetingCode}" Width="143" Height="143"></Image>
+                <TextBlock Text="{Binding Meeting.Num}" FontSize="22" HorizontalAlignment="Center" FontWeight="Bold" Foreground="#1F92D3"></TextBlock>
             </StackPanel>
-            <StackPanel Grid.Row="2" Margin="0,15,0,0">
-                <Image Source="pack://application:,,,/UTH.Meeting.Win;component/Assets/Image/main2.png" Width="93" Height="31"></Image>
+            <StackPanel Grid.Row="2" Margin="0">
+                <TextBlock Text="当前会议序号" FontSize="12" HorizontalAlignment="Center" Foreground="#A7A7A7"></TextBlock>
             </StackPanel>
             <StackPanel Grid.Row="3" Margin="0,15,0,0">
+                <Image Source="{Binding MeetingCode}" Width="143" Height="143"></Image>
+            </StackPanel>
+            <StackPanel Grid.Row="4" Margin="0,15,0,0">
+                <Image Source="pack://application:,,,/UTH.Meeting.Win;component/Assets/Image/main2.png" Width="93" Height="31"></Image>
+            </StackPanel>
+            <StackPanel Grid.Row="5" Margin="0,15,0,0">
                 <!--<ComboBox  ItemsSource="{Binding Microphones}" SelectedItem="{Binding Microphone, Mode=TwoWay}"></ComboBox>-->
                 <ComboBox Name="cmbRecorder" 
                               ItemsSource="{Binding Microphones}"
@@ -48,7 +56,7 @@
                               SelectedValuePath="Key"
                               SelectedItem="{Binding Microphone, Mode=TwoWay}"></ComboBox>
             </StackPanel>
-            <StackPanel Grid.Row="4" Margin="0,25,0,0">
+            <StackPanel Grid.Row="6" Margin="0,25,0,0">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                     <Button Name="btnStart" Margin="0,0,10,0" Width="68" Height="68" Cursor="Hand"  IsEnabled="{Binding CanStart}" Click="btnStart_Click">
                         <Image Source="pack://application:,,,/UTH.Meeting.Win;component/Assets/Image/tool1.png" Width="40" Height="54" />
@@ -58,13 +66,13 @@
                     </Button>
                 </StackPanel>
             </StackPanel>
-            <StackPanel Grid.Row="5" Margin="0,25,0,0">
+            <StackPanel Grid.Row="7" Margin="0,25,0,0">
                 <controls:MetroProgressBar Height="10" Value="{Binding MicrophoneVolume}" Background="#e8e8e8" Foreground="#ff6600"  />
             </StackPanel>
-            <StackPanel Grid.Row="6" Margin="0,25,0,0">
+            <StackPanel Grid.Row="8" Margin="0,25,0,0">
                 <Button Name="btnClear" Cursor="Hand" IsEnabled="{Binding CanClear}" Content="{x:Static culture:Lang.metQingChuHuiYiJiLu}" Click="btnClear_Click"></Button>
             </StackPanel>
-            <StackPanel Grid.Row="7" Margin="0,25,0,0">
+            <StackPanel Grid.Row="9" Margin="0,25,0,0">
                 <TextBlock Foreground="Red" Text="{Binding StatusDes}"></TextBlock>
             </StackPanel>
         </Grid>

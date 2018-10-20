@@ -30,22 +30,66 @@ namespace UTH.Meeting.Win.ViewModel
     {
         public EmployeViewModel() : base(culture.Lang.userYongHuGuanLi, "")
         {
+            No = "";
+            Status = EnumAccountStatus.Default;
         }
 
         /// <summary>
-        /// 员工列表
+        /// 查询编号
         /// </summary>
-        public ObservableCollection<EmployeObservable> Items
+        public string No
         {
-            get { return _items; }
+            get { return _no; }
+            set { _no = value; RaisePropertyChanged(() => No); }
+        }
+        private string _no;
+
+        /// <summary>
+        /// 查询状态
+        /// </summary>
+        public EnumAccountStatus Status
+        {
+            get { return _status; }
+            set { _status = value; RaisePropertyChanged(() => Status); }
+        }
+        private EnumAccountStatus _status;
+
+        /// <summary>
+        /// 分页控件
+        /// </summary>
+        public Pager2 Pager { get; set; }
+
+        /// <summary>
+        /// 员工数据
+        /// </summary>
+        public ObservableCollection<EmployeObservable> Source
+        {
+            get { return _source; }
             set
             {
-                _items = value;
-                RaisePropertyChanged(() => Items);
+                _source = value;
+                RaisePropertyChanged(() => Source);
             }
         }
-        private ObservableCollection<EmployeObservable> _items = new ObservableCollection<EmployeObservable>();
+        private ObservableCollection<EmployeObservable> _source = new ObservableCollection<EmployeObservable>();
 
+        /// <summary>
+        /// 查询事件 
+        /// </summary>
+        public ICommand OnSearchCommand
+        {
+            get
+            {
+                return new RelayCommand<object>((obj) =>
+                {
+                    Query();
+                });
+            }
+        }
+
+        /// <summary>
+        /// 删除事件
+        /// </summary>
         public ICommand OnDeleteCommand
         {
             get
@@ -57,6 +101,7 @@ namespace UTH.Meeting.Win.ViewModel
             }
         }
 
+
         /// <summary>
         /// 数据查询
         /// </summary>
@@ -64,24 +109,44 @@ namespace UTH.Meeting.Win.ViewModel
         /// <param name="size"></param>
         /// <param name="name"></param>
         /// <param name="status"></param>
-        public PagingModel<EmployeOutput> Query(int page, int size = 10, string name = null, int status = -1)
+        public PagingModel<EmployeDTO> Query(int page = 0, int size = 0, string no = null, int status = -1)
         {
-            Items = new ObservableCollection<EmployeObservable>();
-            var result = PlugCoreHelper.ApiUrl.User.EmployePaging.GetResult<PagingModel<EmployeOutput>, QueryInput>(new QueryInput()
+            Source = new ObservableCollection<EmployeObservable>();
+
+            PagingModel<EmployeDTO> model = new PagingModel<EmployeDTO>()
+            {
+                Total = 0,
+                Rows = new List<EmployeDTO>()
+            };
+
+            if (page == 0)
+            {
+                page = Pager.PageIndex;
+            }
+
+            if (size == 0)
+            {
+                size = Pager.PageSize;
+            }
+
+            var result = PlugCoreHelper.ApiUrl.User.EmployePaging.GetResult<PagingModel<EmployeDTO>, QueryInput<EmployeDTO>>(new QueryInput<EmployeDTO>()
             {
                 Page = page,
                 Size = size,
-                Query = new JObject() {
-                    new JProperty("organize",CurrentUser.User.Organize)
+                Query = new EmployeDTO()
+                {
+                    Organize = CurrentUser.User.Organize,
+                    No = No
                 }
             });
+
             if (result.Code == EnumCode.成功)
             {
+                model = result.Obj;
                 var _index = 1;
-                Items = new ObservableCollection<EmployeObservable>();
                 result.Obj.Rows.ForEach(item =>
                 {
-                    Items.Add(new EmployeObservable()
+                    Source.Add(new EmployeObservable()
                     {
                         Index = _index,
                         Id = item.Id,
@@ -92,62 +157,40 @@ namespace UTH.Meeting.Win.ViewModel
                     });
                     _index++;
                 });
-                return result.Obj;
             }
-            return null;
+
+            Pager?.Sync((int)model.Total);
+
+            return model;
         }
 
+        /// <summary>
+        /// 员工删除
+        /// </summary>
+        /// <param name="obj"></param>
         public void Delete(object obj)
         {
-            Message("是否删除?", img: System.Windows.MessageBoxImage.Question, okAction: () =>
+            MessageAlert("是否删除?", img: System.Windows.MessageBoxImage.Question, okAction: () =>
             {
                 var input = new EmployeEditInput()
                 {
                     Organize = CurrentUser.User.Organize,
-                    Ids = Items.Where(x => x.IsSelected).Select(x => x.Id).ToList()
+                    Ids = Source.Where(x => x.IsSelected).Select(x => x.Id).ToList()
                 };
 
                 var result = "/api/user/employe/delete".GetResult<int, EmployeEditInput>(input);
                 if (result.Code == EnumCode.成功)
                 {
-                    Message("成功", okAction: () =>
+                    MessageAlert("成功", okAction: () =>
                     {
-                        new AppViewModelLocator().EmployeModel.Query(1);
+                        Query(1, size: Pager.PageSize);
                     });
                 }
                 else
                 {
                     throw new DbxException(EnumCode.提示消息, result.Message);
                 }
-
-                //new AppViewModelLocator().EmployeManageModel.Query(1);
             });
-
-            //var input = new EmployeEditInput()
-            //{
-            //    Organize = CurrentUser.User.Organize,
-            //    No = No,
-            //    Name = Name,
-            //    Password = Password
-            //};
-
-            //var result = "/api/user/employe/create".GetResult<EmployeOutput, EmployeEditInput>(input);
-            //if (result.Code == EnumCode.成功)
-            //{
-            //    No = string.Empty;
-            //    Name = string.Empty;
-            //    Password = string.Empty;
-
-            //    Message("成功", okAction: () =>
-            //    {
-            //        new AppViewModelLocator().EmployeManageModel.Query(1);
-            //    });
-            //    Close(obj.GetType().FullName);
-            //}
-            //else
-            //{
-            //    throw new DbxException(EnumCode.提示消息, result.Message);
-            //}
         }
     }
 }

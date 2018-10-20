@@ -15,17 +15,23 @@
     /// <summary>
     /// 账户签入返回
     /// </summary>
-    public class SignInOutput
+    public class SignInOutput:IOutput
     {
         /// <summary>
         /// 账号编号
         /// </summary>
-        public string Num { get; set; }
+        public string No { get; set; }
 
         /// <summary>
         /// 登录账号
         /// </summary>
         public string Account { get; set; }
+
+        /// <summary>
+        /// 账号类型
+        /// </summary>
+        public EnumAccountType Type { get; set; }
+
 
         /// <summary>
         /// 登录Token

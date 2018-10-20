@@ -147,5 +147,17 @@
         /// 账户状态(EnumAccountStatus)
         /// </summary>
         public EnumAccountStatus Status { get; set; }
+
+        /// <summary>
+        /// 公司编号
+        /// </summary>
+        [SugarColumn(IsIgnore = true)]
+        public string OrganizeNo { get; set; }
+
+        /// <summary>
+        /// 员工编号
+        /// </summary>
+        [SugarColumn(IsIgnore = true)]
+        public string EmployeNo { get; set; }
     }
 }

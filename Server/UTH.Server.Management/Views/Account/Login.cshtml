@@ -29,7 +29,7 @@
                     <div class="clearfix">
                         <div class="left form-input verify-code-input">
                             @Html.TextBox("imgCode", Model?.ImgCode, new { placeholder = Lang.userYanZhengMa })
-                            @Html.Hidden("imgCodeTag", Model?.ImgCodeTag)
+                            @Html.Hidden("imgCodeKey", Model?.ImgCodeKey)
                         </div>
                         <div class="left form-input verify-code-img">
                             <img id="img-captcha" />
@@ -60,12 +60,13 @@
             });
         };
         pageView.getCaptcha = function () {
-            app.request("/common/verifycode?category=login&type=image", { type: "GET" }, function (data) {
-                $("#img-captcha").attr("src", "data:image/png;base64," + data.code).attr("data-id", "");
-                $("#imgCodeTag").attr("value", data.tag);
+            app.request("/common/verify?category=login&mode=image", { type: "GET" }, function (data) {
+                console.log(data);
+                $("#img-captcha").attr("src", "data:image/png;base64," + data.code);
+                $("#imgCodeKey").attr("value", data.key);
             }, function () {
-                $("#img-captcha").attr("src", "").attr("data-id", "");
-                $("#imgCodeTag").attr("value", "");
+                $("#img-captcha").attr("src", "");
+                $("#imgCodeKey").attr("value", "");
             });
         };
     </script>

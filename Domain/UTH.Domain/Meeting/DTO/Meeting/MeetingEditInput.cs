@@ -14,12 +14,10 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 会议编辑输入
+    /// 会议输入
     /// </summary>
-    public class MeetingEditInput : MeetingBase, IInput, IInputDelete, IInputUpdate, IInputTransaction
+    public class MeetingEditInput : MeetingDTO, IInput
     {
-        public List<Guid> Ids { get; set; }
-        public bool IsTransaction { get; set; } = false;
     }
 
     /// <summary>

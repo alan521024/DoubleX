@@ -14,15 +14,15 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 账号编辑输入
+    /// 账号输入
     /// </summary>
-    public class AccountEditInput : AccountDTO, IInput, IInputDelete, IInputUpdate
+    public class AccountEditInput : AccountDTO, IInput
     {
-        public List<Guid> Ids { get; set; }
+
     }
 
     /// <summary>
-    /// 会议输入校验
+    /// 账号输入校验
     /// </summary>
     public class AccountEditInputValidator : AccountValidator<AccountEditInput>, IValidator<AccountEditInput>
     {

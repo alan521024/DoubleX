@@ -40,11 +40,13 @@
                         <ColumnDefinition Width="*"></ColumnDefinition>
                         <ColumnDefinition Width="Auto"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <TextBox Grid.Column="0" Text="{Binding Code}" Style="{StaticResource UTH.GroupTextBox}"></TextBox>
-                    <Button Grid.Column="1" x:Name="btnSend"  Content="{Binding SendText}" Style="{DynamicResource UTH.GroupButton}" IsEnabled="{Binding CanSend}" Click="btnSend_Click"></Button>
+                    <TextBox Grid.Column="0" Text="{Binding CaptchaCode}" Style="{StaticResource UTHGroupTextBox}"></TextBox>
+                    <Button Grid.Column="1" Content="{Binding SendText}" Style="{DynamicResource UTHGroupButton}" IsEnabled="{Binding CanSend}" 
+                            Command="{Binding OnSendCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"></Button>
                 </Grid>
                 <StackPanel Margin="35,15,35,0">
-                    <Button x:Name="btnSetop0Next" Content="{x:Static culture:Lang.sysXiaYiBu}" Click="btnSetop0Next_Click"></Button>
+                    <Button x:Name="btnSetop0Next" Content="{x:Static culture:Lang.sysXiaYiBu}"
+                            Command="{Binding OnVerifyCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"></Button>
                 </StackPanel>
             </StackPanel>
             <StackPanel Visibility="{Binding Setp1visible, Converter={StaticResource VisibilityConverter}}">
@@ -55,7 +57,8 @@
                     <PasswordBox behaviors:PasswordBoxBindingBehavior.Password="{Binding Password2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" controls:TextBoxHelper.Watermark="{x:Static culture:Lang.userQingQueRenXinMiMa}"></PasswordBox>
                 </StackPanel>
                 <StackPanel Margin="35,15,35,0">
-                    <Button x:Name="btnEditPwd" Content="{x:Static culture:Lang.userXiuGaiMiMa}" Click="btnEditPwd_Click"></Button>
+                    <Button Content="{x:Static culture:Lang.userXiuGaiMiMa}" 
+                            Command="{Binding OnEditPwdCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"></Button>
                 </StackPanel>
             </StackPanel>
         </Grid>

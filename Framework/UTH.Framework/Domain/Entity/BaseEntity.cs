@@ -13,19 +13,12 @@
     /// <summary>
     /// 基础信息（Key）
     /// </summary>
-    public class BaseEntity<TKey> : IEntity<TKey>
+    public class BaseEntity : IEntity
     {
         /// <summary>
         /// 主键
         /// </summary>
-        public TKey Id { get; set; }
-    }
-
-    /// <summary>
-    /// 基础信息（Key）
-    /// </summary>
-    public class BaseEntity : BaseEntity<Guid>, IEntity
-    {
+        public Guid Id { get; set; }
     }
 
 }

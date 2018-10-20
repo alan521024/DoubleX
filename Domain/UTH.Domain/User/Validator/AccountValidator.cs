@@ -14,7 +14,7 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 账户相关校验
+    /// 账户校验
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class AccountValidator<T> : AbstractValidator<T>
@@ -38,6 +38,7 @@
             {
                 accountRoule.Length(5, 36);
             }
+
             return accountRoule;
         }
 

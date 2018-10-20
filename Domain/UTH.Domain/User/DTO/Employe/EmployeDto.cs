@@ -16,7 +16,7 @@
     /// 人员信息(DTO)
     /// </summary>
     [Serializable]
-    public class EmployeDTO : IEntityKeys
+    public class EmployeDTO : IKeys, IOutput
     {
         /// <summary>
         /// Id

@@ -9,11 +9,15 @@ namespace UTH.Meeting.Win.ViewModel
     using System.Threading;
     using System.Threading.Tasks;
     using System.ComponentModel;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Input;
     using Newtonsoft.Json.Linq;
     using GalaSoft.MvvmLight;
     using GalaSoft.MvvmLight.Command;
     using GalaSoft.MvvmLight.Threading;
     using GalaSoft.MvvmLight.Messaging;
+    using MahApps.Metro.Controls;
     using culture = UTH.Infrastructure.Resource.Culture;
     using UTH.Infrastructure.Utility;
     using UTH.Framework;
@@ -30,14 +34,20 @@ namespace UTH.Meeting.Win.ViewModel
     {
         public FindPwdViewModel()
         {
-            Initialize();
+            Mobile = string.Empty;
+            Password = string.Empty;
+            Password2 = string.Empty;
+            CaptchaKey = string.Empty;
+            CaptchaCode = string.Empty;
+
+            CanSend = false;
+            IsVerify = false;
+
+            Setp0visible = true;
+            Setp1visible = false;
+
+            SendText = culture.Lang.sysHuoQuYanZhengMa;
         }
-
-        #region 私有变量
-
-        #endregion
-
-        #region 公共属性
 
         public string Mobile
         {
@@ -45,27 +55,13 @@ namespace UTH.Meeting.Win.ViewModel
             set
             {
                 _mobile = value;
-                Tag = "";
-                Code = "";
+                CaptchaKey = "";
+                CaptchaCode = "";
                 CanSend = Mobile.IsMobile();
                 RaisePropertyChanged(() => Mobile);
             }
         }
         private string _mobile;
-
-        public string Tag
-        {
-            get { return _tag; }
-            set { _tag = value; RaisePropertyChanged(() => Tag); }
-        }
-        private string _tag;
-
-        public string Code
-        {
-            get { return _code; }
-            set { _code = value; RaisePropertyChanged(() => Code); }
-        }
-        private string _code;
 
         public string Password
         {
@@ -103,6 +99,20 @@ namespace UTH.Meeting.Win.ViewModel
         }
         private bool _isVerify;
 
+        public string CaptchaKey
+        {
+            get { return _captchaKey; }
+            set { _captchaKey = value; RaisePropertyChanged(() => CaptchaKey); }
+        }
+        private string _captchaKey;
+
+        public string CaptchaCode
+        {
+            get { return _captchaCode; }
+            set { _captchaCode = value; RaisePropertyChanged(() => CaptchaCode); }
+        }
+        private string _captchaCode;
+
         public bool Setp0visible
         {
             get { return _setp0visible; }
@@ -124,127 +134,182 @@ namespace UTH.Meeting.Win.ViewModel
         }
         private string _sendText;
 
-        #endregion
-
-        #region 辅助操作
-
-        private void Initialize()
+        /// <summary>
+        /// 发送验证码事件
+        /// </summary>
+        public ICommand OnSendCommand
         {
-
-            Mobile = string.Empty;
-            Password = string.Empty;
-            Password2 = string.Empty;
-            Tag = string.Empty;
-            Code = string.Empty;
-
-            CanSend = false;
-            IsVerify = false;
-
-            Setp0visible = true;
-            Setp1visible = false;
-
-            SendText = culture.Lang.sysHuoQuYanZhengMa;
+            get
+            {
+                return new RelayCommand<object>((obj) =>
+                {
+                    SendCode();
+                });
+            }
         }
 
-        #endregion
+        /// <summary>
+        /// 校验验证码事件
+        /// </summary>
+        public ICommand OnVerifyCommand
+        {
+            get
+            {
+                return new RelayCommand<object>((obj) =>
+                {
+                    VerifyCode();
+                });
+            }
+        }
+
+        public ICommand OnEditPwdCommand
+        {
+            get
+            {
+                return new RelayCommand<object>((obj) =>
+                {
+                    EditPwd();
+                });
+            }
+        }
 
         /// <summary>
         /// 发送验证码
         /// </summary>
         /// <returns></returns>
-        public string SendCaptchaCode()
+        public void SendCode()
         {
             if (!Mobile.IsMobile())
             {
-                return culture.Lang.userQingShuRuZhengQueDeShouJiHao;
+                MessageAlert(culture.Lang.userQingShuRuYouXiaoDeShouJiHao);
             }
 
-            Tag = ""; Code = "";
-
-            var input = new CaptchaSendInput(EnumNotificationCategory.FindPwd, EnumNotificationType.Sms, Mobile);
-            var result = PlugCoreHelper.ApiUrl.Core.CaptchaSend.GetResult<CaptchaOutput, CaptchaSendInput>(input);
-            if (result.Code == EnumCode.成功)
+            var accountCheckName = PlugCoreHelper.ApiUrl.User.CheckName.GetResult<bool, AccountEditInput>(new AccountEditInput()
             {
-                Tag = result.Obj.Tag;
-                return null;
+                Mobile = Mobile
+            });
+            if (accountCheckName.Code != EnumCode.成功)
+            {
+                MessageAlert(accountCheckName.Message);
+                return;
             }
-            return result.Message;
+            if (!accountCheckName.Obj)
+            {
+                MessageAlert(culture.Lang.userWeiZhaoDaoZhangHu);
+                return;
+            }
+
+            var captchSend = PlugCoreHelper.ApiUrl.Core.CaptchaSend.GetResult<CaptchaOutput, CaptchaInput>(new CaptchaInput()
+            {
+                Category = EnumCaptchaCategory.FindPwd,
+                Mode = EnumCaptchaMode.Sms,
+                Receiver = Mobile
+            });
+            if (captchSend.Code != EnumCode.成功)
+            {
+                MessageAlert(captchSend.Message);
+                return;
+            }
+
+            CaptchaKey = captchSend.Obj.Key;
+            CaptchaCode = "";
+
+            new Thread(() =>
+            {
+                ThreadHelper.Countdown((p) =>
+                {
+                    WpfHelper.ExcuteUI(() =>
+                    {
+                        var pro = Math.Abs((p / 1000) - AppHelper.CountdownSecond);
+                        if (pro < 1)
+                        {
+                            CanSend = true;
+                            SendText = culture.Lang.sysHuoQuYanZhengMa;
+                        }
+                        else
+                        {
+                            CanSend = false;
+                            SendText = string.Format("{0}({1})", culture.Lang.sysDaoJiShi, pro);
+                        }
+                    });
+                }, AppHelper.CountdownSecond * 1000);
+            }).Start();
         }
 
         /// <summary>
         /// 验证验证码
         /// </summary>
         /// <returns></returns>
-        public string VerifyCaptchaCode()
+        public void VerifyCode()
         {
-            if (!Mobile.IsMobile())
+            if (!Mobile.IsMobile() || CaptchaKey.IsEmpty() || CaptchaCode.IsEmpty())
             {
-                return culture.Lang.userQingShuRuZhengQueDeShouJiHao;
+                MessageAlert(culture.Lang.sysYanZhengShiBai);
+                return;
             }
 
-            if (Code.IsEmpty())
+            var captchVerify = PlugCoreHelper.ApiUrl.Core.CaptchaVerify.GetResult<bool, CaptchaInput>(new CaptchaInput()
             {
-                return culture.Lang.userQingShuRuYanZhengMa;
-            }
+                Category = EnumCaptchaCategory.FindPwd,
+                Mode = EnumCaptchaMode.Sms,
+                Receiver = Mobile,
+                Key = CaptchaKey,
+                Code = CaptchaCode
+            });
 
-            var input = new CaptchaVerifyInput(EnumNotificationCategory.FindPwd, EnumNotificationType.Sms);
-            input.Receiver = Mobile;
-            input.Code = Code;
-            input.Tag = Tag;
-
-            var result = PlugCoreHelper.ApiUrl.Core.CaptchaVerify.GetResult<bool, CaptchaVerifyInput>(input);
-
-            if (result.Code != EnumCode.成功)
+            if (captchVerify.Code != EnumCode.成功)
             {
-                return result.Message;
-            }
-
-            if (!result.Obj)
-            {
-                return result.Message.IsEmpty() ? "验证失败" : result.Message;
+                MessageAlert(captchVerify.Message ?? culture.Lang.sysYanZhengShiBai);
+                return;
             }
 
             IsVerify = true;
             Setp0visible = false;
             Setp1visible = true;
-
-            return null;
         }
 
         /// <summary>
         /// 修改密码
         /// </summary>
         /// <returns></returns>
-        public string EditPwd()
+        public void EditPwd()
         {
-            if (!Mobile.IsMobile())
+            if (!Mobile.IsMobile() || CaptchaKey.IsEmpty() || CaptchaCode.IsEmpty() || !IsVerify)
             {
-                return culture.Lang.userQingShuRuZhengQueDeShouJiHao;
-            }
-
-            if (Code.IsEmpty() || Tag.IsEmpty())
-            {
-                return culture.Lang.userQingShuRuYanZhengMa;
-            }
-
-            if (!IsVerify)
-            {
-                return culture.Lang.userYanZhengMaCuoWu;
+                MessageAlert(culture.Lang.sysXiuGaiShiBai);
+                return;
             }
 
             if (Password.IsEmpty())
             {
-                return culture.Lang.userQingShuRuMiMa;
+                MessageAlert(culture.Lang.userQingShuRuMiMa);
+                return;
             }
 
-            var input = new FindPwdInput() { Mobile = Mobile, Password = Password, SmsCode = Code };
-            var result = PlugCoreHelper.ApiUrl.User.FindPwd.GetResult<bool, FindPwdInput>(input);
+            if (Password != Password2)
+            {
+                MessageAlert(culture.Lang.userXinMiMaYuQueRenMiMaBuTong);
+                return;
+            }
+
+            var result = PlugCoreHelper.ApiUrl.User.FindPwd.GetResult<bool, FindPwdInput>(new FindPwdInput()
+            {
+                Mobile = Mobile,
+                Password = Password,
+                SmsCode = CaptchaCode
+            });
+
             if (result.Code != EnumCode.成功)
             {
-                return result.Message;
+                MessageAlert(result.Message ?? culture.Lang.sysXiuGaiShiBai);
+                return;
             }
 
-            return null;
+            WpfHelper.Message(culture.Lang.sysXiuGaiChengGong, action: () =>
+            {
+                WpfHelper.GetParent<Window>(DependencyObj).FindChild<Frame>("mainFrame")
+                    .Navigate(new UTH.Meeting.Win.View.Login());
+            });
         }
 
     }

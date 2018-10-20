@@ -53,11 +53,11 @@
                 Id = GuidHelper.Get(id)
             };
 
-            ResultModel<MeetingOutput> result = null;
+            ResultModel<MeetingDTO> result = null;
 
             try
             {
-                result = $"{PlugCoreHelper.ApiUrl.Meeting.MeetingGetId}?id={id}".GetResult<MeetingOutput>();
+                result = PlugCoreHelper.ApiUrl.Meeting.MeetingGetId.GetResult<MeetingDTO, MeetingEditInput>(input);
             }
             catch
             {
@@ -94,8 +94,8 @@
         {
             var input = new SignInInput()
             {
-                UserName = "admin",
-                Password = "123456"
+                UserName = EngineHelper.Configuration.Settings.GetValue("DefaultUserName"),
+                Password = EngineHelper.Configuration.Settings.GetValue("DefaultUserPwd")
             };
 
             var result = PlugCoreHelper.ApiUrl.User.SignIn.GetResult<SignInOutput, SignInInput>(input);
@@ -105,7 +105,7 @@
             }
             else
             {
-                throw new DbxException(EnumCode.认证失败);
+                throw new DbxException(EnumCode.认证失败, result.Message ?? UTH.Infrastructure.Resource.Culture.Lang.userDengLuShiBai);
             }
 
             return Redirect($"~/wap?id={id}");

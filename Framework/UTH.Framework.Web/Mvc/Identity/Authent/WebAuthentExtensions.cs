@@ -100,7 +100,6 @@
             return services;
         }
 
-
         private static Task JwtOnTokenValidated(TokenValidatedContext context)
         {
             context.CheckNull();

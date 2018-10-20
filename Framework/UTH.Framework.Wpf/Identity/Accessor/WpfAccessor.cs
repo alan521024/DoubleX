@@ -32,6 +32,6 @@ namespace UTH.Framework.Wpf
         /// <summary>
         /// 访问Token
         /// </summary>
-        public override string Token { get { return StringHelper.Get(Principal?.Claims.FirstOrDefault(c => c.Type == WpfClaimTypesExtend.LocalToken)?.Value); } }
+        public override string Token { get { return StringHelper.Get(Principal?.Claims.FirstOrDefault(c => c.Type == ClaimTypesExtend.Token)?.Value); } }
     }
 }

@@ -61,8 +61,6 @@ namespace UTH.Framework
         /// 排序对象
         /// </summary>
         public List<KeyValueModel> Sorting { get; set; }
-
-        //int top,int pageIndex, int pageSize, Expression<Func<TEntity, bool>> predicate, List<KeyValueModel> sorting, out long total
     }
 
     /// <summary>

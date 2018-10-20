@@ -209,13 +209,20 @@ namespace UTH.Infrastructure.Utility
             {
                 throw new AuthException(string.Format("[{0}]{1}", response.StatusCode, response.Content));
             }
+
             if (response.StatusCode.GetValue() >= HttpStatusCode.InternalServerError.GetValue())
             {
                 throw new ServiceException(string.Format("[{0}]{1}", response.StatusCode, response.Content));
             }
+
             if (response.StatusCode.GetValue() >= HttpStatusCode.BadRequest.GetValue())
             {
                 throw new NetworkException(string.Format("[{0}]{1}", response.StatusCode, response.Content));
+            }
+
+            if (response.Content == "无法连接到远程服务器")
+            {
+                throw new NetworkException(string.Format("[{0}]{1}", HttpStatusCode.NotFound, response.Content));
             }
 
             return response;

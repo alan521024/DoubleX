@@ -9,6 +9,19 @@
 
                     mc:Ignorable="options">
 
+    <ResourceDictionary.MergedDictionaries>
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml">
+            </ResourceDictionary>
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml">
+            </ResourceDictionary>
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml">
+            </ResourceDictionary>
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml">
+            </ResourceDictionary>
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml">
+            </ResourceDictionary>
+        </ResourceDictionary.MergedDictionaries>
+    
     <!--size-->
     <System:Double x:Key="ButtonDefaultSize">86</System:Double>
 
@@ -33,7 +46,7 @@
     </Style>-->
 
     <!--button-->
-    <Style x:Key="UTH.DefaultButton" BasedOn="{StaticResource MetroButton}" TargetType="{x:Type ButtonBase}">
+    <Style x:Key="UTHDefaultButton" BasedOn="{StaticResource MetroButton}" TargetType="{x:Type ButtonBase}">
         <Setter Property="Height" Value="35"></Setter>
         <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource IdealForegroundColorBrush}" />
@@ -93,14 +106,14 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style BasedOn="{StaticResource UTH.DefaultButton}" TargetType="Button" />
+    <Style BasedOn="{StaticResource UTHDefaultButton}" TargetType="Button" />
 
     <!--textbox-->
-    <Style x:Key="UTH.DefaultTextBox"  BasedOn="{StaticResource MetroTextBox}" TargetType="{x:Type TextBox}">
+    <Style x:Key="UTHDefaultTextBox"  BasedOn="{StaticResource MetroTextBox}" TargetType="{x:Type TextBox}">
         <Setter Property="MinHeight" Value="30" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
-    <Style BasedOn="{StaticResource UTH.DefaultTextBox}" TargetType="TextBox" />
+    <Style BasedOn="{StaticResource UTHDefaultTextBox}" TargetType="TextBox" />
 
     <!--ext togglebutton-->
     <Style TargetType="ToggleButton">
@@ -110,27 +123,28 @@
     </Style>
 
     <!--ext passwordbox -->
-    <Style x:Key="UTH.DefaultPasswordBox"  BasedOn="{StaticResource MetroPasswordBox}" TargetType="{x:Type PasswordBox}">
+    <Style x:Key="UTHDefaultPasswordBox"  BasedOn="{StaticResource MetroPasswordBox}" TargetType="{x:Type PasswordBox}">
         <Setter Property="MinHeight" Value="30" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
     </Style>
-    <Style BasedOn="{StaticResource UTH.DefaultPasswordBox}" TargetType="PasswordBox" />
+    <Style BasedOn="{StaticResource UTHDefaultPasswordBox}" TargetType="PasswordBox" />
 
     <!--ext groupbutton-->
-    <Style x:Key="UTH.GroupButton" BasedOn="{StaticResource UTH.DefaultButton}"  TargetType="{x:Type ButtonBase}">
+    <Style x:Key="UTHGroupButton" BasedOn="{StaticResource UTHDefaultButton}"  TargetType="{x:Type ButtonBase}">
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Height" Value="30" />
         <Setter Property="controls:ControlsHelper.CornerRadius" Value="0" />
     </Style>
-
+ 
     <!--ext grouptext-->
-    <Style x:Key="UTH.GroupTextBox" BasedOn="{StaticResource UTH.DefaultTextBox}"  TargetType="{x:Type TextBox}">
+    <Style x:Key="UTHGroupTextBox" BasedOn="{StaticResource UTHDefaultTextBox}" TargetType="{x:Type TextBox}">
         <Setter Property="Height" Value="30" />
+        <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="BorderThickness" Value="1" />
     </Style>
 
     <!--splitter-->
-    <Style x:Key="UTH.Splitter.PreviewStyle">
+    <Style x:Key="UTHSplitterPreviewStyle">
         <Setter Property="Control.Template">
             <Setter.Value>
                 <ControlTemplate>
@@ -139,12 +153,12 @@
             </Setter.Value>
         </Setter>
     </Style>
-    <Style x:Key="UTH.Splitter.Button" TargetType="{x:Type Button}">
+    <Style x:Key="UTHSplitterButton" TargetType="{x:Type Button}">
 
     </Style>
-    <Style x:Key="UTH.Splitter" TargetType="{x:Type GridSplitter}">
+    <Style x:Key="UTHSplitter" TargetType="{x:Type GridSplitter}">
         <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
-        <Setter Property="PreviewStyle" Value="{StaticResource UTH.Splitter.PreviewStyle}"/>
+        <Setter Property="PreviewStyle" Value="{StaticResource UTHSplitterPreviewStyle}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type GridSplitter}">

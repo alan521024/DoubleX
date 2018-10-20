@@ -18,33 +18,44 @@ namespace UTH.Domain
     {
         public void Mapper(IMapperConfigurationExpression config)
         {
-            config.CreateMap<AccountDTO, AccountEditInput>();
+            config.CreateMap<AccountEntity, AccountDTO>();
+            config.CreateMap<AccountDTO, AccountEntity>();
             config.CreateMap<AccountEditInput, AccountEntity>();
-            config.CreateMap<AccountEntity, AccountOutput>();
 
             config.CreateMap<SignInInput, AccountEntity>();
             config.CreateMap<AccountEntity, SignInOutput>();
+
+            config.CreateMap<RegistInput, AccountEntity>();
             config.CreateMap<AccountEntity, RegistOutput>();
 
-            config.CreateMap<OrganizeBase, OrganizeEditInput>();
-            config.CreateMap<OrganizeEditInput, OrganizeEntity>();
-            config.CreateMap<OrganizeEntity, OrganizeOutput>();
+            config.CreateMap<MemberEntity, MemberDTO>();
+            config.CreateMap<MemberDTO, MemberEntity>();
+            config.CreateMap<MemberEditInput, MemberEntity>();
 
-            config.CreateMap<EmployeDTO, EmployeEditInput>();
-            config.CreateMap<EmployeEditInput, EmployeEntity>();
+            config.CreateMap<OrganizeEntity, OrganizeDTO>();
+            config.CreateMap<OrganizeDTO, OrganizeEntity>();
+            config.CreateMap<OrganizeEditInput, OrganizeEntity>();
+
             config.CreateMap<EmployeEntity, EmployeDTO>();
-            config.CreateMap<EmployeEntity, EmployeOutput>(); 
+            config.CreateMap<EmployeDTO, EmployeEntity>();
+            config.CreateMap<EmployeEditInput, EmployeEntity>();
         }
 
         public void Configuration()
         {
             
             EngineHelper.RegisterType(typeof(IValidator<AccountEditInput>), typeof(AccountEditInputValidator));
+
             EngineHelper.RegisterType(typeof(IValidator<SignInInput>), typeof(SignInInputValidator));
+
             EngineHelper.RegisterType(typeof(IValidator<SignOutInput>), typeof(SignOutInputValidator));
+
             EngineHelper.RegisterType(typeof(IValidator<SignRefreshInput>), typeof(SignRefreshInputValidator));
+
             EngineHelper.RegisterType(typeof(IValidator<RegistInput>), typeof(RegistInputValidator));
             EngineHelper.RegisterType(typeof(IValidator<FindPwdInput>), typeof(FindPwdInputValidator));
+
+            EngineHelper.RegisterType(typeof(IValidator<MemberEditInput>), typeof(MemberEditInputValidator));
 
             EngineHelper.RegisterType(typeof(IValidator<OrganizeEditInput>), typeof(OrganizeEditInputValidator));
 

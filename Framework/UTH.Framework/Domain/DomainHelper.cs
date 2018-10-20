@@ -55,15 +55,15 @@ namespace UTH.Framework
         //    return !method.GetCustomAttributes<NotificationAttribute>().IsEmpty();
         //}
 
-        public static TService CreateTransactionService<TService, TEntity>(IRepository repository)
-            where TService : IApplicationService
-            where TEntity : class, IEntity
-        {
-            var repParams = new KeyValueModel<string, object>("connectionClient", repository.GetClient());
-            var repObj = EngineHelper.Resolve<IRepository<TEntity>>(repParams);
-            return EngineHelper.Resolve<TService>(new KeyValueModel<string, object>("_repository", repObj));
-        }
-
+        //public static TService CreateTransactionService<TService, TEntity>(IRepository repository)
+        //    where TService : IApplicationService
+        //    where TEntity : class, IEntity
+        //{
+        //    var repParams = new KeyValueModel<string, object>("connectionClient", repository.GetClient());
+        //    var repObj = EngineHelper.Resolve<IRepository<TEntity>>(repParams);
+        //    return EngineHelper.Resolve<TService>(new KeyValueModel<string, object>("_repository", repObj));
+        //}
+        
         /// <summary>
         /// 验证规则第一个消息
         /// </summary>

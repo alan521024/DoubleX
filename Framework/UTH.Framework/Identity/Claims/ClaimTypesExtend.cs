@@ -20,6 +20,11 @@
     public static class ClaimTypesExtend
     {
         /// <summary>
+        /// Token值
+        /// </summary>
+        public const string Token = "token";
+
+        /// <summary>
         /// Token唯一标识
         /// </summary>
         public const string _Key = JwtRegisteredClaimNames.Jti;

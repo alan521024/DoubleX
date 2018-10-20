@@ -49,6 +49,8 @@ namespace UTH.Meeting.Win.Areas.User.View
         {
             viewModel = DataContext as EmployeViewModel;
             viewModel.CheckNull();
+            viewModel.Pager = pager;
+            viewModel.Configuration(this);
 
             pager.Configuration(1, 10);
             crumbs1.Items = AppHelper.GetMainNavigationCrumbs(new CrumbData() { Text = "用户管理", IsText = true, Split = "" });
@@ -61,14 +63,7 @@ namespace UTH.Meeting.Win.Areas.User.View
 
         private void pager_PagerChanged(object sender, RoutedEventArgs e)
         {
-            var obj = e.Source as Pager2;
-            var current = obj.IsNull() ? 1 : obj.PageIndex;
-            var size = obj.IsNull() ? 10 : obj.PageSize;
-            var model = viewModel?.Query(current, size);
-            if (!model.IsNull())
-            {
-                pager.SetTotal((int)model.Total);
-            }
+            viewModel?.Query();
         }
 
         private void crumbs1_ItemSelect(object sender, RoutedEventArgs e)
@@ -85,6 +80,13 @@ namespace UTH.Meeting.Win.Areas.User.View
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
             EmployeEdit edit = new EmployeEdit();
+            edit.Owner = parent;
+            edit.ShowDialog();
+        }
+
+        private void btnAdds_Click(object sender, RoutedEventArgs e)
+        {
+            EmployeEdit edit = new EmployeEdit(isBatch:true);
             edit.Owner = parent;
             edit.ShowDialog();
         }

@@ -26,7 +26,7 @@
         /// <summary>
         /// 图片验证码标识
         /// </summary>
-        string ImgCodeTag { get; set; }
+        string ImgCodeKey { get; set; }
 
         /// 短信验证码
         /// </summary>
@@ -36,7 +36,7 @@
         /// <summary>
         /// 短信验证码标识
         /// </summary>
-        string SmsCodeTag { get; set; }
+        string SmsCodeKey { get; set; }
 
         /// 短信验证码
         /// </summary>

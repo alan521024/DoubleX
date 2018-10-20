@@ -16,7 +16,7 @@
     /// 组织信息(DTO)
     /// </summary>
     [Serializable]
-    public class OrganizeDto
+    public class OrganizeDTO : IKeys, IOutput
     {
         /// <summary>
         /// Id
@@ -24,9 +24,14 @@
         public Guid Id { get; set; }
 
         /// <summary>
-        /// 唯一标识(组织简称或标识符号)
+        /// Ids
         /// </summary>
-        public string UUID { get; set; }
+        public List<Guid> Ids { get; set; }
+
+        /// <summary>
+        /// 组织编号
+        /// </summary>
+        public string No { get; set; }
 
         /// <summary>
         /// 组织名称

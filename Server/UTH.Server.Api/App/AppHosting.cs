@@ -58,11 +58,7 @@
             EngineHelper.LoggingInfo("UTH.Server.Api - Startup - ");
 
             //(1)领域相关初始配置
-            DomainConfiguration.Initialize(opt =>
-            {
-                opt.Repositorys.Add(new KeyValueModel<Type, Type>(typeof(IRepository<>), typeof(SqlSugarRepository<>)));
-                opt.Repositorys.Add(new KeyValueModel<Type, Type>(typeof(IRepository<,>), typeof(SqlSugarRepository<,>)));
-            });
+            DomainConfiguration.Initialize();
 
             //(2)组件安装初始配置
             EngineHelper.Component.List.ForEach(x => x.Install());

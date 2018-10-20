@@ -56,7 +56,7 @@
         /// <summary>
         /// 图片验证码标识
         /// </summary>
-        public string ImgCodeTag { get; set; }
+        public string ImgCodeKey { get; set; }
     }
 
     /// <summary>
@@ -71,6 +71,10 @@
 
         public SignInInputValidator()
         {
+            RuleFor(x => x.UserName + x.Account + x.Email + x.Mobile)
+                .NotEmpty()
+                .WithMessage(Lang.userQingShuRuZhangHaoShouJiHaoMaYouXiangDiZhi);
+
             CheckAccount();
             CheckMobile();
             CheckEmail();

@@ -55,11 +55,14 @@
         /// </summary>
         public void Install()
         {
-            EngineHelper.RegisterType<ICaptchaService, CaptchaService>();
-            EngineHelper.RegisterType<INotificationService, NotificationService>();
+            EngineHelper.RegisterType<ISecurityCodeService, SecurityCodeService>();
+            EngineHelper.RegisterType<INotifyService, NotifyService>();
 
-            EngineHelper.RegisterType<ICaptchaVerifyInterceptor, CaptchaVerifyInterceptor>();
-            EngineHelper.RegisterType<INotificationInterceptor, NotificationInterceptor>();
+            EngineHelper.RegisterType<ICaptchaApplication, CaptchaApplication>();
+            EngineHelper.RegisterType<INotifyApplication, NotifyApplication>();
+
+            EngineHelper.RegisterType<INotifyInterceptor, NotifyInterceptor>();
+            EngineHelper.RegisterType<ICaptchaInterceptor, CaptchaInterceptor>();
         }
 
         /// <summary>

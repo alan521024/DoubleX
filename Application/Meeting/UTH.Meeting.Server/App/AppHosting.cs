@@ -12,6 +12,7 @@ using UTH.Infrastructure.Utility;
 using UTH.Framework;
 using UTH.Domain;
 using UTH.Plug;
+using UTH.Framework.Wpf;
 
 namespace UTH.Meeting.Server
 {
@@ -59,18 +60,15 @@ namespace UTH.Meeting.Server
             EngineHelper.LoggingInfo("UTH Meeting Win Server - Startup - ");
 
             //(1)领域相关初始配置
-            DomainConfiguration.Initialize(opt =>
-            {
-                opt.Repositorys.Add(new KeyValueModel<Type, Type>(typeof(IRepository<>), typeof(SqlSugarRepository<>)));
-                opt.Repositorys.Add(new KeyValueModel<Type, Type>(typeof(IRepository<,>), typeof(SqlSugarRepository<,>)));
-            });
+            DomainConfiguration.Initialize();
             
             //(2)组件安装初始配置
             EngineHelper.Component.List.ForEach(x => x.Install());
 
             //(3)会话访问认证授权
-            //EngineHelper.RegisterType<IApplicationSession, IdentifierSession>();
-            //EngineHelper.RegisterType<ITokenService, TokenService>();
+            EngineHelper.RegisterType<IAccessor, WpfAccessor>();
+            EngineHelper.RegisterType<IApplicationSession, IdentifierSession>();
+            EngineHelper.RegisterType<ITokenService, TokenService>();
 
             //接口访问处理
             PlugCoreHelper.ApiServerAuthError = (token) =>

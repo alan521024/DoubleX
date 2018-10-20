@@ -17,29 +17,39 @@
     /// <summary>
     /// SqlSugar 仓储
     /// </summary>
-    public  class SqlSugarRepository : IRepository
+    public class SqlSugarRepository : IRepository
     {
-        #region 私有变量
+        public SqlSugarRepository(SqlSugarClient client = null, ConnectionModel connection = null, IApplicationSession session = null)
+        {
+            this.client = client;
+            this.session = session;
 
+            if (connection.IsNull())
+            {
+                connection = EngineHelper.Configuration.Store.Database;
+            }
+
+            if (this.client.IsNull())
+            {
+                connection.CheckNull();
+                this.client = CreateDb(connection);
+            }
+
+            if (this.client.IsNull())
+            {
+                throw new Exception("SqlSugarRepository Params is null");
+            }
+        }
+
+        /// <summary>
+        /// 数据对象
+        /// </summary>
         protected SqlSugarClient client;
 
-        #endregion
-
-        #region 公共属性
-
         /// <summary>
-        /// 连接信息
+        /// 会话信息
         /// </summary>
-        public ConnectionModel Connection { get; protected set; }
-
-        /// <summary>
-        /// 访问会话信息
-        /// </summary>
-        public IApplicationSession Session { get; protected set; }
-
-        #endregion
-
-        #region 脚本执行
+        protected IApplicationSession session;
 
         /// <summary>
         /// 脚本执行
@@ -74,25 +84,6 @@
             catch (Exception ex)
             {
                 throw new DbxException(EnumCode.数据库查询异常, ex);
-            }
-        }
-
-        #endregion
-
-        #region 事务操作
-
-        /// <summary>
-        /// 事务仓储参数对象
-        /// </summary>
-        public KeyValueModel<string, object>[] TranParams
-        {
-            get
-            {
-                return new KeyValueModel<string, object>[] {
-                    new KeyValueModel<string, object>("connectionStr",null),
-                    new KeyValueModel<string, object>("connectionModel", null),
-                    new KeyValueModel<string, object>("connectionClient", client)
-                };
             }
         }
 
@@ -145,154 +136,27 @@
         /// <returns></returns>
         public virtual bool UseTransaction(Action<IRepository> action)
         {
-            DbResult<bool> result = client.Ado.UseTran(() => action(this));
-            if (result != null)
-            {
-                if (result.IsSuccess)
-                {
-                    return result.Data;
-                }
-                else if (!result.ErrorMessage.IsEmpty())
-                {
-                    throw new DbxException(EnumCode.数据库事务异常, result.ErrorMessage);
-                }
-                else if (!result.ErrorException.IsNull())
-                {
-                    throw new DbxException(EnumCode.数据库事务异常, result.ErrorException);
-                }
-            }
-            return false;
+            var result = client.Ado.UseTran(() =>
+             {
+                 action?.Invoke(this);
+             });
+
+            return result.Data;
         }
 
-        /// <summary>
-        /// 事务操作
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="func"></param>
-        /// <returns></returns>
-        public virtual T UseTransaction<T>(Func<T> func)
+
+        protected SqlSugarClient CreateDb(ConnectionModel connection)
         {
-            DbResult<T> result = client.Ado.UseTran<T>(func);
-            if (result != null)
+            var config = new ConnectionConfig()
             {
-                if (result.IsSuccess)
-                {
-                    return result.Data;
-                }
-                else if (!result.ErrorMessage.IsEmpty())
-                {
-                    throw new DbxException(EnumCode.数据库事务异常, result.ErrorMessage);
-                }
-                else if (!result.ErrorException.IsNull())
-                {
-                    throw new DbxException(EnumCode.数据库事务异常, result.ErrorException);
-                }
-            }
-            return default(T);
-        }
-
-        #endregion
-
-        #region 仓储操作
-
-        /// <summary>
-        /// 获取仓储连接对象
-        /// </summary>
-        /// <returns></returns>
-        public virtual object GetClient()
-        {
-            return client;
-        }
-
-        /// <summary>
-        /// 获取仓储连接对象
-        /// </summary>
-        /// <returns></returns>
-        public virtual T GetClient<T>() where T : class
-        {
-            return client as T;
-        }
-
-        /// <summary>
-        /// 设置仓储连接对象
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="t"></param>
-        public virtual void SetClient<T>(T t) where T : class
-        {
-            client = t as SqlSugarClient;
-        }
-        #endregion
-
-        #region 会话操作
-
-        /// <summary>
-        /// 设置会话
-        /// </summary>
-        /// <param name="session"></param>
-        public virtual void SetSession(IApplicationSession session)
-        {
-            Session = session;
-        }
-
-        #endregion
-    }
-
-    /// <summary>
-    /// SqlSugar 仓储
-    /// </summary>
-    public  class SqlSugarRepository<TEntity, TKey> : SqlSugarRepository, IRepository<TEntity, TKey> where TEntity : class, IEntity<TKey>, new()
-    {
-        public SqlSugarRepository(string connectionStr = null, ConnectionModel connectionModel = null, SqlSugarClient connectionClient = null, IApplicationSession session = null)
-        {
-            if (!connectionClient.IsNull())
-            {
-                client = connectionClient;
-                Connection = new ConnectionModel()
-                {
-                    ConnectionString = client.CurrentConnectionConfig.ConnectionString,
-                    DbType = ResDBType(client.CurrentConnectionConfig.DbType),
-                    AutoCloseConnection = client.CurrentConnectionConfig.IsAutoCloseConnection
-                };
-            }
-            else if (!connectionModel.IsNull())
-            {
-                Connection = connectionModel;
-                client = CreateClient(Connection);
-
-            }
-            else if (!connectionStr.IsEmpty())
-            {
-                Connection = new ConnectionModel(connectionStr);
-                client = CreateClient(Connection);
-            }
-            else
-            {
-                throw new Exception("SqlSugarRepository Params is null");
-            }
-
-            Session = !session.IsNull() ? session : EngineHelper.Resolve<IApplicationSession>();
-        }
-
-        #region 私有变量
-
-        protected bool isDataCache { get; set; }
-
-        #endregion
-
-        #region 辅助操作
-
-        private SqlSugarClient CreateClient(ConnectionModel config)
-        {
-            var sqlSugarConfig = new ConnectionConfig()
-            {
-                ConnectionString = config.GetConnectionString(),
-                IsAutoCloseConnection = config.AutoCloseConnection,
-                DbType = ToDBType(config.DbType),
+                ConnectionString = connection.GetConnectionString(),
+                DbType = ToDBType(connection.DbType),
+                IsAutoCloseConnection = connection.AutoCloseConnection,
                 //IsShardSameThread = true //设为true相同线程是同一个SqlSugarClient http://www.codeisbug.com/Doc/8/1158
+                //不能使用异步方法
             };
 
-            var model = new SqlSugarClient(sqlSugarConfig);
+            var model = new SqlSugarClient(config);
 
             if (EngineHelper.Configuration.IsDebugger)
             {
@@ -304,23 +168,100 @@
                 };
             }
 
+            return model;
+        }
+
+        protected OrderByType ConvertOrderType(string value)
+        {
+            if (value.IsEmpty())
+                return OrderByType.Asc;
+            value = value.ToLower().Trim();
+            if (value == "desc" || value == "1")
+                return OrderByType.Desc;
+
+            return OrderByType.Asc;
+        }
+
+        protected SqlSugar.DbType ToDBType(EnumDbType dbType)
+        {
+            switch (dbType)
+            {
+                case EnumDbType.SqlServer:
+                    return SqlSugar.DbType.SqlServer;
+                case EnumDbType.MySql:
+                    return SqlSugar.DbType.MySql;
+                case EnumDbType.Oracle:
+                    return SqlSugar.DbType.Oracle;
+                case EnumDbType.Sqlite:
+                    return SqlSugar.DbType.Sqlite;
+                default:
+                    return SqlSugar.DbType.SqlServer;
+            }
+        }
+
+        protected EnumDbType ResDBType(SqlSugar.DbType dbType)
+        {
+            switch (dbType)
+            {
+                case SqlSugar.DbType.SqlServer:
+                    return EnumDbType.SqlServer;
+                case SqlSugar.DbType.MySql:
+                    return EnumDbType.MySql;
+                case SqlSugar.DbType.Oracle:
+                    return EnumDbType.Oracle;
+                case SqlSugar.DbType.Sqlite:
+                    return EnumDbType.Sqlite;
+                default:
+                    return EnumDbType.SqlServer;
+            }
+        }
+
+    }
+
+    /// <summary>
+    /// SqlSugar 仓储
+    /// </summary>
+    public class SqlSugarRepository<TEntity, TKey> : SqlSugarRepository, IRepository<TEntity, TKey> where TEntity : class, IEntity<TKey>, new()
+    {
+        public SqlSugarRepository(SqlSugarClient client = null, ConnectionModel connection = null, IApplicationSession session = null) :
+            base(client, connection, session)
+        {
+            this.SetQueryFilter();
+        }
+
+        protected bool isDataCache { get; set; }
+
+        #region 辅助操作
+
+        private void SetQueryFilter()
+        {
+            if (EngineHelper.Configuration.IsDebugger)
+            {
+                client.Ado.IsEnableLogEvent = true;
+                client.Ado.LogEventStarting = (sql, pars) =>
+                {
+                    Console.WriteLine(sql + "\r\n" + client.Utilities.SerializeObject(pars.ToDictionary(s => s.ParameterName, s => s.Value)));
+                    Console.WriteLine();
+                };
+            }
+
             //过滤器：在关联查询时，条件只针对主体信息，，
 
             //过滤器-软删除
             if (typeof(TEntity).IsBaseFrom<ISoftDeleteEntity>())
             {
-                if (model.QueryFilter.GeFilterList.Where(x => x.FilterName == "Audit.IsDelete").Count() == 0)
+                if (client.QueryFilter.GeFilterList.Where(x => x.FilterName == "Audit.IsDelete").Count() == 0)
                 {
-                    model.QueryFilter.Add(new SqlFilterItem()
+                    client.QueryFilter.Add(new SqlFilterItem()
                     {
                         FilterName = "Audit.IsDelete",
                         FilterValue = filterDb => { return new SqlFilterResult() { Sql = " IsDelete=0 " }; },
                         IsJoinQuery = false
                     });
                 }
-                if (model.QueryFilter.GeFilterList.Where(x => x.FilterName == "Audit.IsDelete.F").Count() == 0)
+                if (client.QueryFilter.GeFilterList.Where(x => x.FilterName == "Audit.IsDelete.F").Count() == 0)
                 {
-                    model.QueryFilter.Add(new SqlFilterItem()
+                    client.QueryFilter.Add(new SqlFilterItem()
                     {
                         FilterName = "Audit.IsDelete.F",
                         FilterValue = filterDb => { return new SqlFilterResult() { Sql = " f.IsDelete=0 " }; },
@@ -345,55 +286,56 @@
                 //        IsJoinQuery = true
                 //    });
             }
-
-            return model;
         }
-
-        private OrderByType ConvertOrderType(string value)
+        private void SetOperate<T>(List<T> list, EnumOperateType operate)
         {
-            if (value.IsEmpty())
-                return OrderByType.Asc;
-            value = value.ToLower().Trim();
-            if (value == "desc" || value == "1")
-                return OrderByType.Desc;
-
-            return OrderByType.Asc;
-        }
-
-        private SqlSugar.DbType ToDBType(EnumDbType dbType)
-        {
-            switch (dbType)
+            if (!list.IsEmpty())
             {
-                case EnumDbType.SqlServer:
-                    return SqlSugar.DbType.SqlServer;
-                case EnumDbType.MySql:
-                    return SqlSugar.DbType.MySql;
-                case EnumDbType.Oracle:
-                    return SqlSugar.DbType.Oracle;
-                case EnumDbType.Sqlite:
-                    return SqlSugar.DbType.Sqlite;
-                default:
-                    return SqlSugar.DbType.SqlServer;
+                list.ForEach(x =>
+                {
+                    SetOperate<T>(x, operate);
+                });
             }
         }
-
-        private EnumDbType ResDBType(SqlSugar.DbType dbType)
+        private void SetOperate<T>(T entity, EnumOperateType operate)
         {
-            switch (dbType)
+            if (entity is T)
             {
-                case SqlSugar.DbType.SqlServer:
-                    return EnumDbType.SqlServer;
-                case SqlSugar.DbType.MySql:
-                    return EnumDbType.MySql;
-                case SqlSugar.DbType.Oracle:
-                    return EnumDbType.Oracle;
-                case SqlSugar.DbType.Sqlite:
-                    return EnumDbType.Sqlite;
-                default:
-                    return EnumDbType.SqlServer;
+                var auditedItem = entity as IAuditedEntity;
+                if (auditedItem != null)
+                {
+                    switch (operate)
+                    {
+                        case EnumOperateType.Insert:
+                            auditedItem.CreateDt = auditedItem.CreateDt.IsEmpty() ? DateTime.Now : auditedItem.CreateDt;
+                            auditedItem.CreateId = !session.IsNull() ? session.User.Id : Guid.Empty;
+                            auditedItem.LastDt = auditedItem.LastDt.IsEmpty() ? DateTime.Now : auditedItem.LastDt;
+                            auditedItem.LastId = !session.IsNull() ? session.User.Id : Guid.Empty;
+                            break;
+                        case EnumOperateType.Update:
+                        case EnumOperateType.Delete:
+                            auditedItem.LastDt = DateTime.Now; //auditedItem.LastDt.IsEmpty() ?  : auditedItem.LastDt;
+                            auditedItem.LastId = !session.IsNull() ? session.User.Id : Guid.Empty;
+                            break;
+                    }
+                }
+
+                var tenantItem = entity as ITenantEntity;
+                if (tenantItem != null)
+                {
+                    switch (operate)
+                    {
+                        case EnumOperateType.Insert:
+                            tenantItem.TenantId = !session.IsNull() ? session.User.TenantId : Guid.Empty;
+                            break;
+                        case EnumOperateType.Update:
+                        case EnumOperateType.Delete:
+                            //...
+                            break;
+                    }
+                }
             }
         }
-
 
 
         private ISugarQueryable<TEntity> GetSource()
@@ -415,7 +357,6 @@
             }
             return query;
         }
-
         private IInsertable<TEntity> GetInsertable(List<TEntity> list)
         {
             var query = client.Insertable<TEntity>(list);
@@ -473,57 +414,6 @@
             }
             return query;
         }
-
-        private void SetOperate<T>(List<T> list, EnumOperateType operate)
-        {
-            if (!list.IsEmpty())
-            {
-                list.ForEach(x =>
-                {
-                    SetOperate<T>(x, operate);
-                });
-            }
-        }
-        private void SetOperate<T>(T entity, EnumOperateType operate)
-        {
-            if (entity is T)
-            {
-                var auditedItem = entity as IAuditedEntity;
-                if (auditedItem != null)
-                {
-                    switch (operate)
-                    {
-                        case EnumOperateType.Insert:
-                            auditedItem.CreateDt = auditedItem.CreateDt.IsEmpty() ? DateTime.Now : auditedItem.CreateDt;
-                            auditedItem.CreateId = !Session.IsNull() ? Session.User.Id : Guid.Empty;
-                            auditedItem.LastDt = auditedItem.LastDt.IsEmpty() ? DateTime.Now : auditedItem.LastDt;
-                            auditedItem.LastId = !Session.IsNull() ? Session.User.Id : Guid.Empty;
-                            break;
-                        case EnumOperateType.Update:
-                        case EnumOperateType.Delete:
-                            auditedItem.LastDt = DateTime.Now; //auditedItem.LastDt.IsEmpty() ?  : auditedItem.LastDt;
-                            auditedItem.LastId = !Session.IsNull() ? Session.User.Id : Guid.Empty;
-                            break;
-                    }
-                }
-
-                var tenantItem = entity as ITenantEntity;
-                if (tenantItem != null)
-                {
-                    switch (operate)
-                    {
-                        case EnumOperateType.Insert:
-                            tenantItem.TenantId = !Session.IsNull() ? Session.User.TenantId : Guid.Empty;
-                            break;
-                        case EnumOperateType.Update:
-                        case EnumOperateType.Delete:
-                            //...
-                            break;
-                    }
-                }
-            }
-        }
-
 
         protected virtual ISugarQueryable<TEntity> GetQueryable(ISugarQueryable<TEntity> query = null, Expression<Func<TEntity, bool>> where = null, List<KeyValueModel> sorting = null)
         {
@@ -676,12 +566,12 @@
         /// <summary>
         /// 修改操作
         /// </summary>
-        /// <param name="predicate">条件</param>
+        /// <param name="where">条件</param>
         /// <param name="columns">修改例</param>
         /// <param name="setValueExpression">设置值</param>
         /// <param name="entity">对象实体</param>
         /// <returns></returns>
-        public virtual int Update(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, object>> columns = null, Expression<Func<TEntity, bool>> setValueExpression = null, TEntity entity = null)
+        public virtual int Update(Expression<Func<TEntity, bool>> where = null, Expression<Func<TEntity, object>> columns = null, Expression<Func<TEntity, bool>> setValueExpression = null, TEntity entity = null)
         {
             IUpdateable<TEntity> updater = null;
 
@@ -694,9 +584,9 @@
                 updater = GetUpdateable();
             }
 
-            if (predicate != null)
+            if (where != null)
             {
-                updater = updater.Where(predicate);
+                updater = updater.Where(where);
             }
 
             if (columns != null)
@@ -760,12 +650,12 @@
         /// <summary>
         /// 修改操作-(可等待)
         /// </summary>
-        /// <param name="predicate">条件</param>
+        /// <param name="where">条件</param>
         /// <param name="columns">修改例</param>
         /// <param name="setValueExpression">设置值</param>
         /// <param name="entity">对象实体</param>
         /// <returns></returns>
-        public virtual async Task<int> UpdateAsync(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, object>> columns = null, Expression<Func<TEntity, bool>> setValueExpression = null, TEntity entity = null)
+        public virtual async Task<int> UpdateAsync(Expression<Func<TEntity, bool>> where = null, Expression<Func<TEntity, object>> columns = null, Expression<Func<TEntity, bool>> setValueExpression = null, TEntity entity = null)
         {
             IUpdateable<TEntity> updater = null;
 
@@ -778,9 +668,9 @@
                 updater = GetUpdateable();
             }
 
-            if (predicate != null)
+            if (where != null)
             {
-                updater = updater.Where(predicate);
+                updater = updater.Where(where);
             }
 
             if (columns != null)
@@ -861,12 +751,12 @@
         /// <summary>
         /// 删除集合
         /// </summary>
-        /// <param name="predicate">表达式</param>
-        public virtual int Delete(Expression<Func<TEntity, bool>> predicate)
+        /// <param name="where">表达式</param>
+        public virtual int Delete(Expression<Func<TEntity, bool>> where)
         {
             try
             {
-                return GetDeleteable().Where(predicate).ExecuteCommand();
+                return GetDeleteable().Where(where).ExecuteCommand();
             }
             catch (Exception ex)
             {
@@ -877,7 +767,7 @@
         /// <summary>
         /// 删除集合
         /// </summary>
-        /// <param name="predicate">表达式</param>
+        /// <param name="where">表达式</param>
         public virtual int Delete(List<TEntity> list)
         {
             try
@@ -944,12 +834,12 @@
         /// <summary>
         /// 删除集合
         /// </summary>
-        /// <param name="predicate">表达式</param>
-        public virtual async Task<int> DeleteAsync(Expression<Func<TEntity, bool>> predicate)
+        /// <param name="where">表达式</param>
+        public virtual async Task<int> DeleteAsync(Expression<Func<TEntity, bool>> where)
         {
             try
             {
-                return await GetDeleteable().Where(predicate).ExecuteCommandAsync();
+                return await GetDeleteable().Where(where).ExecuteCommandAsync();
             }
             catch (Exception ex)
             {
@@ -960,7 +850,7 @@
         /// <summary>
         /// 删除集合
         /// </summary>
-        /// <param name="predicate">表达式</param>
+        /// <param name="where">表达式</param>
         public virtual async Task<int> DeleteAsync(List<TEntity> list)
         {
             try
@@ -985,7 +875,7 @@
         /// </summary>
         /// <param name="key">主键</param>
         /// <returns>TEntity 对象 or null</returns>
-        public virtual TEntity Find(TKey key)
+        public virtual TEntity Get(TKey key)
         {
             var entity = GetQueryable().InSingle(key);
             return entity;
@@ -994,24 +884,24 @@
         /// <summary>
         /// 获取对象
         /// </summary>
-        /// <param name="predicate">表达式</param>
+        /// <param name="where">表达式</param>
         /// <returns>TEntity 对象 or null</returns>
-        public virtual TEntity Find(Expression<Func<TEntity, bool>> predicate)
+        public virtual TEntity Get(Expression<Func<TEntity, bool>> where)
         {
-            var entity = GetQueryable(where: predicate).First();  //超过1条,使用Single会报错，First不会报错
+            var entity = GetQueryable(where: where).First();  //超过1条,使用Single会报错，First不会报错
             return entity;
         }
 
         /// <summary>
-        /// 获取集合
+        /// 集合查询
         /// </summary>
         /// <param name="top">数量</param>
-        /// <param name="predicate">表达式</param>
+        /// <param name="where">表达式</param>
         /// <param name="sorting">排序</param>
         /// <returns>IQueryable[TEntity] 集合 new List[TEntity]</returns>
-        public virtual List<TEntity> Find(int top = 0, Expression<Func<TEntity, bool>> predicate = null, List<KeyValueModel> sorting = null)
+        public virtual List<TEntity> Find(int top = 0, Expression<Func<TEntity, bool>> where = null, List<KeyValueModel> sorting = null)
         {
-            ISugarQueryable<TEntity> query = GetQueryable(where: predicate, sorting: sorting);
+            ISugarQueryable<TEntity> query = GetQueryable(where: where, sorting: sorting);
 
             if (top > 0)
             {
@@ -1022,15 +912,15 @@
         }
 
         /// <summary>
-        /// 获取集合
+        /// 分页查询
         /// </summary>
         /// <param name="top">数量</param>
-        /// <param name="predicate">表达式</param>
+        /// <param name="where">表达式</param>
         /// <param name="sorting">排序</param>
         /// <returns>IQueryable[TEntity] 集合 new List[TEntity]</returns>
-        public virtual List<TEntity> Paging(int page, int size, Expression<Func<TEntity, bool>> predicate, List<KeyValueModel> sorting, ref int total)
+        public virtual List<TEntity> Paging(int page, int size, Expression<Func<TEntity, bool>> where, List<KeyValueModel> sorting, ref int total)
         {
-            var list = GetQueryable(where: predicate, sorting: sorting).ToPageList(page, size, ref total);
+            var list = GetQueryable(where: where, sorting: sorting).ToPageList(page, size, ref total);
             return list;
         }
 
@@ -1039,22 +929,33 @@
         /// <summary>
         /// 获取对象
         /// </summary>
-        /// <param name="predicate">表达式</param>
+        /// <param name="key">主键</param>
         /// <returns>TEntity 对象 or null</returns>
-        public virtual async Task<TEntity> FindAsync(Expression<Func<TEntity, bool>> predicate)
+        public virtual async Task<TEntity> GetAsync(TKey key)
         {
-            return await GetQueryable(where: predicate).FirstAsync();  //超过1条,使用Single会报错，First不会报错
+            var entity = GetQueryable().InSingle(key);
+            return entity;
         }
 
         /// <summary>
-        /// 获取集合
+        /// 获取对象
         /// </summary>
-        /// <param name="predicate">表达式</param>
+        /// <param name="where">表达式</param>
+        /// <returns>TEntity 对象 or null</returns>
+        public virtual async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> where)
+        {
+            return await GetQueryable(where: where).FirstAsync();  //超过1条,使用Single会报错，First不会报错
+        }
+
+        /// <summary>
+        /// 集合查询
+        /// </summary>
+        /// <param name="where">表达式</param>
         /// <param name="sorting">排序</param>
         /// <returns>IQueryable[TEntity] 集合 or new List[TEntity]</returns>
-        public virtual async Task<List<TEntity>> FindAsync(int top = 0, Expression<Func<TEntity, bool>> predicate = null, List<KeyValueModel> sorting = null)
+        public virtual async Task<List<TEntity>> FindAsync(int top = 0, Expression<Func<TEntity, bool>> where = null, List<KeyValueModel> sorting = null)
         {
-            ISugarQueryable<TEntity> query = GetQueryable(where: predicate, sorting: sorting);
+            ISugarQueryable<TEntity> query = GetQueryable(where: where, sorting: sorting);
 
             if (top > 0)
             {
@@ -1065,42 +966,41 @@
         }
 
         /// <summary>
-        /// 获取集合
+        /// 分页查询
         /// </summary>
         /// <param name="top">数量</param>
-        /// <param name="predicate">表达式</param>
+        /// <param name="where">表达式</param>
         /// <param name="sorting">排序</param>
         /// <returns>IQueryable[TEntity] 集合 new List[TEntity]</returns>
-        public virtual async Task<KeyValuePair<List<TEntity>, int>> PagingAsync(int page, int size, Expression<Func<TEntity, bool>> predicate, List<KeyValueModel> sorting, int total)
+        public virtual async Task<KeyValuePair<List<TEntity>, int>> PagingAsync(int page, int size, Expression<Func<TEntity, bool>> where, List<KeyValueModel> sorting, int total)
         {
-            return await GetQueryable(where: predicate, sorting: sorting).ToPageListAsync(page, size, total);
+            return await GetQueryable(where: where, sorting: sorting).ToPageListAsync(page, size, total);
         }
 
         #endregion
 
         #endregion
-
 
         #region 存在判断/函数
 
         /// <summary>
         /// 存在判断
         /// </summary>
-        /// <param name="expression"></param>
+        /// <param name="where"></param>
         /// <returns></returns>
-        public virtual bool Any(Expression<Func<TEntity, bool>> expression)
+        public virtual bool Any(Expression<Func<TEntity, bool>> where)
         {
-            return GetSource().Where(expression).Any();
+            return GetQueryable(where: where).Any();
         }
 
         /// <summary>
         /// 存在判断
         /// </summary>
-        /// <param name="expression"></param>
+        /// <param name="where"></param>
         /// <returns></returns>
-        public virtual async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> expression)
+        public virtual async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> where)
         {
-            return await GetSource().Where(expression).AnyAsync();
+            return await GetSource().Where(where).AnyAsync();
         }
 
         #endregion
@@ -1113,18 +1013,18 @@
         /// <typeparam name="TResult">结果类型</typeparam>
         /// <param name="field">查询字段 与 name 选填一个</param>
         /// <param name="name">字段名称 与 field 选填一个</param>
-        /// <param name="predicate">查询条件</param>
+        /// <param name="where">查询条件</param>
         /// <returns></returns>
-        public virtual TResult Max<TResult>(Expression<Func<TEntity, TResult>> field = null, string name = null, Expression<Func<TEntity, bool>> predicate = null)
+        public virtual TResult Max<TResult>(Expression<Func<TEntity, TResult>> field = null, string name = null, Expression<Func<TEntity, bool>> where = null)
         {
             if (field.IsNull() && name.IsEmpty())
                 throw new ArgumentException($"{nameof(field)} && {nameof(name)} cannot be null");
 
             var source = GetSource();
 
-            if (!predicate.IsNull())
+            if (!where.IsNull())
             {
-                source = source.Where(predicate);
+                source = source.Where(where);
             }
 
             if (!field.IsNull())
@@ -1144,18 +1044,18 @@
         /// <typeparam name="TResult">结果类型</typeparam>
         /// <param name="field">查询字段 与 name 选填一个</param>
         /// <param name="name">字段名称 与 field 选填一个</param>
-        /// <param name="predicate">查询条件</param>
+        /// <param name="where">查询条件</param>
         /// <returns></returns>
-        public virtual async Task<TResult> MaxAsync<TResult>(Expression<Func<TEntity, TResult>> field = null, string name = null, Expression<Func<TEntity, bool>> predicate = null)
+        public virtual async Task<TResult> MaxAsync<TResult>(Expression<Func<TEntity, TResult>> field = null, string name = null, Expression<Func<TEntity, bool>> where = null)
         {
             if (field.IsNull() && name.IsEmpty())
                 throw new ArgumentException($"{nameof(field)} && {nameof(name)} cannot be null");
 
             var source = GetSource();
 
-            if (!predicate.IsNull())
+            if (!where.IsNull())
             {
-                source = source.Where(predicate);
+                source = source.Where(where);
             }
 
             if (!field.IsNull())
@@ -1178,18 +1078,18 @@
         /// <typeparam name="TResult">结果类型</typeparam>
         /// <param name="field">查询字段 与 name 选填一个</param>
         /// <param name="name">字段名称 与 field 选填一个</param>
-        /// <param name="predicate">查询条件</param>
+        /// <param name="where">查询条件</param>
         /// <returns></returns>
-        public virtual TResult Min<TResult>(Expression<Func<TEntity, TResult>> field = null, string name = null, Expression<Func<TEntity, bool>> predicate = null)
+        public virtual TResult Min<TResult>(Expression<Func<TEntity, TResult>> field = null, string name = null, Expression<Func<TEntity, bool>> where = null)
         {
             if (field.IsNull() && name.IsEmpty())
                 throw new ArgumentException($"{nameof(field)} && {nameof(name)} cannot be null");
 
             var source = GetSource();
 
-            if (!predicate.IsNull())
+            if (!where.IsNull())
             {
-                source = source.Where(predicate);
+                source = source.Where(where);
             }
 
             if (!field.IsNull())
@@ -1208,18 +1108,18 @@
         /// <typeparam name="TResult">结果类型</typeparam>
         /// <param name="field">查询字段 与 name 选填一个</param>
         /// <param name="name">字段名称 与 field 选填一个</param>
-        /// <param name="predicate">查询条件</param>
+        /// <param name="where">查询条件</param>
         /// <returns></returns>
-        public virtual async Task<TResult> MinAsync<TResult>(Expression<Func<TEntity, TResult>> field = null, string name = null, Expression<Func<TEntity, bool>> predicate = null)
+        public virtual async Task<TResult> MinAsync<TResult>(Expression<Func<TEntity, TResult>> field = null, string name = null, Expression<Func<TEntity, bool>> where = null)
         {
             if (field.IsNull() && name.IsEmpty())
                 throw new ArgumentException($"{nameof(field)} && {nameof(name)} cannot be null");
 
             var source = GetSource();
 
-            if (!predicate.IsNull())
+            if (!where.IsNull())
             {
-                source = source.Where(predicate);
+                source = source.Where(where);
             }
 
             if (!field.IsNull())
@@ -1240,18 +1140,18 @@
         /// 获取总数
         /// </summary>
         /// <returns></returns>
-        public virtual int Count(Expression<Func<TEntity, bool>> predicate = null)
+        public virtual int Count(Expression<Func<TEntity, bool>> where = null)
         {
-            return predicate.IsNull() ? GetSource().Count() : GetSource().Count(predicate);
+            return where.IsNull() ? GetSource().Count() : GetSource().Count(where);
         }
 
         /// <summary>
         /// 获取总数
         /// </summary>
         /// <returns></returns>
-        public virtual async Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate = null)
+        public virtual async Task<int> CountAsync(Expression<Func<TEntity, bool>> where = null)
         {
-            return await (predicate.IsNull() ? GetSource().CountAsync() : GetSource().CountAsync(predicate));
+            return await (where.IsNull() ? GetSource().CountAsync() : GetSource().CountAsync(where));
         }
 
         #endregion
@@ -1264,18 +1164,18 @@
         /// <typeparam name="TResult">结果类型</typeparam>
         /// <param name="field">查询字段 与 name 选填一个</param>
         /// <param name="name">字段名称 与 field 选填一个</param>
-        /// <param name="predicate">查询条件</param>
+        /// <param name="where">查询条件</param>
         /// <returns></returns>
-        public virtual TResult Sum<TResult>(Expression<Func<TEntity, TResult>> field = null, string name = null, Expression<Func<TEntity, bool>> predicate = null)
+        public virtual TResult Sum<TResult>(Expression<Func<TEntity, TResult>> field = null, string name = null, Expression<Func<TEntity, bool>> where = null)
         {
             if (field.IsNull() && name.IsEmpty())
                 throw new ArgumentException($"{nameof(field)} && {nameof(name)} cannot be null");
 
             var source = GetSource();
 
-            if (!predicate.IsNull())
+            if (!where.IsNull())
             {
-                source = source.Where(predicate);
+                source = source.Where(where);
             }
 
             if (!field.IsNull())
@@ -1294,18 +1194,18 @@
         /// <typeparam name="TResult">结果类型</typeparam>
         /// <param name="field">查询字段 与 name 选填一个</param>
         /// <param name="name">字段名称 与 field 选填一个</param>
-        /// <param name="predicate">查询条件</param>
+        /// <param name="where">查询条件</param>
         /// <returns></returns>
-        public virtual async Task<TResult> SumAsync<TResult>(Expression<Func<TEntity, TResult>> field = null, string name = null, Expression<Func<TEntity, bool>> predicate = null)
+        public virtual async Task<TResult> SumAsync<TResult>(Expression<Func<TEntity, TResult>> field = null, string name = null, Expression<Func<TEntity, bool>> where = null)
         {
             if (field.IsNull() && name.IsEmpty())
                 throw new ArgumentException($"{nameof(field)} && {nameof(name)} cannot be null");
 
             var source = GetSource();
 
-            if (!predicate.IsNull())
+            if (!where.IsNull())
             {
-                source = source.Where(predicate);
+                source = source.Where(where);
             }
 
             if (!field.IsNull())
@@ -1328,18 +1228,18 @@
         /// <typeparam name="TResult">结果类型</typeparam>
         /// <param name="field">查询字段 与 name 选填一个</param>
         /// <param name="name">字段名称 与 field 选填一个</param>
-        /// <param name="predicate">查询条件</param>
+        /// <param name="where">查询条件</param>
         /// <returns></returns>
-        public virtual TResult Avg<TResult>(Expression<Func<TEntity, TResult>> field = null, string name = null, Expression<Func<TEntity, bool>> predicate = null)
+        public virtual TResult Avg<TResult>(Expression<Func<TEntity, TResult>> field = null, string name = null, Expression<Func<TEntity, bool>> where = null)
         {
             if (field.IsNull() && name.IsEmpty())
                 throw new ArgumentException($"{nameof(field)} && {nameof(name)} cannot be null");
 
             var source = GetSource();
 
-            if (!predicate.IsNull())
+            if (!where.IsNull())
             {
-                source = source.Where(predicate);
+                source = source.Where(where);
             }
 
             if (!field.IsNull())
@@ -1358,18 +1258,18 @@
         /// <typeparam name="TResult">结果类型</typeparam>
         /// <param name="field">查询字段 与 name 选填一个</param>
         /// <param name="name">字段名称 与 field 选填一个</param>
-        /// <param name="predicate">查询条件</param>
+        /// <param name="where">查询条件</param>
         /// <returns></returns>
-        public virtual async Task<TResult> AvgAsync<TResult>(Expression<Func<TEntity, TResult>> field = null, string name = null, Expression<Func<TEntity, bool>> predicate = null)
+        public virtual async Task<TResult> AvgAsync<TResult>(Expression<Func<TEntity, TResult>> field = null, string name = null, Expression<Func<TEntity, bool>> where = null)
         {
             if (field.IsNull() && name.IsEmpty())
                 throw new ArgumentException($"{nameof(field)} && {nameof(name)} cannot be null");
 
             var source = GetSource();
 
-            if (!predicate.IsNull())
+            if (!where.IsNull())
             {
-                source = source.Where(predicate);
+                source = source.Where(where);
             }
 
             if (!field.IsNull())
@@ -1383,16 +1283,15 @@
         }
 
         #endregion
-
     }
 
     /// <summary>
     /// SqlSugar 仓储接口
     /// </summary>
-    public  class SqlSugarRepository<TEntity> : SqlSugarRepository<TEntity, Guid>, IRepository<TEntity> where TEntity : class, IEntity, new()
+    public class SqlSugarRepository<TEntity> : SqlSugarRepository<TEntity, Guid>, IRepository<TEntity> where TEntity : class, IEntity, new()
     {
-        public SqlSugarRepository(string connectionStr = null, ConnectionModel connectionModel = null, SqlSugarClient connectionClient = null, IApplicationSession session = null)
-            : base(connectionStr, connectionModel, connectionClient, session)
+        public SqlSugarRepository(ConnectionModel connection = null, SqlSugarClient client = null, IApplicationSession session = null) :
+            base(client, connection, session)
         {
 
         }

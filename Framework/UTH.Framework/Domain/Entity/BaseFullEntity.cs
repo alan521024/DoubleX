@@ -13,22 +13,22 @@
     /// <summary>
     /// 基础信息（Key + Audited + Tenant + SoftDeleteEntity）
     /// </summary>
-    public class BaseFullEntity<TKey> : IEntity<TKey>, IAuditedEntity<TKey>, ITenantEntity<TKey>, ISoftDeleteEntity
+    public class BaseFullEntity : IEntity, IAuditedEntity, ITenantEntity, ISoftDeleteEntity
     {
         /// <summary>
         /// 主键
         /// </summary>
-        public TKey Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// 租户Id
         /// </summary>
-        public TKey TenantId { get; set; }
+        public Guid TenantId { get; set; }
 
         /// <summary>
         /// 添加人Id
         /// </summary>
-        public TKey CreateId { get; set; }
+        public Guid CreateId { get; set; }
 
         /// <summary>
         /// 添加时间
@@ -38,7 +38,7 @@
         /// <summary>
         /// 修改人Id
         /// </summary>
-        public TKey LastId { get; set; }
+        public Guid LastId { get; set; }
 
         /// <summary>
         /// 修改时间
@@ -50,13 +50,5 @@
         /// 是否逻辑删除
         /// </summary>
         public bool IsDelete { get; set; }
-    }
-
-    /// <summary>
-    /// 基础信息（Key + Audited + Tenant + SoftDeleteEntity）
-    /// </summary>
-    public class BaseFullEntity : BaseFullEntity<Guid>, IEntity, IAuditedEntity, ITenantEntity, ISoftDeleteEntity
-    {
-
     }
 }

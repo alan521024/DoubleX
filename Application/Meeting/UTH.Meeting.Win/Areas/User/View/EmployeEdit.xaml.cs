@@ -35,22 +35,44 @@ namespace UTH.Meeting.Win.Areas.User.View
     /// </summary>
     public partial class EmployeEdit : UTHWindow
     {
-        public EmployeEdit()
+        public EmployeEdit(bool isBatch = false)
         {
             InitializeComponent();
-            Initialize();
+            Initialize(isBatch);
             this.Loaded += EmployeEdit_Loaded;
         }
 
         EmployeEditViewModel viewModel;
         Win.View.Main parent;
 
-        private void Initialize()
+        private void Initialize(bool isBatch = false)
         {
             viewModel = DataContext as EmployeEditViewModel;
             viewModel.CheckNull();
-            var ddd = viewModel.Title;
             viewModel.MaskHide();
+
+            viewModel.No = "";
+            viewModel.Name = "";
+            viewModel.Password = "";
+            viewModel.BatchStart = 0;
+            viewModel.BatchEnd = 0;
+            viewModel.IsSingle = Visibility.Visible;
+            viewModel.IsBatch = Visibility.Collapsed;
+
+            if (isBatch)
+            {
+                viewModel.IsBatch = Visibility.Visible;
+                viewModel.IsSingle = Visibility.Collapsed;
+                viewModel.BatchStart = 1;
+                viewModel.BatchEnd = 5;
+            }
+            else
+            {
+                viewModel.IsBatch = Visibility.Collapsed;
+                viewModel.IsSingle = Visibility.Visible;
+                viewModel.BatchStart = 0;
+                viewModel.BatchEnd = 0;
+            }
         }
 
         private void EmployeEdit_Loaded(object sender, RoutedEventArgs e)

@@ -41,7 +41,7 @@
         /// <summary>
         /// 图片验证码标识
         /// </summary>
-        public string ImgCodeTag { get; set; }
+        public string ImgCodeKey { get; set; }
 
         /// <summary>
         /// 短信验证码

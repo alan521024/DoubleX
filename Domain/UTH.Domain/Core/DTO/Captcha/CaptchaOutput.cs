@@ -15,10 +15,8 @@
     /// <summary>
     /// 验证码返回
     /// </summary>
-    public class CaptchaOutput : IOutput
+    public class CaptchaOutput : SecurityCodeModel, IOutput
     {
-        public string Code { get; set; }
 
-        public string Tag { get; set; }
     }
 }

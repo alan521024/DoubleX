@@ -14,7 +14,7 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 组织相关校验
+    /// 组织校验
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class OrganizeValidator<T> : AbstractValidator<T>

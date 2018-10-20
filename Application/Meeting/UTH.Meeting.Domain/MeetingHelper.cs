@@ -90,7 +90,6 @@
             return 780;
         }
 
-
         #endregion
 
         #region 本地数据库业务
@@ -118,27 +117,53 @@
             return FilesHelper.GetPath(string.Format("Assets/Data/{0}/{1}.txt", meetingId.IsEmpty() ? "Temp" : meetingId.ToString(), "会议记录"), isAppWork: true);
         }
 
-        public static IMeetingRecordService GetLocalRecordServer(Guid meetingId, IApplicationSession session)
+        public static IDomainDefaultService<MeetingRecordEntity> GetRecordService(Guid meetingId)
         {
-            var repository = EngineHelper.Resolve<IRepository<MeetingRecordEntity>>(new KeyValueModel<string, object>("connectionModel", new ConnectionModel()
+            var par = new List<KeyValueModel<string, object>>();
+            par.Add(new KeyValueModel<string, object>("session", EngineHelper.Resolve<IApplicationSession>()));
+            par.Add(new KeyValueModel<string, object>("caching", EngineHelper.Resolve<ICachingService>(new KeyValueModel<string, object>("model", EngineHelper.Configuration.Store.Caching))));
+
+
+            var repParams = new List<KeyValueModel<string, object>>();
+            repParams.AddRange(par);
+            repParams.Add(new KeyValueModel<string, object>("connectionModel", new ConnectionModel()
             {
                 DbType = EnumDbType.Sqlite,
-                ConnectionString = string.Format("Data Source={0};", GetMeetingDatabaseFile(meetingId))
+                ConnectionString = string.Format("Data Source={0};", MeetingHelper.GetMeetingDatabaseFile(meetingId))
             }));
-            var service = EngineHelper.Resolve<IMeetingRecordService>(new KeyValueModel<string, object>("_repository", repository));
-            //service.SetSession(session);
+            var repository = EngineHelper.Resolve<IRepository<MeetingRecordEntity>>(repParams.ToArray());
+
+
+            var serviceParams = new List<KeyValueModel<string, object>>();
+            serviceParams.AddRange(par);
+            serviceParams.Add(new KeyValueModel<string, object>("_repository", repository));
+            var service = EngineHelper.Resolve<IDomainDefaultService<MeetingRecordEntity>>(serviceParams.ToArray());
+
             return service;
         }
 
-        public static IMeetingTranslationService GetLocalTranslationServer(Guid meetingId, IApplicationSession session)
+        public static IDomainDefaultService<MeetingTranslationEntity> GetTranslateService(Guid meetingId)
         {
-            var repository = EngineHelper.Resolve<IRepository<MeetingTranslationEntity>>(new KeyValueModel<string, object>("connectionModel", new ConnectionModel()
+            var par = new List<KeyValueModel<string, object>>();
+            par.Add(new KeyValueModel<string, object>("session", EngineHelper.Resolve<IApplicationSession>()));
+            par.Add(new KeyValueModel<string, object>("caching", EngineHelper.Resolve<ICachingService>(new KeyValueModel<string, object>("model", EngineHelper.Configuration.Store.Caching))));
+
+
+            var repParams = new List<KeyValueModel<string, object>>();
+            repParams.AddRange(par);
+            repParams.Add(new KeyValueModel<string, object>("connectionModel", new ConnectionModel()
             {
                 DbType = EnumDbType.Sqlite,
-                ConnectionString = string.Format("Data Source={0};", GetMeetingDatabaseFile(meetingId))
+                ConnectionString = string.Format("Data Source={0};", MeetingHelper.GetMeetingDatabaseFile(meetingId))
             }));
-            var service = EngineHelper.Resolve<IMeetingTranslationService>(new KeyValueModel<string, object>("_repository", repository));
-            //service.SetSession(session);
+            var repository = EngineHelper.Resolve<IRepository<MeetingTranslationEntity>>(repParams.ToArray());
+
+
+            var serviceParams = new List<KeyValueModel<string, object>>();
+            serviceParams.AddRange(par);
+            serviceParams.Add(new KeyValueModel<string, object>("_repository", repository));
+            var service = EngineHelper.Resolve<IDomainDefaultService<MeetingTranslationEntity>>(serviceParams.ToArray());
+
             return service;
         }
 
@@ -146,11 +171,14 @@
 
         #region 获取会议信息
 
-        public static MeetingOutput GetMeeting(Guid? id = null, string code = null)
+        public static MeetingDTO GetMeeting(Guid? id = null, string code = null)
         {
             if (!id.IsEmpty())
             {
-                var result = $"{PlugCoreHelper.ApiUrl.Meeting.MeetingGetId}?id={id}".GetResult<MeetingOutput>();
+                var result = PlugCoreHelper.ApiUrl.Meeting.MeetingGetId.GetResult<MeetingDTO, MeetingEditInput>(new MeetingEditInput()
+                {
+                    Id = id.Value
+                });
                 if (result.Code == EnumCode.成功)
                 {
                     return result.Obj;
@@ -158,7 +186,7 @@
             }
             else if (!code.IsEmpty())
             {
-                var result = PlugCoreHelper.ApiUrl.Meeting.MeetingGetCode.GetResult<MeetingOutput, MeetingEditInput>(new MeetingEditInput() { Num = code });
+                var result = PlugCoreHelper.ApiUrl.Meeting.MeetingGetCode.GetResult<MeetingDTO, MeetingEditInput>(new MeetingEditInput() { Num = code });
                 if (result.Code == EnumCode.成功)
                 {
                     return result.Obj;

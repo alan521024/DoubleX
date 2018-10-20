@@ -14,22 +14,30 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 人员编辑输入
+    /// 人员输入
     /// </summary>
-    public class EmployeEditInput : EmployeDTO, IInput, IInputDelete, IInputUpdate
+    public class EmployeEditInput : EmployeDTO, IInput
     {
-        public List<Guid> Ids { get; set; }
+        public int BatchStart { get; set; }
+        public int BatchEnd { get; set; }
         public string Password { get; set; }
+        public string NewPassword { get; set; }
     }
 
     /// <summary>
-    /// 会议输入校验
+    /// 人员输入校验
     /// </summary>
     public class EmployeEditInputValidator : EmployeValidator<EmployeEditInput>, IValidator<EmployeEditInput>
     {
         public EmployeEditInputValidator()
         {
-            //rule...
+            RuleFor(o => o.No).Configure(x => x.PropertyName = Lang.userYongHuMing)
+                .NotNull().NotEmpty().MinimumLength(2);
+
+            RuleFor(o => o.Name).Configure(x => x.PropertyName = Lang.userXingMing);
+
+            RuleFor(o => o.Password).Configure(x => x.PropertyName = Lang.userMiMa)
+                .NotNull().NotEmpty();
         }
     }
 }

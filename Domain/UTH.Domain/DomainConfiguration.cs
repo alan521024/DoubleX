@@ -25,7 +25,7 @@
         /// <summary>
         /// 领域业务服务配置初始操作
         /// </summary>
-        public static void Initialize(Action<DomainOptions> action)
+        public static void Initialize(Action<DomainOptions> action = null)
         {
             //options
             action?.Invoke(Options);
@@ -43,42 +43,12 @@
             EngineHelper.RegisterGeneric(typeof(IConfigObjService<>), typeof(DefaultConfigObjService<>), new IocRegisterOptions() { SingleInstance = true });
 
             //缓存服务
-            if (!engine.Store.DefaultCache.IsNull())
+            EngineHelper.RegisterType<ICachingService, RedisCachingService>(new IocRegisterOptions()
             {
-                EngineHelper.RegisterType<ICachingService, RedisCachingService>(new IocRegisterOptions()
-                {
-                    Parameters = new List<KeyValueModel<string, object>>(){
-                    new KeyValueModel<string, object>("model", engine.Store.DefaultCache)
+                Parameters = new List<KeyValueModel<string, object>>(){
+                    new KeyValueModel<string, object>("model", engine.Store.Caching)
                 }
-                });
-            }
-            if (!engine.Store.AppCache.IsNull())
-            {
-                EngineHelper.RegisterType<IAppCachingService, AppCachingService>(new IocRegisterOptions()
-                {
-                    Parameters = new List<KeyValueModel<string, object>>(){
-                    new KeyValueModel<string, object>("model", engine.Store.AppCache)
-                }
-                });
-            }
-            if (!engine.Store.DataCache.IsNull())
-            {
-                EngineHelper.RegisterType<IDataCachingService, DataCachingService>(new IocRegisterOptions()
-                {
-                    Parameters = new List<KeyValueModel<string, object>>(){
-                    new KeyValueModel<string, object>("model", engine.Store.DataCache)
-                }
-                });
-            }
-            if (!engine.Store.SessionCache.IsNull())
-            {
-                EngineHelper.RegisterType<ISessionCachingService, SessionCachingService>(new IocRegisterOptions()
-                {
-                    Parameters = new List<KeyValueModel<string, object>>(){
-                    new KeyValueModel<string, object>("model", engine.Store.SessionCache)
-                }
-                });
-            }
+            });
 
             //Aop(执行日志/输入校验)
             EngineHelper.RegisterType<ILoggingInterceptor, LoggingInterceptor>();
@@ -92,29 +62,33 @@
                 profiles.Add((Activator.CreateInstance(item) as IDomainProfile));
             }
 
-            //domain configuration
+            //configuration
             profiles.ForEach(x => x.Configuration());
 
-            //domain mapper
+            //mapper
             Mapper.Initialize(config =>
             {
                 profiles.ForEach(x => x.Mapper(config));
                 Options.Mapper?.Invoke(config);
             });
 
-            //仓储、业务
-            Options.Repositorys.ForEach((x) =>
-            {
-                EngineHelper.RegisterGeneric(x.Key, x.Value, Options.IocRepositoryOption);
-            });
+            //unitofwork
+            EngineHelper.RegisterType<IUnitOfWork, UnitOfWorkSqlSugar>();
+            EngineHelper.RegisterType<IUnitOfWorkManager, UnitOfWorkManager>();
 
+            //domain repository
+            EngineHelper.RegisterType<IRepository, SqlSugarRepository>(Options.IocRepositoryOption);
+            EngineHelper.RegisterGeneric(typeof(IRepository<,>), typeof(SqlSugarRepository<,>), Options.IocRepositoryOption);
+            EngineHelper.RegisterGeneric(typeof(IRepository<>), typeof(SqlSugarRepository<>), Options.IocRepositoryOption);
+
+            //domain service
             EngineHelper.RegisterType<IDomainService, DomainService>(Options.IocServiceOption);
             EngineHelper.RegisterGeneric(typeof(IDomainDefaultService<>), typeof(DomainDefaultService<>), Options.IocServiceOption);
 
+            //application service
             EngineHelper.RegisterType<IApplicationService, ApplicationService>(Options.IocServiceOption);
-            EngineHelper.RegisterGeneric(typeof(IApplicationDefault<>), typeof(ApplicationDefault<>), Options.IocServiceOption);
 
-            //访问者、Session、 Token、授权认证
+            //accessor、session、 token、auth
             EngineHelper.RegisterType<IAccessor, DefaultAccessor>();
             EngineHelper.RegisterType<IApplicationSession, DefaultSession>();
             EngineHelper.RegisterType<ITokenService, TokenService>();

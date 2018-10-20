@@ -14,6 +14,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\..\Build</OutputPath>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Assets\Style\Theme.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Style\Theme.xaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   
   <ItemGroup>
     <PackageReference Include="ControlzEx" Version="3.0.2.4" />
@@ -46,12 +54,6 @@
   
   <ItemGroup>
     <Compile DependentUpon="%(Filename)" SubType="Code" Update="$(MSBuildProjectDirectory)\obj\**\*.g$(_SdkLanguageExtension)" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <None Update="Assets\Style\Theme.xaml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   
   <ItemGroup>

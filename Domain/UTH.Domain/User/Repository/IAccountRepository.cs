@@ -12,7 +12,7 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 账号仓储接口
+    /// 账户仓储接口
     /// </summary>
     public interface IAccountRepository : IRepository<AccountEntity>
     {

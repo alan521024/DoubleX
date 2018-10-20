@@ -25,14 +25,21 @@
         </Grid.RowDefinitions>
 
         <DockPanel Grid.Row="0" Margin="0,10,0,10">
-            <TextBlock  DockPanel.Dock="Left"  Style="{StaticResource formTitleMin}" Text="{x:Static culture:Lang.sysBianMa}"></TextBlock>
+            <TextBlock  DockPanel.Dock="Left"  Style="{StaticResource formTitleMin}" Text="{x:Static culture:Lang.userYongHuMing}"></TextBlock>
             <TextBox DockPanel.Dock="Right" Text="{Binding No}"></TextBox>
         </DockPanel>
 
-        <DockPanel Grid.Row="1" Margin="0,10,0,10">
+        <DockPanel Grid.Row="1" Margin="0,10,0,10" Visibility="{Binding IsSingle}">
             <TextBlock DockPanel.Dock="Left" Style="{StaticResource formTitleMin}" Text="{x:Static culture:Lang.userXingMing}"></TextBlock>
             <TextBox DockPanel.Dock="Right"  Text="{Binding Name}"></TextBox>
         </DockPanel>
+
+        <WrapPanel Grid.Row="1" Margin="0,10,0,10" Visibility="{Binding IsBatch}" HorizontalAlignment="Left">
+            <TextBlock DockPanel.Dock="Left" Style="{StaticResource formTitleMin}" Text=""></TextBlock>
+            <TextBox Text="{Binding BatchStart}" Width="60"></TextBox>
+            <TextBlock Text="-" Margin="10,0,10,0"></TextBlock>
+            <TextBox Text="{Binding BatchEnd}" Width="60"></TextBox>
+        </WrapPanel>
 
         <DockPanel Grid.Row="2" Margin="0,10,0,10">
             <TextBlock DockPanel.Dock="Left" Style="{StaticResource formTitleMin}" Text="{x:Static culture:Lang.userMiMa}"></TextBlock>
@@ -42,7 +49,8 @@
         <DockPanel Grid.Row="3" Margin="0,10,0,10">
             <TextBlock DockPanel.Dock="Left" Style="{StaticResource formTitleMin}" Text=""></TextBlock>
             <WrapPanel DockPanel.Dock="Right" VerticalAlignment="Center" HorizontalAlignment="Left">
-                <Button Content="{x:Static culture:Lang.sysBaoCun}" Width="{StaticResource ButtonDefaultSize}" Command="{Binding SaveCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"></Button>
+                <Button Content="{x:Static culture:Lang.sysBaoCun}" Width="{StaticResource ButtonDefaultSize}"
+                        Command="{Binding SaveCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"></Button>
             </WrapPanel>
         </DockPanel>
 

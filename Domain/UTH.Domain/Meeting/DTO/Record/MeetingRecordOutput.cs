@@ -15,11 +15,11 @@
     /// <summary>
     /// 会议记录输出信息
     /// </summary>
-    public class MeetingRecordOutput : MeetingRecordBase, IOutput
+    public class MeetingRecordOutput : MeetingRecordDTO, IOutput
     {
         /// <summary>
         /// 翻译记录
         /// </summary>
-        public List<MeetingTranslationOutput> Translations { get; set; }
+        public List<MeetingTranslationDTO> Translations { get; set; }
     }
 }

@@ -14,15 +14,14 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 应用程序编辑输入
+    /// 应用程序输入
     /// </summary>
-    public class AppEditInput : AppBase, IInput, IInputDelete, IInputUpdate
+    public class AppEditInput : AppDTO, IInput
     {
-        public List<Guid> Ids { get; set; }
     }
 
     /// <summary>
-    /// 应用程序编辑输入校验
+    /// 应用程序输入校验
     /// </summary>
     public class AppEditInputValidator : AppValidator<AppEditInput>, IValidator<AppEditInput>
     {

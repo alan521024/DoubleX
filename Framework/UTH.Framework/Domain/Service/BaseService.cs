@@ -14,35 +14,22 @@
     /// <summary>
     /// 应用服务基类实现
     /// </summary>
-    public abstract class BaseService : IApplicationService
+    public abstract class BaseService
     {
-        /// <summary>
-        /// 访问会话信息
-        /// </summary>
-        public virtual IApplicationSession Session { get; set; }
-
-        /// <summary>
-        /// 应用缓存
-        /// </summary>
-        public IAppCachingService AppCaching { get; set; }
-
-        /// <summary>
-        /// 数据缓存
-        /// </summary>
-        public IDataCachingService DataCaching { get; set; }
-
-        /// <summary>
-        /// 会话缓存
-        /// </summary>
-        public ISessionCachingService SessionCaching { get; set; }
-
-        /// <summary>
-        /// 设置会话
-        /// </summary>
-        /// <param name="session"></param>
-        public virtual void SetSession(IApplicationSession session)
+        public BaseService(IApplicationSession session = null, ICachingService caching = null)
         {
             Session = session;
+            Caching = caching;
         }
+
+        /// <summary>
+        /// 缓存服务
+        /// </summary>
+        protected readonly ICachingService Caching;
+
+        /// <summary>
+        /// 访问会话
+        /// </summary>
+        protected readonly IApplicationSession Session;
     }
 }

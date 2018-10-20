@@ -14,7 +14,7 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 数据字典相关校验
+    /// 数据字典校验
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class DictionaryValidator<T> : AbstractValidator<T>

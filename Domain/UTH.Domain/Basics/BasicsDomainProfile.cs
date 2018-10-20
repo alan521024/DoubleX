@@ -31,34 +31,31 @@ namespace UTH.Domain
 
         public void Mapper(IMapperConfigurationExpression config)
         {
-            config.CreateMap<AppBase, AppEditInput>();
+            config.CreateMap<AppEntity, AppDTO>();
+            config.CreateMap<AppDTO, AppEntity>();
             config.CreateMap<AppEditInput, AppEntity>();
-            config.CreateMap<AppEntity, AppOutput>();
-            config.CreateMap<AppOutput, ApplicationModel>();
-            config.CreateMap<AppVersionBase, AppVersionEditInput>();
+            config.CreateMap<AppDTO, ApplicationModel>();
+
+            config.CreateMap<AppVersionEntity, AppVersionDTO>();
+            config.CreateMap<AppVersionDTO, AppVersionEntity>();
             config.CreateMap<AppVersionEditInput, AppVersionEntity>();
-            config.CreateMap<AppVersionEntity, AppVersionOutput>();
-            config.CreateMap<AppVersionOutput, ApplicationVersion>();
+            config.CreateMap<AppVersionDTO, ApplicationVersion>();
 
-            config.CreateMap<AssetsBase, AssetsEditInput>();
-            config.CreateMap<AssetsEditInput, AssetsEntity>();
-            config.CreateMap<AssetsEntity, AssetsOutput>();
-
-            config.CreateMap<DictionaryBase, DictionaryEditInput>();
+            config.CreateMap<DictionaryEntity, DictionaryDTO>();
+            config.CreateMap<DictionaryDTO, DictionaryEntity>();
             config.CreateMap<DictionaryEditInput, DictionaryEntity>();
-            config.CreateMap<DictionaryEntity, DictionaryOutput>();
 
-            config.CreateMap<AssetsBase, AssetsEditInput>();
+            config.CreateMap<AssetsEntity, AssetsDTO>();
+            config.CreateMap<AssetsDTO, AssetsEntity>();
             config.CreateMap<AssetsEditInput, AssetsEntity>();
-            config.CreateMap<AssetsEntity, AssetsOutput>();
 
-            config.CreateMap<OperateBase, OperateEditInput>();
+            config.CreateMap<OperateEntity, OperateDTO>();
+            config.CreateMap<OperateDTO, OperateEntity>();
             config.CreateMap<OperateEditInput, OperateEntity>();
-            config.CreateMap<OperateEntity, OperateOutput>();
 
-            config.CreateMap<NavigationBase, NavigationEditInput>();
+            config.CreateMap<NavigationEntity, NavigationDTO>();
+            config.CreateMap<NavigationDTO, NavigationEntity>();
             config.CreateMap<NavigationEditInput, NavigationEntity>();
-            config.CreateMap<NavigationEntity, NavigationOutput>();
         }
     }
 }

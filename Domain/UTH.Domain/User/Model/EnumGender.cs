@@ -5,6 +5,7 @@
     /// </summary>
     public enum EnumGender
     {
+        Default = 0,
         男 = 1,
         女 = 2
     }

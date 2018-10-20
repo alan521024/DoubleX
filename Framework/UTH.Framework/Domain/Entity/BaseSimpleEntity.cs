@@ -13,17 +13,17 @@
     /// <summary>
     /// 基础信息（Key + Audited）
     /// </summary>
-    public class BaseSimpleEntity<TKey> : IEntity<TKey>, IAuditedEntity<TKey>
+    public class BaseSimpleEntity :  IEntity, IAuditedEntity
     {
         /// <summary>
         /// 主键
         /// </summary>
-        public TKey Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// 添加人Id
         /// </summary>
-        public TKey CreateId { get; set; }
+        public Guid CreateId { get; set; }
 
         /// <summary>
         /// 添加时间
@@ -33,19 +33,11 @@
         /// <summary>
         /// 修改人Id
         /// </summary>
-        public TKey LastId { get; set; }
+        public Guid LastId { get; set; }
 
         /// <summary>
         /// 修改时间
         /// </summary>
         public DateTime LastDt { get; set; }
-    }
-
-    /// <summary>
-    /// 基础信息（Key + Audited）
-    /// </summary>
-    public class BaseSimpleEntity : BaseSimpleEntity<Guid>, IEntity, IAuditedEntity
-    {
-
     }
 }

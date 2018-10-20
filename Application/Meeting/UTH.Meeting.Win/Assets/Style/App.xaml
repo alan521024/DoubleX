@@ -78,7 +78,7 @@
         <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
         <Setter Property="Margin" Value="10,0,10,0"></Setter>
     </Style>
-    <Style x:Key="searchButton" BasedOn="{StaticResource UTH.DefaultButton}"  TargetType="{x:Type Button}">
+    <Style x:Key="searchButton" BasedOn="{StaticResource UTHDefaultButton}"  TargetType="{x:Type Button}">
         <Setter Property="Width" Value="60"></Setter>
         <Setter Property="Height" Value="28"></Setter>
         <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
@@ -272,7 +272,7 @@
                                 <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
                                 <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
                             </Style>
-                            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource UTH.DefaultButton}">
+                            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource UTHDefaultButton}">
                                 <Setter Property="Height" Value="28"></Setter>
                                 <Setter Property="Margin" Value="2"></Setter>
                                 <Setter Property="Padding" Value="5"></Setter>

@@ -14,15 +14,14 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 组织编辑输入
+    /// 组织输入
     /// </summary>
-    public class OrganizeEditInput : OrganizeBase, IInput, IInputDelete, IInputUpdate
+    public class OrganizeEditInput : OrganizeDTO, IInput
     {
-        public List<Guid> Ids { get; set; }
     }
 
     /// <summary>
-    /// 会议输入校验
+    /// 组织输入校验
     /// </summary>
     public class OrganizeEditInputValidator : OrganizeValidator<OrganizeEditInput>, IValidator<OrganizeEditInput>
     {

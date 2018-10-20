@@ -43,8 +43,53 @@ namespace UTH.Meeting.Win.ViewModel
             Initialize();
         }
 
-        #region 公共属性
+        private MeetingSettingModel setting
+        {
+            get
+            {
+                //单列，应用程序唯一(Setting 界面修改后，不需要重新读取数据库)
+                var value = ServiceLocator.Current.GetInstance<SettingViewModel>().DataModel;
+                value.Rate = 16000;
+                value.Channel = 1;
+                value.BitDepth = 16;
+                value.BufferMilliseconds = 150;
+                value.SentenceMilliseconds = 3500;
+                value.RemoteAddress = "ipc://channel/ServerRemoteObject.rem";
+                value.ByteLength = MultimediaHelper.GetAudioByteLength(value.Rate, value.BitDepth, value.BufferMilliseconds);
+                return value;
+            }
+        }
+        private IRecorderService<WaveInCapabilities> recorder { get; set; }
+        private ServerMarshalByRefObject server
+        {
+            get
+            {
+                if (_server.IsNull())
+                {
+                    _server = AppHelper.GetServerMarshalByRefObject();
+                }
+                if (_server.IsNull())
+                {
+                    EngineHelper.LoggingError($"server is null");
+                    taskException?.Cancel();
+                }
+                try
+                {
+                    var check = _server.IsConnection;
+                }
+                catch (Exception ex)
+                {
+                    EngineHelper.LoggingError(ex);
+                    taskException.Cancel();
+                }
+                return _server;
+            }
+        }
+        private ServerMarshalByRefObject _server;
+        private CancellationTokenSource taskException = new CancellationTokenSource();
+        private CancellationTokenSource taskCancel = new CancellationTokenSource();
 
+        
         /// <summary>
         /// 麦克风列表
         /// </summary>
@@ -93,12 +138,12 @@ namespace UTH.Meeting.Win.ViewModel
         /// <summary>
         /// 会议信息
         /// </summary>
-        public MeetingBase Meeting
+        public MeetingDTO Meeting
         {
             get { return _meeting; }
             set { _meeting = value; RaisePropertyChanged(() => Meeting); }
         }
-        private MeetingBase _meeting;
+        private MeetingDTO _meeting;
 
         /// <summary>
         /// 会议二维码
@@ -168,75 +213,173 @@ namespace UTH.Meeting.Win.ViewModel
         }
         private Visibility _isRecords = Visibility.Collapsed;
 
-        #endregion
 
-        #region 私有变量
-
-        private IApplicationSession session;
-
-        private MeetingSettingModel setting
+        /// <summary>
+        /// 加载会议
+        /// </summary>
+        /// <param name="code"></param>
+        public void Loading(string code = null, MeetingDTO meeting = null)
         {
-            get
+            //加载/创建
+            if (code.IsEmpty() && meeting.IsNull())
             {
-                //单列，应用程序唯一(Setting 界面修改后，不需要重新读取数据库)
-                var value = ServiceLocator.Current.GetInstance<SettingViewModel>().DataModel;
-                value.Rate = 16000;
-                value.Channel = 1;
-                value.BitDepth = 16;
-                value.BufferMilliseconds = 150;
-                value.SentenceMilliseconds = 3500;
-                value.RemoteAddress = "ipc://channel/ServerRemoteObject.rem";
-                value.ByteLength = MultimediaHelper.GetAudioByteLength(value.Rate, value.BitDepth, value.BufferMilliseconds);
-                return value;
+                Meeting.Id = Guid.Empty;
+                var result = PlugCoreHelper.ApiUrl.Meeting.MeetingInsert.GetResult<MeetingDTO, MeetingEditInput>(EngineHelper.Map<MeetingEditInput>(Meeting));
+                if (result.Code == EnumCode.成功)
+                {
+                    Meeting = result.Obj;
+                }
             }
+            else if (!code.IsEmpty())
+            {
+                var result = PlugCoreHelper.ApiUrl.Meeting.MeetingGetCode.GetResult<MeetingDTO, MeetingEditInput>(new MeetingEditInput() { Num = code });
+                if (result.Code == EnumCode.成功)
+                {
+                    Meeting = result.Obj;
+                }
+            }
+            else if (!meeting.IsNull())
+            {
+                Meeting = meeting;
+            }
+
+            //会议校验
+            if (Meeting.Id.IsEmpty() || Meeting.Num.IsEmpty())
+            {
+                throw new DbxException(EnumCode.初始失败);
+            }
+
+            //二维码
+            var codeBitmap = QrCodeHelper.GetCode(string.Format(EngineHelper.Configuration.Settings.GetValue("meetingViewUrl"), Meeting.Id));
+            MeetingCode = WpfHelper.BitmapToSource(codeBitmap);
+
+            //本地数据库
+            var meetingDatabasePath = MeetingHelper.GetMeetingDatabaseFile(Meeting.Id);
+            if (!File.Exists(meetingDatabasePath))
+            {
+                FilesHelper.CopyFile(MeetingHelper.TemplateDatabaseFilePath, meetingDatabasePath);
+            }
+
+            //远程初始
+            server.Initialize(Meeting, Session.Accessor.Token);
+
+            //UI状态
+            SyncUIStatus(EnumTaskStatus.Init);
+
+            //同步任务
+            taskException.Token.Register(() =>
+            {
+                taskCancel?.Cancel();
+                throw new DbxException(EnumCode.服务异常);
+            });
+            taskCancel.Token.Register(() =>
+            {
+            });
+            CancellationTokenSource compositeCancel = CancellationTokenSource.CreateLinkedTokenSource(taskException.Token, taskCancel.Token);
+            compositeCancel.Token.Register(() =>
+            {
+                SyncUIStatus(EnumTaskStatus.Stoped);
+                SyncUIStatus(EnumTaskStatus.Clear);
+            });
+            Task.Factory.StartNew(() =>
+            {
+                while (true && !compositeCancel.IsCancellationRequested)
+                {
+                    ThreadPool.QueueUserWorkItem((Object state) =>
+                    {
+                        DispatcherHelper.CheckBeginInvokeOnUI(() =>
+                        {
+                            try
+                            {
+                                SyncData();
+                            }
+                            catch (Exception ex)
+                            {
+                                EngineHelper.LoggingError(ex);
+                                compositeCancel.Cancel();
+                            }
+                        });
+                    });
+                    Thread.Sleep(10);
+                }
+            }, compositeCancel.Token);
         }
 
-        private IRecorderService<WaveInCapabilities> recorder { get; set; }
-
-        private ServerMarshalByRefObject server
+        /// <summary>
+        /// 开始会议
+        /// </summary>
+        public void Start()
         {
-            get
+            Meeting.CheckNull();
+            Microphone.CheckNull();
+
+            recorder.Configruation((opt) =>
             {
-                if (_server.IsNull())
+                opt.DeviceNum = Microphone.Key;
+                opt.Rate = setting.Rate;
+                opt.BitDepth = setting.BitDepth;
+                opt.Channel = setting.Channel;
+                opt.BufferMilliseconds = setting.BufferMilliseconds;
+                opt.DataEvent = (sender, e) =>
                 {
-                    _server = AppHelper.GetServerMarshalByRefObject();
-                }
-                if (_server.IsNull())
+                    server.MeetingSend(Meeting.Id, e.Buffer, 0, e.BytesRecorded);
+                };
+                opt.VolumeEvent = (volume) =>
                 {
-                    EngineHelper.LoggingError($"server is null");
-                    taskException?.Cancel();
-                }
-                try
+                    MicrophoneVolume = volume;
+                };
+                opt.StopedEvent = (sender, e) =>
                 {
-                    var check = _server.IsConnection;
-                }
-                catch (Exception ex)
-                {
-                    EngineHelper.LoggingError(ex);
-                    taskException.Cancel();
-                }
-                return _server;
-            }
+                    Trace.WriteLine($"stop: {DateTime.Now}");
+                };
+
+                opt.FileName = MeetingHelper.GetMeetingWavFile(Meeting.Id);
+
+            });
+            recorder.Start();
+
+            server.Configuration(setting);
+            server.MeetingStart();
+
+            SyncUIStatus(EnumTaskStatus.Started);
         }
-        private ServerMarshalByRefObject _server;
 
-        private CancellationTokenSource taskException = new CancellationTokenSource();
-        private CancellationTokenSource taskCancel = new CancellationTokenSource();
+        /// <summary>
+        /// 停止会议
+        /// </summary>
+        public void Stop()
+        {
+            recorder?.Stop();
+            server?.MeetingStop();
+            SyncUIStatus(EnumTaskStatus.Stoped);
+        }
 
-        #endregion
+        /// <summary>
+        /// 清除记录
+        /// </summary>
+        public void Clear()
+        {
+            SyncUIStatus(EnumTaskStatus.Clear);
+        }
 
-        #region 辅助操作
+        /// <summary>
+        /// 取消会议
+        /// </summary>
+        public void Cancel()
+        {
+            recorder?.Stop();
+            //server?.MeetingStop();
+            taskCancel?.Cancel();
+        }
+
 
         private void Initialize()
         {
             //UI状态
             SyncUIStatus(EnumTaskStatus.Default);
 
-            //会话
-            session = EngineHelper.Resolve<IApplicationSession>() as DefaultSession;
-
             //会议初始
-            Meeting = new MeetingBase()
+            Meeting = new MeetingDTO()
             {
                 Id = Guid.Empty,
                 Name = culture.Lang.metName,
@@ -254,7 +397,6 @@ namespace UTH.Meeting.Win.ViewModel
             //录音器
             recorder = new RecorderWaveInService2();
         }
-
         private void SyncData()
         {
             //本地最后一条数据,空段xx秒后 处理
@@ -390,7 +532,6 @@ namespace UTH.Meeting.Win.ViewModel
 
             SyncUIStatus(EnumTaskStatus.Loading);
         }
-
         private void SyncUIStatus(EnumTaskStatus status)
         {
             switch (status)
@@ -449,163 +590,5 @@ namespace UTH.Meeting.Win.ViewModel
             }
         }
 
-        #endregion
-
-        /// <summary>
-        /// 加载会议
-        /// </summary>
-        /// <param name="code"></param>
-        public void Loading(string code = null, MeetingOutput meeting = null)
-        {
-            //加载/创建
-            if (code.IsEmpty() && meeting.IsNull())
-            {
-                var result = PlugCoreHelper.ApiUrl.Meeting.MeetingInsert.GetResult<MeetingOutput, MeetingEditInput>(EngineHelper.Map<MeetingEditInput>(Meeting));
-                if (result.Code == EnumCode.成功)
-                {
-                    Meeting.Id = result.Obj.Id;
-                }
-            }
-            else if (!code.IsEmpty())
-            {
-                var result = PlugCoreHelper.ApiUrl.Meeting.MeetingGetCode.GetResult<MeetingOutput, MeetingEditInput>(new MeetingEditInput() { Num = code });
-                if (result.Code == EnumCode.成功)
-                {
-                    Meeting.Id = result.Obj.Id;
-                }
-            }
-            else if (!meeting.IsNull())
-            {
-                Meeting.Id = meeting.Id;
-            }
-
-            //会议校验
-            if (Meeting.Id.IsEmpty())
-            {
-                throw new DbxException(EnumCode.初始失败);
-            }
-
-            //二维码
-            var codeBitmap = QrCodeHelper.GetCode(string.Format(EngineHelper.Configuration.Settings.GetValue("meetingViewUrl"), Meeting.Id));
-            MeetingCode = WpfHelper.BitmapToSource(codeBitmap);
-
-            //本地数据库
-            var meetingDatabasePath = MeetingHelper.GetMeetingDatabaseFile(Meeting.Id);
-            if (!File.Exists(meetingDatabasePath))
-            {
-                FilesHelper.CopyFile(MeetingHelper.TemplateDatabaseFilePath, meetingDatabasePath);
-            }
-
-            //远程初始
-            server.MeetingInit(Meeting, JsonHelper.Deserialize<DefaultSession>(JsonHelper.Serialize(session)));
-
-            //UI状态
-            SyncUIStatus(EnumTaskStatus.Init);
-
-            //同步任务
-            taskException.Token.Register(() =>
-            {
-                taskCancel?.Cancel();
-                throw new DbxException(EnumCode.服务异常);
-            });
-            taskCancel.Token.Register(() =>
-            {
-            });
-            CancellationTokenSource compositeCancel = CancellationTokenSource.CreateLinkedTokenSource(taskException.Token, taskCancel.Token);
-            compositeCancel.Token.Register(() =>
-            {
-                SyncUIStatus(EnumTaskStatus.Stoped);
-                SyncUIStatus(EnumTaskStatus.Clear);
-            });
-            Task.Factory.StartNew(() =>
-            {
-                while (true && !compositeCancel.IsCancellationRequested)
-                {
-                    ThreadPool.QueueUserWorkItem((Object state) =>
-                    {
-                        DispatcherHelper.CheckBeginInvokeOnUI(() =>
-                        {
-                            try
-                            {
-                                SyncData();
-                            }
-                            catch (Exception ex)
-                            {
-                                EngineHelper.LoggingError(ex);
-                                compositeCancel.Cancel();
-                            }
-                        });
-                    });
-                    Thread.Sleep(10);
-                }
-            }, compositeCancel.Token);
-        }
-
-        /// <summary>
-        /// 开始会议
-        /// </summary>
-        public void Start()
-        {
-            Meeting.CheckNull();
-            Microphone.CheckNull();
-
-            recorder.Configruation((opt) =>
-            {
-                opt.DeviceNum = Microphone.Key;
-                opt.Rate = setting.Rate;
-                opt.BitDepth = setting.BitDepth;
-                opt.Channel = setting.Channel;
-                opt.BufferMilliseconds = setting.BufferMilliseconds;
-                opt.DataEvent = (sender, e) =>
-                {
-                    server.MeetingSend(Meeting.Id, e.Buffer, 0, e.BytesRecorded);
-                };
-                opt.VolumeEvent = (volume) =>
-                {
-                    MicrophoneVolume = volume;
-                };
-                opt.StopedEvent = (sender, e) =>
-                {
-                    Trace.WriteLine($"stop: {DateTime.Now}");
-                };
-
-                opt.FileName = MeetingHelper.GetMeetingWavFile(Meeting.Id);
-
-            });
-            recorder.Start();
-
-            server.Configuration(setting);
-            server.MeetingStart();
-
-            SyncUIStatus(EnumTaskStatus.Started);
-        }
-
-        /// <summary>
-        /// 停止会议
-        /// </summary>
-        public void Stop()
-        {
-            recorder.Stop();
-            server.MeetingStop();
-            SyncUIStatus(EnumTaskStatus.Stoped);
-        }
-
-        /// <summary>
-        /// 清除记录
-        /// </summary>
-        public void Clear()
-        {
-            SyncUIStatus(EnumTaskStatus.Clear);
-        }
-
-        /// <summary>
-        /// 取消会议
-        /// </summary>
-        public void Cancel()
-        {
-            recorder?.Stop();
-            //server?.MeetingStop();
-            taskCancel?.Cancel();
-        }
     }
 }

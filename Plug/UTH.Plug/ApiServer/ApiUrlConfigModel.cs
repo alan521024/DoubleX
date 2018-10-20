@@ -68,12 +68,9 @@
         #region App
 
         public string AppGetId { get; set; } = "/api/basics/app/get";
-        public string AppGetIds { get; set; } = "/api/basics/app/getids";
         public string AppInsert { get; set; } = "/api/basics/app/insert";
         public string AppUpdate { get; set; } = "/api/basics/app/update";
         public string AppDelete { get; set; } = "/api/basics/app/delete";
-        public string AppDeleteId { get; set; } = "/api/basics/app/deleteid";
-        public string AppDeleteIds { get; set; } = "/api/basics/app/deleteids";
         public string AppQuery { get; set; } = "/api/basics/app/query";
         public string AppPaging { get; set; } = "/api/basics/app/paging";
 
@@ -94,6 +91,12 @@
         public string CaptchaRemove { get; set; } = "/api/core/captcha/remove";
 
         #endregion
+
+        #region Notify
+
+        public string NotifySend { get; set; } = "/api/core/Notify/send";
+
+        #endregion
     }
 
     /// <summary>
@@ -101,6 +104,7 @@
     /// </summary>
     public class ApiUrlUser
     {
+        public string CheckName { get; set; } = "/api/user/account/checkname";
         public string SignIn { get; set; } = "/api/user/account/signin";
         public string SignOut { get; set; } = "/api/user/account/signout";
         public string Refresh { get; set; } = "/api/user/account/refresh";
@@ -108,19 +112,42 @@
         public string FindPwd { get; set; } = "/api/user/account/findpwd";
         public string EditPwd { get; set; } = "/api/user/account/editpwd";
 
+        #region Account
+
+        public string AccountGetId { get; set; } = "/api/user/account/get";
+        public string AccountUpdate { get; set; } = "/api/user/account/update";
+        public string AccountQuery { get; set; } = "/api/user/account/query";
+        public string AccountPaging { get; set; } = "/api/user/account/paging";
+
+        #endregion
+
+        #region member
+
+        public string MemberGetId { get; set; } = "/api/user/member/get";
+        public string MemberUpdate { get; set; } = "/api/user/member/update";
+        public string MemberQuery { get; set; } = "/api/user/Member/query";
+        public string MemberPaging { get; set; } = "/api/user/Member/paging";
+
+        #endregion
+
+        #region Organize
+
+        public string OrganizeGetId { get; set; } = "/api/user/organize/get";
+        public string OrganizeUpdate { get; set; } = "/api/user/organize/update";
+        public string OrganizeQuery { get; set; } = "/api/user/organize/query";
+        public string OrganizePaging { get; set; } = "/api/user/organize/paging";
+
+        #endregion
+
         #region employe
 
         public string EmployeGetId { get; set; } = "/api/user/employe/get";
-        public string EmployeGetIds { get; set; } = "/api/user/employe/getids";
         public string EmployeInsert { get; set; } = "/api/user/employe/insert";
         public string EmployeUpdate { get; set; } = "/api/user/employe/update";
         public string EmployeDelete { get; set; } = "/api/user/employe/delete";
-        public string EmployeDeleteId { get; set; } = "/api/user/employe/deleteid";
-        public string EmployeDeleteIds { get; set; } = "/api/user/v/deleteids";
         public string EmployeQuery { get; set; } = "/api/user/employe/query";
         public string EmployePaging { get; set; } = "/api/user/employe/paging";
         #endregion
-
     }
 
     /// <summary>

@@ -13,18 +13,11 @@
     /// <summary>
     /// 树结构实体接口
     /// </summary>
-    public interface IEntityTree<TKey> : IEntity<TKey>
+    public interface IEntityTree : IEntity
     {
-        TKey Parent { get; set; }
+        Guid Parent { get; set; }
         string Paths { get; set; }
         int Depth { get; set; }
         int Sort { get; set; }
-    }
-
-    /// <summary>
-    /// 树结构实体接口
-    /// </summary>
-    public interface IEntityTree : IEntityTree<Guid>, IEntity<Guid>
-    {
     }
 }

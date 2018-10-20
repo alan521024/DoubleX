@@ -14,11 +14,10 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 操作权限编辑输入
+    /// 操作权限输入
     /// </summary>
-    public class OperateEditInput : OperateBase, IInput, IInputDelete, IInputUpdate
+    public class OperateEditInput : OperateDTO, IInput
     {
-        public List<Guid> Ids { get; set; }
     }
 
     /// <summary>

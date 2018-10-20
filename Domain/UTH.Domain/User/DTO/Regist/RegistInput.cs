@@ -51,7 +51,7 @@
         /// <summary>
         /// 图片验证码标识
         /// </summary>
-        public string ImgCodeTag { get; set; }
+        public string ImgCodeKey { get; set; }
 
         /// <summary>
         /// 短信验证码
@@ -61,7 +61,7 @@
         /// <summary>
         ///  短信验证码标识
         /// </summary>
-        public string SmsCodeTag { get; set; }
+        public string SmsCodeKey { get; set; }
     }
 
     /// <summary>
@@ -76,6 +76,10 @@
 
         public RegistInputValidator()
         {
+            RuleFor(x => x.Account + x.Email + x.Mobile)
+                .NotEmpty()
+                .WithMessage(Lang.userQingShuRuZhangHaoShouJiHaoMaYouXiangDiZhi);
+
             CheckAccount();
             CheckMobile();
             CheckEmail();

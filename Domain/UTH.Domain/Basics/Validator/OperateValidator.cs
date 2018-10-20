@@ -14,7 +14,7 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 操作权限相关校验
+    /// 操作权限校验
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class OperateValidator<T> : AbstractValidator<T>

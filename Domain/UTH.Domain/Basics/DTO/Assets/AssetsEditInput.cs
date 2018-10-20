@@ -14,11 +14,10 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 资源编辑输入
+    /// 资源输入
     /// </summary>
-    public class AssetsEditInput : AssetsBase, IInput, IInputDelete, IInputUpdate
+    public class AssetsEditInput : AssetsDTO, IInput
     {
-        public List<Guid> Ids { get; set; }
     }
 
     /// <summary>

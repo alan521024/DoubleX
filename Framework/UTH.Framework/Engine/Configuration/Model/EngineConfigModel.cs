@@ -98,22 +98,7 @@
         /// <summary>
         /// 默认缓存
         /// </summary>
-        public ConnectionModel DefaultCache { get; set; }
-
-        /// <summary>
-        /// 数据缓存(二级缓存)
-        /// </summary>
-        public ConnectionModel DataCache { get; set; }
-
-        /// <summary>
-        /// 应用缓存
-        /// </summary>
-        public ConnectionModel AppCache { get; set; }
-
-        /// <summary>
-        /// 会话缓存
-        /// </summary>
-        public ConnectionModel SessionCache { get; set; }
+        public ConnectionModel Caching { get; set; }
     }
 
     /// <summary>

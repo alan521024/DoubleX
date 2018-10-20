@@ -48,24 +48,12 @@ namespace UTH.Meeting.Win.View
         {
             viewModel = DataContext as LoginViewModel;
             viewModel.CheckNull();
+            viewModel.Configuration(this);
         }
 
         private void Login_Loaded(object sender, RoutedEventArgs e)
         {
             parent = this.GetParent();
-        }
-
-        private void btnLogin_Click(object sender, RoutedEventArgs e)
-        {
-            var msg = viewModel.Signin();
-            if (!msg.IsEmpty())
-            {
-                WpfHelper.Message(msg);
-            }
-            else
-            {
-                ToMain();
-            }
         }
 
         private void hlFindPwd_Click(object sender, RoutedEventArgs e)
@@ -78,12 +66,5 @@ namespace UTH.Meeting.Win.View
             parent.FindChild<Frame>("mainFrame").Navigate(new Regist());
         }
 
-        private void ToMain()
-        {
-            Main mainForm = new Main();
-            mainForm.Show();
-
-            parent.Close();
-        }
     }
 }

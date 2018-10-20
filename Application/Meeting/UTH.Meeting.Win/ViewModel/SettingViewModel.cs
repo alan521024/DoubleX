@@ -31,12 +31,6 @@ namespace UTH.Meeting.Win.ViewModel
             Initialize();
         }
 
-        #region 私有变量
-
-        #endregion
-
-        #region 公共属性
-
         /// <summary>
         /// 源语言列表
         /// </summary>
@@ -125,14 +119,10 @@ namespace UTH.Meeting.Win.ViewModel
         /// </summary>
         public MeetingSettingModel DataModel { get; set; }
         
-        #endregion
-
-        #region 辅助操作
-
         private void Initialize()
         {
             //初始选择项
-            var result = PlugCoreHelper.ApiUrl.Meeting.MeetingProfileLoginAccountGet.GetResult<MeetingProfileOutput, MeetingProfileEditInput>();
+            var result = PlugCoreHelper.ApiUrl.Meeting.MeetingProfileLoginAccountGet.GetResult<MeetingProfileDTO, MeetingProfileEditInput>();
             if (result.Code != EnumCode.成功)
             {
                 throw new DbxException(EnumCode.提示消息, result.Message);
@@ -181,8 +171,6 @@ namespace UTH.Meeting.Win.ViewModel
             });
         }
 
-        #endregion
-
         /// <summary>
         /// 保存配置
         /// </summary>
@@ -198,7 +186,7 @@ namespace UTH.Meeting.Win.ViewModel
                 MeetingId = id,
             };
 
-            var result = PlugCoreHelper.ApiUrl.Meeting.MeetingProfileLoginAccountSave.GetResult<MeetingProfileOutput, MeetingProfileEditInput>(input);
+            var result = PlugCoreHelper.ApiUrl.Meeting.MeetingProfileLoginAccountSave.GetResult<MeetingProfileDTO, MeetingProfileEditInput>(input);
             if (result.Code != EnumCode.成功)
             {
                 return result.Message;

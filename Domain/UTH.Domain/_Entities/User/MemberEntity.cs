@@ -23,9 +23,9 @@
         public string Nickname { get; set; }
 
         /// <summary>
-        /// 性别
+        /// 性别(EnumGender)
         /// </summary>
-        public int Gender { get; set; }
+        public EnumGender Gender { get; set; }
 
         /// <summary>
         /// 出生日期

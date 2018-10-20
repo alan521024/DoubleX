@@ -12,13 +12,17 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 人员应用业务接口
+    /// 人员应用服务接口
     /// </summary>
-    public interface IEmployeApplication : IApplicationService, IApplicationCrudService<EmployeDTO>
+    public interface IEmployeApplication :
+        IApplicationCrudService<EmployeDTO, EmployeEditInput>,
+        IApplicationService
     {
         /// <summary>
         /// 创建人员
         /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         EmployeDTO Create(EmployeEditInput input);
     }
 }

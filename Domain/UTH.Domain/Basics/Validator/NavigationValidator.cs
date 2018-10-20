@@ -14,7 +14,7 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 导航权限相关校验
+    /// 导航权限校验
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class NavigationValidator<T> : AbstractValidator<T>

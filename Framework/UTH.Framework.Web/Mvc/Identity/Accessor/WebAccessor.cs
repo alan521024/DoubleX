@@ -49,6 +49,6 @@
         /// <summary>
         /// 访问Token
         /// </summary>
-        public override string Token { get { return WebHelper.GetToken(_httpContextAccessor.HttpContext); } }
+        public override string Token { get { return StringHelper.Get(Principal?.Claims.FirstOrDefault(c => c.Type == ClaimTypesExtend.Token)?.Value); } }
     }
 }

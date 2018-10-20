@@ -55,15 +55,21 @@
         /// </summary>
         public void Install()
         {
-            //App
+            //app
             EngineHelper.RegisterType<IAppRepository, AppRepository>(DomainConfiguration.Options.IocRepositoryOption);
-            EngineHelper.RegisterType<IAppService, AppService>(DomainConfiguration.Options.IocServiceOption);
-            EngineHelper.RegisterType<IAppVersionService, AppVersionService>(DomainConfiguration.Options.IocServiceOption);
 
+            EngineHelper.RegisterType<IAppApplication, AppApplication>(DomainConfiguration.Options.IocServiceOption);
+            EngineHelper.RegisterType<IAppVersionApplication, AppVersionApplication>(DomainConfiguration.Options.IocServiceOption);
+            
             //dictionary
-            EngineHelper.RegisterType<IDictionaryService, DictionaryService>(DomainConfiguration.Options.IocServiceOption);
+            EngineHelper.RegisterType<IDictionaryApplication, DictionaryApplication>(DomainConfiguration.Options.IocServiceOption);
+
+            //assets
+            EngineHelper.RegisterType<IAssetsApplication, AssetsApplication>(DomainConfiguration.Options.IocServiceOption);
 
             //permission
+            EngineHelper.RegisterType<INavigationApplication, NavigationApplication>(DomainConfiguration.Options.IocRepositoryOption);
+            EngineHelper.RegisterType<IOperateApplication, OperateApplication>(DomainConfiguration.Options.IocRepositoryOption);
 
         }
 

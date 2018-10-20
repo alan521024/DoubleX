@@ -619,6 +619,15 @@ namespace UTH.Infrastructure.Resource.Culture {
         }
         
         /// <summary>
+        ///   查找类似 校验失败 的本地化字符串。
+        /// </summary>
+        public static string sysJiaoYanShiBai {
+            get {
+                return ResourceManager.GetString("sysJiaoYanShiBai", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Base Info 的本地化字符串。
         /// </summary>
         public static string sysJiChuXinXi {
@@ -633,6 +642,24 @@ namespace UTH.Infrastructure.Resource.Culture {
         public static string sysJieGuoWeiKong {
             get {
                 return ResourceManager.GetString("sysJieGuoWeiKong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 结束 的本地化字符串。
+        /// </summary>
+        public static string sysJieSu {
+            get {
+                return ResourceManager.GetString("sysJieSu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 开始 的本地化字符串。
+        /// </summary>
+        public static string sysKaiShi {
+            get {
+                return ResourceManager.GetString("sysKaiShi", resourceCulture);
             }
         }
         
@@ -709,15 +736,6 @@ namespace UTH.Infrastructure.Resource.Culture {
         }
         
         /// <summary>
-        ///   查找类似 Name 的本地化字符串。
-        /// </summary>
-        public static string sysName {
-            get {
-                return ResourceManager.GetString("sysName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   查找类似 批量添加 的本地化字符串。
         /// </summary>
         public static string sysPiLiangTianJia {
@@ -759,6 +777,15 @@ namespace UTH.Infrastructure.Resource.Culture {
         public static string sysQingShuRuMingCheng {
             get {
                 return ResourceManager.GetString("sysQingShuRuMingCheng", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 请输入起止信息 的本地化字符串。
+        /// </summary>
+        public static string sysQingShuRuQiZhiXingXi {
+            get {
+                return ResourceManager.GetString("sysQingShuRuQiZhiXingXi", resourceCulture);
             }
         }
         
@@ -1024,6 +1051,24 @@ namespace UTH.Infrastructure.Resource.Culture {
         }
         
         /// <summary>
+        ///   查找类似 修改成功 的本地化字符串。
+        /// </summary>
+        public static string sysXiuGaiChengGong {
+            get {
+                return ResourceManager.GetString("sysXiuGaiChengGong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 修改失败 的本地化字符串。
+        /// </summary>
+        public static string sysXiuGaiShiBai {
+            get {
+                return ResourceManager.GetString("sysXiuGaiShiBai", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 选择 的本地化字符串。
         /// </summary>
         public static string sysXuanZe {
@@ -1132,6 +1177,15 @@ namespace UTH.Infrastructure.Resource.Culture {
         }
         
         /// <summary>
+        ///   查找类似 旧密码错误 的本地化字符串。
+        /// </summary>
+        public static string userJiuMiMaCuoWu {
+            get {
+                return ResourceManager.GetString("userJiuMiMaCuoWu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 记住密码 的本地化字符串。
         /// </summary>
         public static string userJiZhuMiMa {
@@ -1213,6 +1267,15 @@ namespace UTH.Infrastructure.Resource.Culture {
         }
         
         /// <summary>
+        ///   查找类似 请输入用户名 的本地化字符串。
+        /// </summary>
+        public static string userQingShuRuYongHuMing {
+            get {
+                return ResourceManager.GetString("userQingShuRuYongHuMing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 请输入有效的确认密码 的本地化字符串。
         /// </summary>
         public static string userQingShuRuYouXiaoDeQueRenMiMa {
@@ -1222,11 +1285,29 @@ namespace UTH.Infrastructure.Resource.Culture {
         }
         
         /// <summary>
+        ///   查找类似 请输入有效的手机号 的本地化字符串。
+        /// </summary>
+        public static string userQingShuRuYouXiaoDeShouJiHao {
+            get {
+                return ResourceManager.GetString("userQingShuRuYouXiaoDeShouJiHao", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 请输入有效的新密码 的本地化字符串。
         /// </summary>
         public static string userQingShuRuYouXiaoDeXinMiMa {
             get {
                 return ResourceManager.GetString("userQingShuRuYouXiaoDeXinMiMa", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 请输入有效的验证码 的本地化字符串。
+        /// </summary>
+        public static string userQingShuRuYouXiaoDeYanZhengMa {
+            get {
+                return ResourceManager.GetString("userQingShuRuYouXiaoDeYanZhengMa", resourceCulture);
             }
         }
         
@@ -1258,20 +1339,11 @@ namespace UTH.Infrastructure.Resource.Culture {
         }
         
         /// <summary>
-        ///   查找类似 请输入正确的手机号 的本地化字符串。
+        ///   查找类似 请输入账户编号 的本地化字符串。
         /// </summary>
-        public static string userQingShuRuZhengQueDeShouJiHao {
+        public static string userQingShuRuZhangHuBianHao {
             get {
-                return ResourceManager.GetString("userQingShuRuZhengQueDeShouJiHao", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 请输入正确的验证码 的本地化字符串。
-        /// </summary>
-        public static string userQingShuRuZhengQueDeYanZhengMa {
-            get {
-                return ResourceManager.GetString("userQingShuRuZhengQueDeYanZhengMa", resourceCulture);
+                return ResourceManager.GetString("userQingShuRuZhangHuBianHao", resourceCulture);
             }
         }
         
@@ -1326,6 +1398,15 @@ namespace UTH.Infrastructure.Resource.Culture {
         public static string userTuiChuDengLu {
             get {
                 return ResourceManager.GetString("userTuiChuDengLu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 未找到账户 的本地化字符串。
+        /// </summary>
+        public static string userWeiZhaoDaoZhangHu {
+            get {
+                return ResourceManager.GetString("userWeiZhaoDaoZhangHu", resourceCulture);
             }
         }
         
@@ -1429,6 +1510,15 @@ namespace UTH.Infrastructure.Resource.Culture {
         }
         
         /// <summary>
+        ///   查找类似 用户名 的本地化字符串。
+        /// </summary>
+        public static string userYongHuMing {
+            get {
+                return ResourceManager.GetString("userYongHuMing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 用户添加 的本地化字符串。
         /// </summary>
         public static string userYongHuTianJia {
@@ -1524,6 +1614,24 @@ namespace UTH.Infrastructure.Resource.Culture {
         public static string userZhangHaoGuanLi {
             get {
                 return ResourceManager.GetString("userZhangHaoGuanLi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 账户类型错误 的本地化字符串。
+        /// </summary>
+        public static string userZhangHuLeiXingCuoWu {
+            get {
+                return ResourceManager.GetString("userZhangHuLeiXingCuoWu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 账户异常 的本地化字符串。
+        /// </summary>
+        public static string userZhangHuYiChang {
+            get {
+                return ResourceManager.GetString("userZhangHuYiChang", resourceCulture);
             }
         }
         

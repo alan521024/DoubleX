@@ -24,130 +24,25 @@
     /// </summary>
     public class ServerMarshalByRefObject : MarshalByRefObject, IServerMarshalByRefObject
     {
-        #region 公共属性
-
         /// <summary>
         /// 是否己连接
         /// </summary>
         public bool IsConnection { get; set; } = true;
-
-        #endregion
-
-        #region 私有变量
-
+        
         //服务配置
         ServerOption options = new ServerOption();
 
-        //会话信息
-        IApplicationSession session;
-
-        //识别服务
-        ISpeechService speech;
-
-        //会议信息, 会议同步队列，最后同步时间,业务处理
-        MeetingBase meeting;
+        //同步队列
         ConcurrentQueue<MeetingSyncModel> meetingSyncQueue = new ConcurrentQueue<MeetingSyncModel>();
-        DateTime LastRecordDt = DateTimeHelper.DefaultDateTime, LastTranslationDt = DateTimeHelper.DefaultDateTime;
-        IMeetingRecordService recordService;
-        IMeetingTranslationService translationService;
 
-        #endregion
-
-        #region 辅助操作
-
-        private void MeetingCheck()
-        {
-            meeting.CheckNull();
-            session.CheckNull();
-
-            meeting.Id.CheckEmpty();
-        }
-
-        private void MeetingRemotingSync()
-        {
-            var input = new MeetingSyncInput() { MeetingId = meeting.Id, RecordDt = LastRecordDt, TranslationDt = LastTranslationDt };
-            var result = PlugCoreHelper.ApiUrl.Meeting.MeetingSyncQuery.GetResult<MeetingSyncOutput, MeetingSyncInput>(session, input);
-            if (result.Code == EnumCode.成功)
-            {
-                MeetingRemotingData(result.Obj);
-                MeetingLocalDBSave(result.Obj);
-            }
-        }
-
-        private void MeetingRemotingData(MeetingSyncOutput model)
-        {
-            if (model.IsNull())
-                return;
-
-            if (model.Records.IsEmpty() && model.Translations.IsEmpty())
-                return;
-
-            if (!model.Records.IsEmpty())
-            {
-                model.Records.OrderBy(x => x.LastDt).ToList().ForEach(x =>
-                  {
-                      if (x.LastDt > LastRecordDt)
-                      {
-                          LastRecordDt = x.LastDt;
-                      }
-                      x.SyncType = 1;
-                      if (x.LocalId.IsEmpty())
-                      {
-                          x.LocalId = Guid.NewGuid();
-                      }
-                      meetingSyncQueue.Enqueue(x);
-                  });
-            }
-
-            if (!model.Translations.IsEmpty())
-            {
-                model.Translations.ForEach(x =>
-                {
-                    if (x.LastDt > LastTranslationDt)
-                    {
-                        LastTranslationDt = x.LastDt;
-                    }
-                    x.SyncType = 2;
-                    meetingSyncQueue.Enqueue(x);
-                });
-            }
-        }
-
-        private void MeetingLocalDBSave(MeetingSyncOutput model)
-        {
-            if (model.IsNull())
-                return;
-
-            if (model.Records.IsEmpty() && model.Translations.IsEmpty())
-                return;
-
-            ThreadPool.QueueUserWorkItem((Object state) =>
-            {
-                if (!model.Records.IsEmpty())
-                {
-                    model.Records.ForEach(x =>
-                    {
-                        if (recordService.Query(where: i => i.Id == x.RecordId).Count() == 0)
-                        {
-                            recordService.Insert(EngineHelper.Map<MeetingRecordEditInput>(x));
-                        }
-                    });
-                }
-
-                if (!model.Translations.IsEmpty())
-                {
-                    model.Translations.ForEach(x =>
-                    {
-                        if (translationService.Query(where: i => i.Id == x.TranslationId).Count() == 0)
-                        {
-                            translationService.Insert(EngineHelper.Map<MeetingTranslationEditInput>(x));
-                        }
-                    });
-                }
-            });
-        }
-
-        #endregion
+        //识别服务、会议信息、最后同步时间,业务处理
+        ISpeechService speech;
+        MeetingDTO meeting;
+        IApplicationSession session;
+        IDomainDefaultService<MeetingRecordEntity> recordService;
+        IDomainDefaultService<MeetingTranslationEntity> translationService;
+        private string culture, clientIp, appCode, token;
+        DateTime lastRecordDt = DateTimeHelper.DefaultDateTime, lastTranslationDt = DateTimeHelper.DefaultDateTime;
 
         /// <summary>
         /// 服务配置
@@ -172,48 +67,40 @@
         /// </summary>
         /// <param name="meetingId"></param>
         /// <param name="session"></param>
-        public void MeetingInit(MeetingBase _meeting, IApplicationSession _session)
+        public void Initialize(MeetingDTO _meeting, string tokenStr)
         {
             meeting = _meeting;
-            session = _session;
-
             this.MeetingCheck();
 
+            WpfHelper.SignIn(tokenStr);
+            session = EngineHelper.Resolve<IApplicationSession>();
+            culture = session.Accessor.Culture.Name;
+            clientIp = session.Accessor.ClientIp;
+            appCode = session.Accessor.AppCode;
+            token = session.Accessor.Token;
+
             meetingSyncQueue = new ConcurrentQueue<MeetingSyncModel>();
-            LastRecordDt = DateTimeHelper.DefaultDateTime;
-            LastTranslationDt = DateTimeHelper.DefaultDateTime;
+            lastRecordDt = DateTimeHelper.DefaultDateTime;
+            lastTranslationDt = DateTimeHelper.DefaultDateTime;
 
-            var recordRepository = EngineHelper.Resolve<IRepository<MeetingRecordEntity>>(new KeyValueModel<string, object>("connectionModel", new ConnectionModel()
-            {
-                DbType = EnumDbType.Sqlite,
-                ConnectionString = string.Format("Data Source={0};", MeetingHelper.GetMeetingDatabaseFile(meeting.IsNull() ? Guid.Empty : meeting.Id))
-            }));
-            recordService = EngineHelper.Resolve<IMeetingRecordService>(new KeyValueModel<string, object>("_repository", recordRepository));
-            //recordService.SetSession(session);
-
-            var translationRepository = EngineHelper.Resolve<IRepository<MeetingTranslationEntity>>(new KeyValueModel<string, object>("connectionModel", new ConnectionModel()
-            {
-                DbType = EnumDbType.Sqlite,
-                ConnectionString = string.Format("Data Source={0};", MeetingHelper.GetMeetingDatabaseFile(meeting.IsNull() ? Guid.Empty : meeting.Id))
-            }));
-            translationService = EngineHelper.Resolve<IMeetingTranslationService>(new KeyValueModel<string, object>("_repository", translationRepository));
-            //translationService.SetSession(session);
+            recordService = MeetingHelper.GetRecordService(meeting.Id);
+            translationService = MeetingHelper.GetTranslateService(meeting.Id);
 
             var remotingTask = new Thread(() =>
-           {
-               try
-               {
-                   while (true)
-                   {
-                       MeetingRemotingSync();
-                       Thread.Sleep(1500);
-                   }
-               }
-               catch (Exception ex)
-               {
-                   throw ex;
-               }
-           });
+            {
+                try
+                {
+                    while (true)
+                    {
+                        MeetingRemotingSync();
+                        Thread.Sleep(1500);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            });
             remotingTask.IsBackground = true;
             remotingTask.Start();
         }
@@ -270,9 +157,7 @@
         /// </summary>
         public void MeetingStop()
         {
-            this.MeetingCheck();
-
-            speech.Stop();
+            speech?.Stop();
             speech = null;
         }
 
@@ -286,8 +171,7 @@
         public void MeetingSend(Guid meetingId, byte[] data, int offset, int length)
         {
             this.MeetingCheck();
-
-            speech.Send(new SpeechData()
+            speech?.Send(new SpeechData()
             {
                 Key = meetingId,
                 Data = data,
@@ -321,7 +205,8 @@
                     LocalId = localId,
                     Sort = 0
                 };
-                var result = PlugCoreHelper.ApiUrl.Meeting.MeetingRecordAdd.GetResult<MeetingRecordOutput, MeetingRecordEditInput>(session, input);
+                var result = PlugCoreHelper.ApiUrl.Meeting.MeetingRecordAdd.GetResult<MeetingRecordOutput, MeetingRecordEditInput>(input,
+                    culture: culture, clientIp: clientIp, appCode: appCode, token: token);
                 if (result.Code == EnumCode.成功)
                 {
                     //....
@@ -340,5 +225,121 @@
             meetingSyncQueue.TryDequeue(out model);
             return model;
         }
+
+        private IDomainDefaultService<MeetingTranslationEntity> GetTranslateService()
+        {
+            var repository = EngineHelper.Resolve<IRepository<MeetingTranslationEntity>>(new KeyValueModel<string, object>("connectionModel", new ConnectionModel()
+            {
+                DbType = EnumDbType.Sqlite,
+                ConnectionString = string.Format("Data Source={0};", MeetingHelper.GetMeetingDatabaseFile(meeting.IsNull() ? Guid.Empty : meeting.Id))
+            }));
+            var service = EngineHelper.Resolve<IDomainDefaultService<MeetingTranslationEntity>>(new KeyValueModel<string, object>("_repository", repository));
+            return service;
+        }
+
+        private IDomainDefaultService<MeetingRecordEntity> GetRecordService()
+        {
+            var repository = EngineHelper.Resolve<IRepository<MeetingRecordEntity>>(new KeyValueModel<string, object>("connectionModel", new ConnectionModel()
+            {
+                DbType = EnumDbType.Sqlite,
+                ConnectionString = string.Format("Data Source={0};", MeetingHelper.GetMeetingDatabaseFile(meeting.IsNull() ? Guid.Empty : meeting.Id))
+            }));
+            var service = EngineHelper.Resolve<IDomainDefaultService<MeetingRecordEntity>>(new KeyValueModel<string, object>("_repository", repository));
+            return service;
+        }
+
+
+        private void MeetingCheck()
+        {
+            meeting.CheckNull();
+            meeting.Id.CheckEmpty();
+        }
+
+        private void MeetingRemotingSync()
+        {
+            var input = new MeetingSyncInput() { MeetingId = meeting.Id, RecordDt = lastRecordDt, TranslationDt = lastTranslationDt };
+            var result = PlugCoreHelper.ApiUrl.Meeting.MeetingSyncQuery.GetResult<MeetingSyncOutput, MeetingSyncInput>(input,
+                    culture: culture, clientIp: clientIp, appCode: appCode, token: token);
+            if (result.Code == EnumCode.成功)
+            {
+                MeetingRemotingData(result.Obj);
+                MeetingLocalDBSave(result.Obj);
+            }
+        }
+
+        private void MeetingRemotingData(MeetingSyncOutput model)
+        {
+            if (model.IsNull())
+                return;
+
+            if (model.Records.IsEmpty() && model.Translations.IsEmpty())
+                return;
+
+            if (!model.Records.IsEmpty())
+            {
+                model.Records.OrderBy(x => x.LastDt).ToList().ForEach(x =>
+                {
+                    if (x.LastDt > lastRecordDt)
+                    {
+                        lastRecordDt = x.LastDt;
+                    }
+                    x.SyncType = 1;
+                    if (x.LocalId.IsEmpty())
+                    {
+                        x.LocalId = Guid.NewGuid();
+                    }
+                    meetingSyncQueue.Enqueue(x);
+                });
+            }
+
+            if (!model.Translations.IsEmpty())
+            {
+                model.Translations.ForEach(x =>
+                {
+                    if (x.LastDt > lastTranslationDt)
+                    {
+                        lastTranslationDt = x.LastDt;
+                    }
+                    x.SyncType = 2;
+                    meetingSyncQueue.Enqueue(x);
+                });
+            }
+        }
+
+        private void MeetingLocalDBSave(MeetingSyncOutput model)
+        {
+            if (model.IsNull())
+                return;
+
+            if (model.Records.IsEmpty() && model.Translations.IsEmpty())
+                return;
+
+            ThreadPool.QueueUserWorkItem((Object state) =>
+            {
+                if (!model.Records.IsEmpty())
+                {
+                    model.Records.ForEach(x =>
+                    {
+                        if (recordService.Find(where: i => i.Id == x.RecordId).Count() == 0)
+                        {
+                            recordService.Insert(EngineHelper.Map<MeetingRecordEntity>(x));
+                        }
+                    });
+                }
+
+                if (!model.Translations.IsEmpty())
+                {
+                    model.Translations.ForEach(x =>
+                    {
+                        if (translationService.Find(where: i => i.Id == x.TranslationId).Count() == 0)
+                        {
+                            translationService.Insert(EngineHelper.Map<MeetingTranslationEntity>(x));
+                        }
+                    });
+                }
+            });
+        }
+
+
     }
 }

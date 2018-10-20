@@ -21,7 +21,7 @@ namespace UTH.Server.Management.Controllers
     [AllowAnonymous]
     public class CommonController : Controller
     {
-        public ICaptchaService captchaService { get; set; }
+        public ICaptchaApplication captchaService { get; set; }
         public IHttpContextAccessor accessor { get; set; }
 
         /// <summary>
@@ -83,13 +83,16 @@ namespace UTH.Server.Management.Controllers
         /// <param name="type"></param>
         /// <returns></returns>
         [HttpGet]
-        public ResultModel<CaptchaOutput> VerifyCode(EnumNotificationCategory category, EnumNotificationType type)
+        public ResultModel<CaptchaOutput> Verify(EnumCaptchaCategory category, EnumCaptchaMode mode)
         {
             var result = new ResultModel<CaptchaOutput>() { Code = EnumCode.未知异常 };
-            var output = captchaService.Send(new CaptchaSendInput() { Category = category, Type = type, Length = 4 });
+            var output = captchaService.Send(new CaptchaInput() { Category = category, Mode = mode, Length = 4 });
             if (!output.IsNull() && !output.Code.IsEmpty())
             {
-                output.Code = Convert.ToBase64String(ImageHelper.GetContentGraphic(output.Code, 100, 40, 16));
+                if (mode == EnumCaptchaMode.Image)
+                {
+                    output.Code = Convert.ToBase64String(ImageHelper.GetContentGraphic(output.Code, 100, 40, 16));
+                }
 
                 result.Code = EnumCode.成功;
                 result.Obj = output;

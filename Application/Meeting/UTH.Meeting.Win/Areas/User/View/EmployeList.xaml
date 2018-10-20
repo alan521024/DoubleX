@@ -34,35 +34,35 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,15,0">
-                <TextBlock Style="{StaticResource searchTxt}" Text="{x:Static culture:Lang.userYongHu}"></TextBlock>
-                <TextBox Style="{StaticResource searchTextbox}" Text=""></TextBox>
+                <TextBlock Style="{StaticResource searchTxt}" Text="{x:Static culture:Lang.userYongHuMing}"></TextBlock>
+                <TextBox Style="{StaticResource searchTextbox}" Text="{Binding No}"></TextBox>
             </StackPanel>
             <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,15,0">
                 <TextBlock Style="{StaticResource searchTxt}" Text="{x:Static culture:Lang.sysZhuangTai}"></TextBlock>
                 <TextBox Style="{StaticResource searchTextbox}" Text=""></TextBox>
             </StackPanel>
-            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,15,0" >
-                <Button Content="{x:Static culture:Lang.sysChaZhao}" Style="{StaticResource searchButton}" ></Button>
+            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,15,0">
+                <Button Content="{x:Static culture:Lang.sysChaZhao}" Style="{StaticResource searchButton}" Command="{Binding OnSearchCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"></Button>
             </StackPanel>
         </Grid>
         <Grid Grid.Row="2"  Margin="15,20,15,0">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,15,0">
                 <Button x:Name="btnAdd" Content="{x:Static culture:Lang.userYongHuTianJia}" Style="{StaticResource searchButton}" Margin="0,0,15,0" Click="btnAdd_Click"></Button>
-                <Button x:Name="btnAdds" Content="{x:Static culture:Lang.sysPiLiangTianJia}" Style="{StaticResource searchButton}" Margin="0,0,15,0"></Button>
+                <Button x:Name="btnAdds" Content="{x:Static culture:Lang.sysPiLiangTianJia}" Style="{StaticResource searchButton}" Margin="0,0,15,0" Click="btnAdds_Click"></Button>
                 <Button x:Name="btnDeletes" Content="{x:Static culture:Lang.sysShanChu}" Style="{StaticResource searchButton}" Margin="0,0,15,0" Command="{Binding OnDeleteCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"></Button>
             </StackPanel>
         </Grid>
         <Border Grid.Row="3" Margin="15,20,15,0" BorderBrush="#d7d7d7" BorderThickness="1">
             <DataGrid x:Name="MetroDataGrid" Margin="5" HeadersVisibility="All" ColumnWidth="*" SelectionUnit="FullRow"  GridLinesVisibility="Vertical"
-                   ItemsSource="{Binding Path=Items}"
+                   ItemsSource="{Binding Path=Source}" IsReadOnly="False"
                    AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False">
                 <DataGrid.Columns>
                     <DataGridCheckBoxColumn  Binding="{Binding Path=IsSelected, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                         EditingElementStyle="{DynamicResource MetroDataGridCheckBox}"
                                         ElementStyle="{DynamicResource MetroDataGridCheckBox}" IsReadOnly="False" CanUserSort="False"
-                                        Header="{x:Static culture:Lang.sysXuanZe}" Width="45" >
+                                        Header="{x:Static culture:Lang.sysXuanZe}" Width="45">
                     </DataGridCheckBoxColumn>
-                    <DataGridTextColumn Binding="{Binding No}" Header="{x:Static culture:Lang.sysBianMa}" Width="*" IsReadOnly="True" />
+                    <DataGridTextColumn Binding="{Binding No}" Header="{x:Static culture:Lang.userYongHuMing}" Width="*" IsReadOnly="True" />
                     <DataGridTextColumn Binding="{Binding Name}" Header="{x:Static culture:Lang.sysMingCheng}" Width="*" IsReadOnly="True" />
                     <DataGridTextColumn Binding="{Binding Status}" Header="{x:Static culture:Lang.sysZhuangTai}" Width="*" IsReadOnly="True" />
                 </DataGrid.Columns>

@@ -14,11 +14,10 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 导航权限编辑输入
+    /// 导航权限输入
     /// </summary>
-    public class NavigationEditInput : NavigationBase, IInput, IInputDelete, IInputUpdate
+    public class NavigationEditInput : NavigationDTO, IInput
     {
-        public List<Guid> Ids { get; set; }
     }
 
     /// <summary>

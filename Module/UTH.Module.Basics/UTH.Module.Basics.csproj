@@ -21,4 +21,9 @@
     <ProjectReference Include="..\..\Plug\UTH.Plug\UTH.Plug.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Model\" />
+    <Folder Include="Service\" />
+  </ItemGroup>
+
 </Project>

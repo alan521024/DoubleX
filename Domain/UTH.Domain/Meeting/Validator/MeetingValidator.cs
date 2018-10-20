@@ -14,7 +14,7 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 账户相关校验
+    /// 账户校验
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class MeetingValidator<T> : AbstractValidator<T>

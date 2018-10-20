@@ -19,7 +19,7 @@ namespace UTH.Server.Management.Controllers
     [AllowAnonymous]
     public class AccountController : WebViewBase
     {
-        public ICaptchaService captchaService { get; set; }
+        public ICaptchaApplication captchaService { get; set; }
 
         #region Page
 
@@ -48,20 +48,20 @@ namespace UTH.Server.Management.Controllers
 
             #region  验证码 校验
 
-            if (input.ImgCode.IsEmpty() || input.ImgCodeTag.IsEmpty())
+            if (input.ImgCode.IsEmpty() || input.ImgCodeKey.IsEmpty())
             {
                 throw new DbxException(EnumCode.校验失败, Lang.userYanZhengMaCuoWu);
             }
 
-            var captchaVerify = captchaService.Verify(new CaptchaVerifyInput()
+            var captcha = new CaptchaInput()
             {
-                Category = EnumNotificationCategory.Login,
-                Type = EnumNotificationType.Image,
-                Tag = input.ImgCodeTag,
+                Category = EnumCaptchaCategory.Login,
+                Mode = EnumCaptchaMode.Image,
+                Key = input.ImgCodeKey,
                 Code = input.ImgCode
-            });
+            };
 
-            if (!captchaVerify)
+            if (!captchaService.Verify(captcha))
             {
                 throw new DbxException(EnumCode.校验失败, Lang.userYanZhengMaCuoWu);
             }

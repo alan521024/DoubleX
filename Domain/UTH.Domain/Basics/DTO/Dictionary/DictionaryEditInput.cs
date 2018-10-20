@@ -14,11 +14,10 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 数据字典编辑输入
+    /// 数据字典输入
     /// </summary>
-    public class DictionaryEditInput : DictionaryBase, IInput, IInputDelete, IInputUpdate
+    public class DictionaryEditInput : DictionaryDTO, IInput
     {
-        public List<Guid> Ids { get; set; }
     }
 
     /// <summary>

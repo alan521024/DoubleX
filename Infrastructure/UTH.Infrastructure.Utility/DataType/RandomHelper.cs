@@ -37,21 +37,21 @@ namespace UTH.Infrastructure.Utility
         /// 获取随机数字符串
         /// </summary>
         /// <param name="length"></param>
-        /// <param name="contentChars"></param>
+        /// <param name="contents"></param>
         /// <returns></returns>
-        public static string GetToRandomString(int length, char[] contentChars = null)
+        public static string GetToRandomString(int length, char[] contents = null)
         {
-            if (contentChars == null || (contentChars != null && contentChars.Length == 0))
+            if (contents == null || (contents != null && contents.Length == 0))
             {
-                contentChars = randomContent;
+                contents = randomContent;
             }
 
-            int min = 0, max = contentChars.Length;
+            int min = 0, max = contents.Length;
             var numArr = GetToRandomNumberArray(length, min, max);
             StringBuilder builder = new StringBuilder();
             for (var i = 0; i < numArr.Length; i++)
             {
-                builder.Append(contentChars[numArr[i]]);
+                builder.Append(contents[numArr[i]]);
             }
             return builder.ToString();
         }

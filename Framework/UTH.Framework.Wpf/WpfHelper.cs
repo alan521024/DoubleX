@@ -465,21 +465,15 @@ namespace UTH.Framework.Wpf
         {
             if (token.IsEmpty())
                 return;
-
-            var session1 = EngineHelper.Resolve<IApplicationSession>();
-
-
+            
             var jwtToken = EngineHelper.Resolve<ITokenService>().Resolve(token);
 
             var claims = jwtToken.Claims.ToList();
             claims.Add(new Claim(GenericIdentity.DefaultNameClaimType, jwtToken.Subject));
             claims.Add(new Claim(GenericIdentity.DefaultRoleClaimType, ""));
-            claims.Add(new Claim(WpfClaimTypesExtend.LocalToken, token));
+            claims.Add(new Claim(ClaimTypesExtend.Token, token));
 
             Thread.CurrentPrincipal = new ClaimsPrincipal(new ClaimsIdentity(claims, "_win_use"));
-
-
-            var session2 = EngineHelper.Resolve<IApplicationSession>();
         }
 
         /// <summary>

@@ -79,7 +79,7 @@
         /// 口音/方言
         /// </summary>
         public string Accent { get; set; } = "mandarin";
-        
+
         /// <summary>
         /// 字体大小
         /// </summary>

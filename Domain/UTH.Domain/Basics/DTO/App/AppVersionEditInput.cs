@@ -14,15 +14,14 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 应用版本编辑输入
+    /// 应用版本输入
     /// </summary>
-    public class AppVersionEditInput : AppVersionBase, IInput, IInputDelete, IInputUpdate
+    public class AppVersionEditInput : AppVersionDTO, IInput
     {
-        public List<Guid> Ids { get; set; }
     }
 
     /// <summary>
-    /// 应用版本编辑输入校验
+    /// 应用版本输入校验
     /// </summary>
     public class AppVersionEditInputValidator : AbstractValidator<AppVersionEditInput>, IValidator<AppVersionEditInput>
     {

@@ -57,16 +57,17 @@
         {
             //meeting
             EngineHelper.RegisterType<IMeetingRepository, MeetingRepository>(DomainConfiguration.Options.IocRepositoryOption);
-            EngineHelper.RegisterType<IMeetingService, MeetingService>(DomainConfiguration.Options.IocServiceOption);
+            EngineHelper.RegisterType<IMeetingDomainService, MeetingDomainService>(DomainConfiguration.Options.IocServiceOption);
+            EngineHelper.RegisterType<IMeetingApplication, MeetingApplication>(DomainConfiguration.Options.IocServiceOption);
 
             //record
-            EngineHelper.RegisterType<IMeetingRecordService, MeetingRecordService>(DomainConfiguration.Options.IocServiceOption);
+            EngineHelper.RegisterType<IMeetingRecordApplication, MeetingRecordApplication>(DomainConfiguration.Options.IocServiceOption);
 
             //translation
-            EngineHelper.RegisterType<IMeetingTranslationService, MeetingTranslationService>(DomainConfiguration.Options.IocServiceOption);
+            EngineHelper.RegisterType<IMeetingTranslationApplication, MeetingTranslationApplication>(DomainConfiguration.Options.IocServiceOption);
 
             //Profile
-            EngineHelper.RegisterType<IMeetingProfileService, MeetingProfileService>(DomainConfiguration.Options.IocServiceOption);
+            EngineHelper.RegisterType<IMeetingProfileApplication, MeetingProfileApplication>(DomainConfiguration.Options.IocServiceOption);
         }
 
         /// <summary>

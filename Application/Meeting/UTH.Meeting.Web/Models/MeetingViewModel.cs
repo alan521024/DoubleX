@@ -34,7 +34,7 @@
         /// <summary>
         /// 会议信息
         /// </summary>
-        public MeetingOutput Meeting { get; set; }
+        public MeetingDTO Meeting { get; set; }
 
         /// <summary>
         /// 会议设置

@@ -12,10 +12,11 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 组织业务接口
+    /// 组织应用服务接口
     /// </summary>
-    public interface IOrganizeService : IApplicationDefault<OrganizeEntity, OrganizeEditInput, OrganizeOutput>
+    public interface IOrganizeApplication :
+        IApplicationCrudService<OrganizeDTO,OrganizeEditInput>, 
+        IApplicationService
     {
-
     }
 }

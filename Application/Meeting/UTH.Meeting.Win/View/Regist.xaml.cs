@@ -47,6 +47,7 @@ namespace UTH.Meeting.Win.View
         {
             viewModel = DataContext as RegistViewModel;
             viewModel.CheckNull();
+            viewModel.Configuration(obj: this);
         }
 
         private void hlRegAgreement_Click(object sender, RoutedEventArgs e)
@@ -61,53 +62,5 @@ namespace UTH.Meeting.Win.View
                 .Navigate(new Login());
         }
 
-        private void btnSend_Click(object sender, RoutedEventArgs e)
-        {
-            var msg = viewModel.SendCaptchaCode();
-            if (!msg.IsEmpty())
-            {
-                WpfHelper.Message(msg);
-            }
-            else
-            {
-                WpfHelper.Message(culture.Lang.sysFaSongChengGong);
-            }
-
-            new Thread(() =>
-            {
-                ThreadHelper.Countdown((p) =>
-                {
-                    WpfHelper.ExcuteUI(() =>
-                    {
-                        var pro = Math.Abs((p / 1000) - 15);
-                        if (pro < 1)
-                        {
-                            viewModel.CanSend = true;
-                            viewModel.SendText = culture.Lang.sysHuoQuYanZhengMa;
-                        }
-                        else
-                        {
-                            viewModel.CanSend = false;
-                            viewModel.SendText = string.Format("{0}({1})", culture.Lang.sysDaoJiShi, pro);
-                        }
-                    });
-                }, 15000);
-            }).Start();
-        }
-
-        private void btnRegist_Click(object sender, RoutedEventArgs e)
-        {
-            var msg = viewModel.Regist();
-            if (!msg.IsEmpty())
-            {
-                WpfHelper.Message(msg);
-                return;
-            }
-            WpfHelper.Message(culture.Lang.userZhuCeChengGongXiaoXi, action: () =>
-            {
-                WpfHelper.GetParent<Window>(this).FindChild<Frame>("mainFrame")
-                    .Navigate(new Login());
-            });
-        }
     }
 }

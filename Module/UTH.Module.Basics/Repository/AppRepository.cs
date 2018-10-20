@@ -20,25 +20,43 @@
     /// </summary>
     public class AppRepository : SqlSugarRepository<AppEntity>, IAppRepository
     {
-        #region 构造方法
-
-        public AppRepository(string connectionStr = null, ConnectionModel connectionModel = null, SqlSugarClient connectionClient = null, IApplicationSession session = null) :
-            base(connectionStr, connectionModel, connectionClient, session)
+        public AppRepository(ConnectionModel model = null, SqlSugarClient client = null, IApplicationSession session = null) :
+            base(model, client, session)
         {
 
         }
 
+        #region override
+
+        public override AppEntity Get(Guid key)
+        {
+            return base.Get(key);
+        }
+
+        public override AppEntity Get(Expression<Func<AppEntity, bool>> predicate)
+        {
+            return base.Get(predicate);
+        }
+
+        public override List<AppEntity> Find(int top = 0, Expression<Func<AppEntity, bool>> predicate = null, List<KeyValueModel> sorting = null)
+        {
+            var list = base.Find(top, predicate, sorting);
+
+            this.SetVersions(list);
+
+            return list;
+        }
+
+        public override List<AppEntity> Paging(int page, int size, Expression<Func<AppEntity, bool>> predicate, List<KeyValueModel> sorting, ref int total)
+        {
+            var list = base.Paging(page, size, predicate, sorting, ref total);
+
+            this.SetVersions(list);
+
+            return list;
+        }
+
         #endregion
-
-        #region 私有变量
-
-        #endregion
-
-        #region 公共属性
-
-        #endregion
-
-        #region 辅助操作
 
         /// <summary>
         /// 设置应用集合的版本列表
@@ -63,39 +81,6 @@
             return list;
         }
 
-        #endregion
-
-        #region 重写方法
-
-        public override AppEntity Find(Guid key)
-        {
-            return base.Find(key);
-        }
-
-        public override AppEntity Find(Expression<Func<AppEntity, bool>> predicate)
-        {
-            return base.Find(predicate);
-        }
-
-        public override List<AppEntity> Find(int top = 0, Expression<Func<AppEntity, bool>> predicate = null, List<KeyValueModel> sorting = null)
-        {
-            var list = base.Find(top, predicate, sorting);
-
-            this.SetVersions(list);
-
-            return list;
-        }
-
-        public override List<AppEntity> Paging(int page, int size, Expression<Func<AppEntity, bool>> predicate, List<KeyValueModel> sorting, ref int total)
-        {
-            var list = base.Paging(page, size, predicate, sorting, ref total);
-
-            this.SetVersions(list);
-
-            return list;
-        }
-        
-        #endregion
 
     }
 }

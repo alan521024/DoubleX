@@ -16,7 +16,7 @@
     /// 账号信息(DTO)
     /// </summary>
     [Serializable]
-    public class AccountDTO : IEntityKeys
+    public class AccountDTO : IKeys, IOutput
     {
         /// <summary>
         /// Id

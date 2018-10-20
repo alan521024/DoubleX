@@ -20,14 +20,11 @@
     /// </summary>
     public class MeetingRepository : SqlSugarRepository<MeetingEntity>, IMeetingRepository
     {
-        #region 构造方法
-
-        public MeetingRepository(ConnectionModel connectionModel) : base(connectionModel: connectionModel)
+        public MeetingRepository(ConnectionModel model = null, SqlSugarClient client = null, IApplicationSession session = null) :
+            base(model, client, session)
         {
 
         }
-
-        #endregion
 
         /// <summary>
         /// 查找同步记录

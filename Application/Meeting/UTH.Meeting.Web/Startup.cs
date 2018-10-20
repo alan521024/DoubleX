@@ -58,8 +58,8 @@ namespace UTH.Meeting.Web
             });
 
             var interceptors = DomainConfiguration.Options.Interceptors.ToList();
-            interceptors.Add(typeof(INotificationInterceptor));
-            interceptors.Add(typeof(ICaptchaVerifyInterceptor));
+            interceptors.Add(typeof(INotifyInterceptor));
+            interceptors.Add(typeof(ICaptchaInterceptor));
 
             services.AddMemoryCache();                              //使用本地缓存必须添加
             services.AddSession();                                  //使用Session

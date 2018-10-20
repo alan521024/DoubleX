@@ -43,7 +43,8 @@
             </TextBlock>
         </DockPanel>
         <StackPanel Grid.Row="4" Margin="35,15,35,0">
-            <Button Name="btnLogin" IsDefault="True" Content="{x:Static culture:Lang.userDengLu}" Click="btnLogin_Click"></Button>
+            <Button IsDefault="True" Content="{x:Static culture:Lang.userDengLu}" 
+                    Command="{Binding OnLoginCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"></Button>
         </StackPanel>
         <StackPanel Grid.Row="5" Margin="35,15,35,0" HorizontalAlignment="Center">
             <TextBlock>

@@ -12,10 +12,19 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 账号应用业务接口
+    /// 账户应用服务接口
     /// </summary>
-    public interface IAccountApplication : IApplicationService, IApplicationCrudService<AccountDTO>
+    public interface IAccountApplication :
+        IApplicationCrudService<AccountDTO, AccountEditInput>,
+        IApplicationService
     {
+        /// <summary>
+        /// 账户检查
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        bool CheckName(AccountEditInput input);
+
         /// <summary>
         /// 账户注册
         /// </summary>

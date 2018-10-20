@@ -14,17 +14,18 @@
     /// <summary>
     /// 基础信息（Key + Audited + SoftDeleteEntity）
     /// </summary>
-    public class BaseGeneralEntity<TKey> : IEntity<TKey>, IAuditedEntity<TKey>, ISoftDeleteEntity
+    public class BaseGeneralEntity : IEntity, IAuditedEntity, ISoftDeleteEntity
     {
+
         /// <summary>
         /// 主键
         /// </summary>
-        public TKey Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// 添加人Id
         /// </summary>
-        public TKey CreateId { get; set; }
+        public Guid CreateId { get; set; }
 
         /// <summary>
         /// 添加时间
@@ -34,7 +35,7 @@
         /// <summary>
         /// 修改人Id
         /// </summary>
-        public TKey LastId { get; set; }
+        public Guid LastId { get; set; }
 
         /// <summary>
         /// 修改时间
@@ -45,13 +46,5 @@
         /// 是否逻辑删除
         /// </summary>
         public bool IsDelete { get; set; }
-    }
-
-    /// <summary>
-    /// 基础信息（Key + Audited + SoftDeleteEntity）
-    /// </summary>
-    public class BaseGeneralEntity : BaseGeneralEntity<Guid>, IEntity, IAuditedEntity, ISoftDeleteEntity
-    {
-
     }
 }

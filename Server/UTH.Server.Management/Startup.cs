@@ -50,8 +50,8 @@ namespace UTH.Server.Management
             });
 
             var interceptors = DomainConfiguration.Options.Interceptors.ToList();
-            interceptors.Add(typeof(INotificationInterceptor));
-            interceptors.Add(typeof(ICaptchaVerifyInterceptor));
+            interceptors.Add(typeof(INotifyInterceptor));
+            interceptors.Add(typeof(ICaptchaInterceptor));
 
             return builder.AddAutofacProvider(services, Configuration, hosting, (opt) =>
             {

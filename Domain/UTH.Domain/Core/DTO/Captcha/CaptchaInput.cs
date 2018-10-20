@@ -14,28 +14,38 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 验证码验证信息基类
+    /// 验证码信息基类
     /// </summary>
     public class CaptchaInput : IInput
     {
         /// <summary>
-        /// 所属分类
+        /// 验证码类别
         /// </summary>
-        public EnumNotificationCategory Category { get; set; }
+        public EnumCaptchaCategory Category { get; set; }
 
         /// <summary>
-        /// 验证类型
+        /// 验证方式
         /// </summary>
-        public EnumNotificationType Type { get; set; }
+        public EnumCaptchaMode Mode { get; set; } = EnumCaptchaMode.Default;
 
         /// <summary>
         /// 标识
         /// </summary>
-        public string Tag { get; set; }
+        public string Key { get; set; }
 
         /// <summary>
         /// 接收者
         /// </summary>
         public string Receiver { get; set; }
+
+        /// <summary>
+        /// 验证码
+        /// </summary>
+        public string Code { get; set; }
+
+        /// <summary>
+        /// 验证码长度
+        /// </summary>
+        public int Length { get; set; } = 4;
     }
 }

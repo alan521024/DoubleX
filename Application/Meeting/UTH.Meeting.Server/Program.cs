@@ -51,6 +51,7 @@ namespace UTH.Meeting.Server
             EngineHelper.Worker.Startup(appHosting);
             EngineHelper.Worker.OnStart();
 
+
             // 创建一个IPC信道 注册这个IPC信道. 向信道暴露一个远程对象.
             IpcServerChannel serverChannel = new IpcServerChannel("channel");
             ChannelServices.RegisterChannel(serverChannel, false);

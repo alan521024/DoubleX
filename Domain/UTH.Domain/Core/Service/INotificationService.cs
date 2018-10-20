@@ -12,13 +12,13 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 通知消息业务接口
+    /// 通知领域服务接口
     /// </summary>
-    public interface INotificationService : IApplicationService
+    public interface INotifyService : IDomainService
     {
         /// <summary>
-        /// 消息发送
+        /// 通知发送
         /// </summary>
-        NotificationOutput Send(NotificationInput input);
+        bool Send(EnumNotifyCategory category, EnumNotifyMode mode, string sender, string receiver, string content);
     }
 }

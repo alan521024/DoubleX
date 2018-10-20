@@ -13,14 +13,14 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 账号注册返回
+    /// 账户注册返回
     /// </summary>
-    public class RegistOutput
+    public class RegistOutput : IOutput
     {
         /// <summary>
         /// 账号编号
         /// </summary>
-        public string Num { get; set; }
+        public string No { get; set; }
 
         /// <summary>
         /// 登录账号

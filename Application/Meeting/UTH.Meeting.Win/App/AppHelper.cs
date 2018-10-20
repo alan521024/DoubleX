@@ -42,6 +42,15 @@
     /// </summary> 
     public class AppHelper : AppBaseHelper
     {
+        #region const
+
+        /// <summary>
+        /// 倒计时秒
+        /// </summary>
+        public const double CountdownSecond = 15;
+
+        #endregion
+
         #region 注册表（使用时间/次数）
 
         /// <summary>
@@ -121,16 +130,6 @@
         #region 应用程序/授权文件
 
         /// <summary>
-        /// 应用程序信息
-        /// </summary>
-        public static ApplicationModel Current { get { return GetApplication(); } }
-
-        /// <summary>
-        /// 授权文件信息
-        /// </summary>
-        public static LicenseModel Licenses { get { return GetLicenseModel(); } }
-
-        /// <summary>
         /// 应用程序名称
         /// </summary>
         public static string AppTitle
@@ -141,6 +140,21 @@
             }
         }
 
+        /// <summary>
+        /// 应用程序信息
+        /// </summary>
+        public static ApplicationModel Current { get { return GetApplication(); } }
+
+        /// <summary>
+        /// 授权文件信息
+        /// </summary>
+        public static LicenseModel Licenses { get { return GetLicenseModel(); } }
+
+        /// <summary>
+        /// 获取面包屑导航
+        /// </summary>
+        /// <param name="navs"></param>
+        /// <returns></returns>
         public static ObservableCollection<CrumbData> GetMainNavigationCrumbs(params CrumbData[] navs)
         {
             var items = new ObservableCollection<CrumbData>();
@@ -154,6 +168,11 @@
             return items;
         }
 
+        /// <summary>
+        /// Main面包屑导航
+        /// </summary>
+        /// <param name="main"></param>
+        /// <param name="data"></param>
         public static void MainNavigationCrumbsAction(Win.View.Main main, CrumbData data)
         {
             main.CheckNull();

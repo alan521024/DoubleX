@@ -35,10 +35,10 @@ namespace UTH.Server.Management.Areas.Basics.Controllers
         /// </summary>
         public IActionResult Edit(Guid id)
         {
-            var model = new AppOutput() { AppType = EnumAppType.Web };
+            var model = new AppDTO() { AppType = EnumAppType.Web };
             if (!id.IsEmpty())
             {
-                var result = $"{PlugCoreHelper.ApiUrl.Basics.AppGetId}?id={id}".GetResult<AppOutput>();
+                var result = $"{PlugCoreHelper.ApiUrl.Basics.AppGetId}?id={id}".GetResult<AppDTO>();
                 if (result.Code == EnumCode.成功)
                 {
                     return View(result.Obj);

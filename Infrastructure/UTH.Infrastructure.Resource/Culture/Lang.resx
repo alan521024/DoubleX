@@ -192,9 +192,6 @@
   <data name="sysMingCheng" xml:space="preserve">
     <value>Name</value>
   </data>
-  <data name="sysName" xml:space="preserve">
-    <value>Name</value>
-  </data>
   <data name="sysQieHuan" xml:space="preserve">
     <value>Switch</value>
   </data>
@@ -420,11 +417,11 @@
   <data name="userQingShuRuYanZhengMa" xml:space="preserve">
     <value>请输入验证码</value>
   </data>
-  <data name="userQingShuRuZhengQueDeShouJiHao" xml:space="preserve">
-    <value>请输入正确的手机号</value>
+  <data name="userQingShuRuYouXiaoDeShouJiHao" xml:space="preserve">
+    <value>请输入有效的手机号</value>
   </data>
-  <data name="userQingShuRuZhengQueDeYanZhengMa" xml:space="preserve">
-    <value>请输入正确的验证码</value>
+  <data name="userQingShuRuYouXiaoDeYanZhengMa" xml:space="preserve">
+    <value>请输入有效的验证码</value>
   </data>
   <data name="userDengLuShiBai" xml:space="preserve">
     <value>登录失败</value>
@@ -635,5 +632,44 @@
   </data>
   <data name="userXingMing" xml:space="preserve">
     <value>姓名</value>
+  </data>
+  <data name="userZhangHuYiChang" xml:space="preserve">
+    <value>账户异常</value>
+  </data>
+  <data name="userZhangHuLeiXingCuoWu" xml:space="preserve">
+    <value>账户类型错误</value>
+  </data>
+  <data name="userQingShuRuZhangHuBianHao" xml:space="preserve">
+    <value>请输入账户编号</value>
+  </data>
+  <data name="userQingShuRuYongHuMing" xml:space="preserve">
+    <value>请输入用户名</value>
+  </data>
+  <data name="userYongHuMing" xml:space="preserve">
+    <value>用户名</value>
+  </data>
+  <data name="sysJieSu" xml:space="preserve">
+    <value>结束</value>
+  </data>
+  <data name="sysKaiShi" xml:space="preserve">
+    <value>开始</value>
+  </data>
+  <data name="sysQingShuRuQiZhiXingXi" xml:space="preserve">
+    <value>请输入起止信息</value>
+  </data>
+  <data name="sysJiaoYanShiBai" xml:space="preserve">
+    <value>校验失败</value>
+  </data>
+  <data name="userJiuMiMaCuoWu" xml:space="preserve">
+    <value>旧密码错误</value>
+  </data>
+  <data name="sysXiuGaiChengGong" xml:space="preserve">
+    <value>修改成功</value>
+  </data>
+  <data name="sysXiuGaiShiBai" xml:space="preserve">
+    <value>修改失败</value>
+  </data>
+  <data name="userWeiZhaoDaoZhangHu" xml:space="preserve">
+    <value>未找到账户</value>
   </data>
 </root>

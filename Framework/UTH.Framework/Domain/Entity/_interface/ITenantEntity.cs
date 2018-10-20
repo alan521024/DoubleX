@@ -13,16 +13,11 @@
     /// <summary>
     /// 是否租户信息
     /// </summary>
-    public interface ITenantEntity<TKey>
+    public interface ITenantEntity 
     {
         /// <summary>
         /// 租户Id
         /// </summary>
-        TKey TenantId { get; set; }
+        Guid TenantId { get; set; }
     }
-
-    /// <summary>
-    /// 是否租户信息
-    /// </summary>
-    public interface ITenantEntity : ITenantEntity<Guid> { }
 }

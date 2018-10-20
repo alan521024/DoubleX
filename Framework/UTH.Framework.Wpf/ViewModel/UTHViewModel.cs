@@ -10,6 +10,7 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Windows;
+    using System.Windows.Controls;
     using System.Windows.Threading;
     using System.Threading;
     using System.Drawing.Imaging;
@@ -56,6 +57,20 @@
             }
         }
 
+        /// <summary>
+        /// 从属对象
+        /// </summary>
+        public DependencyObject DependencyObj { get; protected set; }
+
+        /// <summary>
+        /// 设置视图Model
+        /// </summary>
+        /// <param name="obj"></param>
+        public void Configuration(DependencyObject obj = null)
+        {
+            DependencyObj = obj;
+        }
+
         #region 窗体控件
 
         /// <summary>
@@ -99,7 +114,7 @@
         /// <param name="owner"></param>
         /// <param name="okAction"></param>
         /// <param name="cancelAction"></param>
-        protected void Message(string txt, string title = null, MessageBoxImage img = MessageBoxImage.None, Window owner = null, Action okAction = null, Action cancelAction = null)
+        protected void MessageAlert(string txt, string title = null, MessageBoxImage img = MessageBoxImage.None, Window owner = null, Action okAction = null, Action cancelAction = null)
         {
             switch (img)
             {

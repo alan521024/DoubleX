@@ -223,26 +223,6 @@
         /// <summary>
         /// ApiServer 请求
         /// </summary>
-        public static ResultModel<TModel> GetResult<TModel, TParam>(this string url, IApplicationSession session, TParam post = default(TParam), string contentType = "application/json")
-        {
-            return GetResult<TModel>(url, post: (post.IsNull() ? "" : JsonHelper.Serialize(post)), contentType: contentType,
-                culture: session?.Accessor.Culture.Name, appCode: session?.Accessor.AppCode, clientIp: session?.Accessor.ClientIp, token: session?.Accessor.Token);
-
-        }
-
-        /// <summary>
-        /// ApiServer 请求
-        /// </summary>
-        public static ResultModel<TModel> GetResult<TModel>(this string url, IApplicationSession session, string post = "", string contentType = "application/json")
-        {
-            return GetResult<TModel>(url, post: post, contentType: contentType,
-                culture: session?.Accessor.Culture.Name, appCode: session?.Accessor.AppCode, clientIp: session?.Accessor.ClientIp, token: session?.Accessor.Token);
-
-        }
-
-        /// <summary>
-        /// ApiServer 请求
-        /// </summary>
         public static ResultModel<TModel> GetResult<TModel>(this string url, string post = "", string contentType = "application/json",
             string culture = null, string appCode = null, string clientIp = null, string token = null)
         {

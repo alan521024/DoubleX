@@ -28,18 +28,22 @@
             <Image Source="pack://application:,,,/UTH.Meeting.Win;component/Assets/Image/account2.png"></Image>
         </StackPanel>
         <StackPanel Grid.Row="1" Margin="35,15,35,0">
-            <TextBox Text="{Binding Mobile,UpdateSourceTrigger=PropertyChanged}" controls:TextBoxHelper.Watermark="{x:Static culture:Lang.userQingShuRuShouJiHao}"></TextBox>
+            <TextBox Text="{Binding Mobile,UpdateSourceTrigger=PropertyChanged}" 
+                     controls:TextBoxHelper.Watermark="{x:Static culture:Lang.userQingShuRuShouJiHao}"></TextBox>
         </StackPanel>
         <Grid Grid.Row="2" Margin="35,15,35,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"></ColumnDefinition>
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <TextBox Grid.Column="0" Text="{Binding Code}" Style="{StaticResource UTH.GroupTextBox}"></TextBox>
-            <Button Grid.Column="1" x:Name="btnSend"  Content="{Binding SendText}" Style="{StaticResource UTH.GroupButton}" IsEnabled="{Binding CanSend}" Click="btnSend_Click"></Button>
+            <TextBox Grid.Column="0" Text="{Binding CaptchaCode}" Style="{StaticResource UTHGroupTextBox}" 
+                     controls:TextBoxHelper.Watermark="{x:Static culture:Lang.userQingShuRuYanZhengMa}"></TextBox>
+            <Button Grid.Column="1" Content="{Binding SendText}" Style="{StaticResource UTHGroupButton}" IsEnabled="{Binding CanSend}" 
+                    Command="{Binding OnSendCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"></Button>
         </Grid>
         <StackPanel Grid.Row="3" Margin="35,15,35,0">
-            <PasswordBox behaviors:PasswordBoxBindingBehavior.Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></PasswordBox>
+            <PasswordBox behaviors:PasswordBoxBindingBehavior.Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         controls:TextBoxHelper.Watermark="{x:Static culture:Lang.userQingShuRuMiMa}"></PasswordBox>
         </StackPanel>
         <DockPanel Grid.Row="4"  Margin="35,15,35,0">
             <CheckBox DockPanel.Dock="Left" Content="" IsChecked="{Binding IsRead, Converter={StaticResource BooleanConverter}}" ></CheckBox>
@@ -50,7 +54,8 @@
             </TextBlock>
         </DockPanel>
         <StackPanel Grid.Row="5" Margin="35,15,35,0">
-            <Button x:Name="btnRegist" Content="{x:Static culture:Lang.userZhuCe}" Click="btnRegist_Click"></Button>
+            <Button Content="{x:Static culture:Lang.userZhuCe}"
+                    Command="{Binding OnRegistCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"></Button>
         </StackPanel>
         <StackPanel Grid.Row="6" Margin="35,15,35,0" HorizontalAlignment="Center">
             <TextBlock>

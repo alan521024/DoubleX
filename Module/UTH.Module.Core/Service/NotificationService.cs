@@ -16,41 +16,64 @@
     using UTH.Plug.Notification;
 
     /// <summary>
-    /// 验证码业务
+    /// 通知领域服务
     /// </summary>
-    public class NotificationService : ApplicationService, INotificationService
+    public class NotifyService : DomainService, INotifyService
     {
-        /// <summary>
-        /// 通知消息发送
-        /// </summary>
-        public NotificationOutput Send(NotificationInput input)
+        ISmsService smsService;
+
+        public NotifyService(IApplicationSession session, ICachingService caching, ISmsService smsService) : base(session, caching)
         {
-            input.CheckNull();
+            this.smsService = smsService;
+        }
 
-            var output = new NotificationOutput() { Success = false };
+        /// <summary>
+        /// 通知发送
+        /// </summary>
+        public bool Send(EnumNotifyCategory category, EnumNotifyMode mode, string sender, string receiver, string content)
+        {
+            content = FormatContent(category, mode, content);
+            content.CheckEmpty();
 
-            //default image 无发送 默认成功
-            if (input.Type == EnumNotificationType.Default || input.Type == EnumNotificationType.Image)
+            switch (mode)
             {
-                output.Success = true;
+                case EnumNotifyMode.短信:
+                    if (receiver.IsEmpty())
+                    {
+                        //TODO:Msg 通知接收人错误
+                    }
+                    return smsService.Send(receiver, content).Success;
+                default:
+                    return true;
+            }
+        }
+
+        /// <summary>
+        /// 默认内容
+        /// </summary>
+        /// <param name="category"></param>
+        /// <param name="mode"></param>
+        /// <returns></returns>
+        private string FormatContent(EnumNotifyCategory category, EnumNotifyMode mode, string content)
+        {
+            if (content.IsNull())
+            {
+                content = "";
             }
 
-            //sms 短信
-            if (input.Type == EnumNotificationType.Sms)
+            if (category == EnumNotifyCategory.注册验证)
             {
-                var smsService = EngineHelper.Resolve<ISmsService>();
-                var result = smsService.Send(input.Receiver, input.Content);
-                output.Success = result.Success;
-                output.Message = result.Message;
+                content.CheckEmpty();
+                content = "注册 验证码为 " + content + " ";
             }
 
-            //邮箱
-            if (input.Type == EnumNotificationType.Email)
+            if (category == EnumNotifyCategory.找回密码验证)
             {
-
+                content.CheckEmpty();
+                content = "找回密码 验证码为 " + content + " ";
             }
 
-            return output;
+            return content;
         }
     }
 }

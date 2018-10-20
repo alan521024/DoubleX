@@ -335,38 +335,6 @@ namespace UTH.Meeting.Win
             RaiseEvent(e);
         }
 
-        private void Sync()
-        {
-            if (this.PageSize > 0)
-            {
-                this.PageTotal = DataTotal / this.PageSize;
-                if (DataTotal % this.PageSize > 0)
-                {
-                    this.PageTotal++;
-                }
-            }
-            if (this.PageIndex <= 0)
-            {
-                this.PageIndex = 1;
-            }
-            if (this.PageTotal <= 0)
-            {
-                this.PageTotal = 1;
-            }
-            if (this.PageIndex > this.PageTotal)
-            {
-                this.PageIndex = this.PageTotal;
-            }
-
-            this.PageItems = new ObservableCollection<KeyValuePair<int, bool>>();
-            for (var i = 1; i <= this.PageTotal; i++)
-            {
-                PageItems.Add(new KeyValuePair<int, bool>(i, i != PageIndex));
-            }
-            IsFirst = PageIndex > 1;
-            IsLast = PageIndex < PageTotal;
-        }
-
         private void FormatValue()
         {
             //_numberFormatInfo.NumberDecimalDigits = this.DecimalPlaces;
@@ -399,13 +367,44 @@ namespace UTH.Meeting.Win
             this.Query();
         }
 
-        public void SetTotal(int dataTotal)
+        public void Sync(int dataTotal = -1)
         {
-            if (dataTotal > 0)
+            if (dataTotal > -1)
             {
                 this.DataTotal = dataTotal;
-                this.Sync();
             }
+
+            if (this.PageSize > 0)
+            {
+                this.PageTotal = DataTotal / this.PageSize;
+                if (DataTotal % this.PageSize > 0)
+                {
+                    this.PageTotal++;
+                }
+            }
+
+            if (this.PageIndex <= 0)
+            {
+                this.PageIndex = 1;
+            }
+
+            if (this.PageTotal <= 0)
+            {
+                this.PageTotal = 1;
+            }
+
+            if (this.PageIndex > this.PageTotal)
+            {
+                this.PageIndex = this.PageTotal;
+            }
+
+            this.PageItems = new ObservableCollection<KeyValuePair<int, bool>>();
+            for (var i = 1; i <= this.PageTotal; i++)
+            {
+                PageItems.Add(new KeyValuePair<int, bool>(i, i != PageIndex));
+            }
+            IsFirst = PageIndex > 1;
+            IsLast = PageIndex < PageTotal;
         }
 
         public void Query()

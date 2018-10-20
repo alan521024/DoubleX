@@ -38,10 +38,8 @@ namespace UTH.Meeting.Win.ViewModel
     {
         public MainViewModel() : base(culture.Lang.winZhuJieMian, "")
         {
-            Initialize();
+            VersionInfo();
         }
-
-        #region 公共属性
 
         /// <summary>
         /// 状态描述
@@ -81,28 +79,6 @@ namespace UTH.Meeting.Win.ViewModel
         /// </summary>
         public Visibility IsOrganize { get { return CurrentUser.User.Type == EnumAccountType.组织 ? Visibility.Visible : Visibility.Collapsed; } }
 
-        #endregion
-
-        #region 私有变量
-
-        #endregion
-
-        #region 辅助操作
-
-        private void Initialize()
-        {
-            var currentVersion = VersionHelper.Get();
-
-            UpdateIntro = string.Format("{0}:v{1} [{2}]",
-                culture.Lang.sysDangQianBanBeng,
-                currentVersion,
-                BoolHelper.Get(AppHelper.Licenses.IsTrial) ? culture.Lang.sysShiYongBan : culture.Lang.sysZhengShiBan);
-
-            IsUpdate = currentVersion != AppHelper.Current.Versions.No ? Visibility.Visible : Visibility.Collapsed;
-        }
-
-        #endregion
-
         /// <summary>
         /// 导出记录
         /// </summary>
@@ -113,8 +89,8 @@ namespace UTH.Meeting.Win.ViewModel
             try
             {
                 var session = EngineHelper.Resolve<IApplicationSession>() as DefaultSession;
-                var res = MeetingHelper.GetLocalRecordServer(id, session);
-                var trs = MeetingHelper.GetLocalTranslationServer(id, session);
+                var res = MeetingHelper.GetRecordService(id); 
+                var trs = MeetingHelper.GetTranslateService(id);
 
                 string filePath = MeetingHelper.GetMeetingTextFile(id);
                 if (File.Exists(filePath))
@@ -122,7 +98,7 @@ namespace UTH.Meeting.Win.ViewModel
                     FilesHelper.DeleteFile(filePath);
                 }
 
-                var records = res.Query(Sorting: new List<KeyValueModel>() { new KeyValueModel("CreateDt", "Asc") });
+                var records = res.Find(sorting: new List<KeyValueModel>() { new KeyValueModel("CreateDt", "Asc") });
 
                 using (file = new StreamWriter(filePath, true))
                 {
@@ -131,7 +107,7 @@ namespace UTH.Meeting.Win.ViewModel
                         file.WriteLine(string.Format("{0}  ({1}){2}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                             record.Langue,
                             record.Content));
-                        var translations = trs.Query(where: t => t.RecordId == record.Id);
+                        var translations = trs.Find(where: t => t.RecordId == record.Id);
                         translations.ForEach(translation =>
                         {
                             file.WriteLine(string.Format("        ({0}){1}", translation.Langue, translation.Content));
@@ -150,5 +126,18 @@ namespace UTH.Meeting.Win.ViewModel
                 file = null;
             }
         }
+
+        private void VersionInfo()
+        {
+            var currentVersion = VersionHelper.Get();
+
+            UpdateIntro = string.Format("{0}:v{1} [{2}]",
+                culture.Lang.sysDangQianBanBeng,
+                currentVersion,
+                BoolHelper.Get(AppHelper.Licenses.IsTrial) ? culture.Lang.sysShiYongBan : culture.Lang.sysZhengShiBan);
+
+            IsUpdate = currentVersion != AppHelper.Current.Versions.No ? Visibility.Visible : Visibility.Collapsed;
+        }
+
     }
 }

@@ -9,11 +9,15 @@ namespace UTH.Meeting.Win.ViewModel
     using System.Threading;
     using System.Threading.Tasks;
     using System.ComponentModel;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Input;
     using Newtonsoft.Json.Linq;
     using GalaSoft.MvvmLight;
     using GalaSoft.MvvmLight.Command;
     using GalaSoft.MvvmLight.Threading;
     using GalaSoft.MvvmLight.Messaging;
+    using MahApps.Metro.Controls;
     using culture = UTH.Infrastructure.Resource.Culture;
     using UTH.Infrastructure.Utility;
     using UTH.Framework;
@@ -30,14 +34,9 @@ namespace UTH.Meeting.Win.ViewModel
     {
         public LoginViewModel() : base(culture.Lang.userDengLu, "")
         {
-            Initialize();
+            Account = string.Empty;
+            Password = string.Empty;
         }
-
-        #region 私有变量
-
-        #endregion
-
-        #region 公共属性
 
         public string Account
         {
@@ -53,37 +52,54 @@ namespace UTH.Meeting.Win.ViewModel
         }
         private string _password;
 
-        #endregion
-
-        #region 辅助操作
-
-        private void Initialize()
+        /// <summary>
+        /// 登录事件
+        /// </summary>
+        public ICommand OnLoginCommand
         {
-            Account = string.Empty;
-            Password = string.Empty;
+            get
+            {
+                return new RelayCommand<object>((obj) =>
+                {
+                    Signin();
+                });
+            }
         }
-
-        #endregion
 
         /// <summary>
         /// 账号登录
         /// </summary>
-        public string Signin()
+        public void Signin()
         {
             if (Account.IsEmpty() || Password.IsEmpty())
             {
-                return culture.Lang.userQingShuZhaoHaoMiMa;
+                MessageAlert(culture.Lang.userQingShuZhaoHaoMiMa);
+                return;
             }
 
             var input = new SignInInput() { UserName = Account, Password = Password };
             var result = PlugCoreHelper.ApiUrl.User.SignIn.GetResult<SignInOutput, SignInInput>(input);
-            if (result.Code == EnumCode.成功)
+            if (result.Code != EnumCode.成功)
             {
-                WpfHelper.SignIn(result.Obj.Token);
-                return string.Empty;
+                MessageAlert(result.Message ?? culture.Lang.userDengLuShiBai);
+                return;
             }
 
-            return result.Message ?? culture.Lang.userDengLuShiBai;
+            if (!(result.Obj.Type == EnumAccountType.组织 || result.Obj.Type == EnumAccountType.人员))
+            {
+                MessageAlert(culture.Lang.userZhangHuLeiXingCuoWu);
+                return;
+            }
+
+            WpfHelper.SignIn(result.Obj.Token);
+            ToMain();
+        }
+
+        private void ToMain()
+        {
+            View.Main mainForm = new View.Main();
+            mainForm.Show();
+            DependencyObj.GetParent().Close();
         }
     }
 }

@@ -18,22 +18,6 @@
     /// </summary>
     public interface IRepository : IDependency
     {
-        #region 公共属性
-
-        /// <summary>
-        /// 连接信息
-        /// </summary>
-        ConnectionModel Connection { get; }
-
-        /// <summary>
-        /// 访问会话
-        /// </summary>
-        IApplicationSession Session { get; }
-
-        #endregion
-
-        #region 脚本执行
-
         /// <summary>
         /// 脚本执行
         /// </summary>
@@ -50,15 +34,6 @@
         /// <returns></returns>
         dynamic SqlQueryDynamic(string sql, params DbParameter[] parameters);
 
-        #endregion
-
-        #region 事务操作
-
-        /// <summary>
-        /// 事务仓储参数对象
-        /// </summary>
-        KeyValueModel<string, object>[] TranParams { get; }
-
         /// <summary>
         /// 开始事务
         /// </summary>
@@ -74,7 +49,6 @@
         /// </summary>
         void CommitTran();
 
-
         /// <summary>
         /// 事务操作
         /// </summary>
@@ -82,48 +56,6 @@
         /// <returns></returns>
         bool UseTransaction(Action<IRepository> action);
 
-        /// <summary>
-        /// 事务操作
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="func"></param>
-        /// <returns></returns>
-        T UseTransaction<T>(Func<T> func);
-
-        #endregion
-
-        #region 仓储操作
-
-        /// <summary>
-        /// 获取仓储连接对象
-        /// </summary>
-        /// <returns></returns>
-        object GetClient();
-
-        /// <summary>
-        /// 获取仓储连接对象
-        /// </summary>
-        /// <returns></returns>
-        T GetClient<T>() where T : class;
-
-        /// <summary>
-        /// 设置仓储连接对象
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="t"></param>
-        void SetClient<T>(T t) where T : class;
-
-        #endregion
-
-        #region 会话操作
-
-        /// <summary>
-        /// 设置会话
-        /// </summary>
-        /// <param name="session"></param>
-        void SetSession(IApplicationSession session);
-
-        #endregion
     }
 
     /// <summary>
@@ -131,23 +63,6 @@
     /// </summary>
     public interface IRepository<TEntity, TKey> : IRepository where TEntity : class, IEntity<TKey>
     {
-        /****
-        //仓储实现构造函数 可参考 SqlSugarRepository
-        //public SqlSugarRepository(string connectionStr = null, ConnectionModel connectionModel = null, SqlSugarClient connectionClient = null) { }
-        //不建义分类写public SqlSugarRepository(string connectionStr) { },public SqlSugarRepository(ConnectionModel connectionModel) { },………………
-        //Autofac解析会导致参数不能在具有相同长度1的多个构造函数之间进行选择(未详细测试)
-        //
-        //初始Ioc注册实，设置默认connectionModel(connectionStr/connectionClient 为空 null)
-        //例：
-        //Parameters = new List<KeyValueModel<string, object>>(){
-        //    new KeyValueModel<string, object>("connectionStr",null),
-        //    new KeyValueModel<string, object>("connectionModel", repositoryConnection),
-        //    new KeyValueModel<string, object>("connectionClient", null)
-        //}
-        //Service业务类中，仓储事务操作可传入，Server的主仓储获取到的 KeyValueModel<string, object> ClientParams { get; } [防止事务不能跨连接对象]
-        //
-        **/
-
         #region 添加对象/集合
 
         /// <summary>
@@ -200,12 +115,12 @@
         /// <summary>
         /// 修改操作
         /// </summary>
-        /// <param name="predicate">条件</param>
+        /// <param name="where">条件</param>
         /// <param name="columns">修改例</param>
         /// <param name="setValueExpression">设置值</param>
         /// <param name="entity">对象实体</param>
         /// <returns></returns>
-        int Update(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, object>> columns = null, Expression<Func<TEntity, bool>> setValueExpression = null, TEntity entity = null);
+        int Update(Expression<Func<TEntity, bool>> where = null, Expression<Func<TEntity, object>> columns = null, Expression<Func<TEntity, bool>> setValueExpression = null, TEntity entity = null);
 
         #region 异步(可等待)操作
 
@@ -225,12 +140,12 @@
         /// <summary>
         /// 修改操作-(可等待)
         /// </summary>
-        /// <param name="predicate">条件</param>
+        /// <param name="where">条件</param>
         /// <param name="columns">修改例</param>
         /// <param name="setValueExpression">设置值</param>
         /// <param name="entity">对象实体</param>
         /// <returns></returns>
-        Task<int> UpdateAsync(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, object>> columns = null, Expression<Func<TEntity, bool>> setValueExpression = null, TEntity entity = null);
+        Task<int> UpdateAsync(Expression<Func<TEntity, bool>> where = null, Expression<Func<TEntity, object>> columns = null, Expression<Func<TEntity, bool>> setValueExpression = null, TEntity entity = null);
 
         #endregion
 
@@ -259,13 +174,13 @@
         /// <summary>
         /// 删除集合
         /// </summary>
-        /// <param name="predicate">表达式</param>
-        int Delete(Expression<Func<TEntity, bool>> predicate);
+        /// <param name="where">表达式</param>
+        int Delete(Expression<Func<TEntity, bool>> where);
 
         /// <summary>
         /// 删除集合
         /// </summary>
-        /// <param name="predicate">表达式</param>
+        /// <param name="where">表达式</param>
         int Delete(List<TEntity> list);
 
         #region 异步(可等待)操作
@@ -291,13 +206,13 @@
         /// <summary>
         /// 删除集合
         /// </summary>
-        /// <param name="predicate">表达式</param>
-        Task<int> DeleteAsync(Expression<Func<TEntity, bool>> predicate);
+        /// <param name="where">表达式</param>
+        Task<int> DeleteAsync(Expression<Func<TEntity, bool>> where);
 
         /// <summary>
         /// 删除集合
         /// </summary>
-        /// <param name="predicate">表达式</param>
+        /// <param name="where">表达式</param>
         Task<int> DeleteAsync(List<TEntity> list);
 
 
@@ -312,17 +227,17 @@
         /// </summary>
         /// <param name="key">主键</param>
         /// <returns>TEntity 对象 or null</returns>
-        TEntity Find(TKey key);
+        TEntity Get(TKey key);
 
         /// <summary>
         /// 获取对象
         /// </summary>
         /// <param name="where">表达式</param>
         /// <returns>TEntity 对象 or null</returns>
-        TEntity Find(Expression<Func<TEntity, bool>> where);
+        TEntity Get(Expression<Func<TEntity, bool>> where);
 
         /// <summary>
-        /// 获取集合
+        /// 集合查询
         /// </summary>
         /// <param name="where">表达式</param>
         /// <param name="sorting">排序</param>
@@ -330,7 +245,7 @@
         List<TEntity> Find(int top = 0, Expression<Func<TEntity, bool>> where = null, List<KeyValueModel> sorting = null);
 
         /// <summary>
-        /// 获取集合
+        /// 分页查询
         /// </summary>
         /// <param name="where">表达式</param>
         /// <param name="sorting">排序</param>
@@ -342,12 +257,19 @@
         /// <summary>
         /// 获取对象
         /// </summary>
+        /// <param name="key">主键</param>
+        /// <returns>TEntity 对象 or null</returns>
+        Task<TEntity> GetAsync(TKey key);
+        
+        /// <summary>
+        /// 获取对象
+        /// </summary>
         /// <param name="where">表达式</param>
         /// <returns>TEntity 对象 or null</returns>
-        Task<TEntity> FindAsync(Expression<Func<TEntity, bool>> where);
+        Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> where);
 
         /// <summary>
-        /// 获取集合
+        /// 集合查询
         /// </summary>
         /// <param name="where">表达式</param>
         /// <param name="sorting">排序</param>
@@ -355,7 +277,7 @@
         Task<List<TEntity>> FindAsync(int top = 0, Expression<Func<TEntity, bool>> where = null, List<KeyValueModel> sorting = null);
 
         /// <summary>
-        /// 获取集合
+        /// 分页查询
         /// </summary>
         /// <param name="top">数量</param>
         /// <param name="where">表达式</param>
@@ -367,22 +289,21 @@
 
         #endregion
 
-
         #region 存在判断/函数
 
         /// <summary>
         /// 存在判断
         /// </summary>
-        /// <param name="expression"></param>
+        /// <param name="where"></param>
         /// <returns></returns>
-        bool Any(Expression<Func<TEntity, bool>> expression);
+        bool Any(Expression<Func<TEntity, bool>> where);
 
         /// <summary>
         /// 存在判断
         /// </summary>
-        /// <param name="expression"></param>
+        /// <param name="where"></param>
         /// <returns></returns>
-        Task<bool> AnyAsync(Expression<Func<TEntity, bool>> expression);
+        Task<bool> AnyAsync(Expression<Func<TEntity, bool>> where);
 
         #endregion
 
@@ -394,9 +315,9 @@
         /// <typeparam name="TResult">结果类型</typeparam>
         /// <param name="field">查询字段 与 name 选填一个</param>
         /// <param name="name">字段名称 与 field 选填一个</param>
-        /// <param name="predicate">查询条件</param>
+        /// <param name="where">查询条件</param>
         /// <returns></returns>
-        TResult Max<TResult>(Expression<Func<TEntity, TResult>> field = null, string name = null, Expression<Func<TEntity, bool>> predicate = null);
+        TResult Max<TResult>(Expression<Func<TEntity, TResult>> field = null, string name = null, Expression<Func<TEntity, bool>> where = null);
 
         /// <summary>
         /// 获取最大值
@@ -404,9 +325,9 @@
         /// <typeparam name="TResult">结果类型</typeparam>
         /// <param name="field">查询字段 与 name 选填一个</param>
         /// <param name="name">字段名称 与 field 选填一个</param>
-        /// <param name="predicate">查询条件</param>
+        /// <param name="where">查询条件</param>
         /// <returns></returns>
-        Task<TResult> MaxAsync<TResult>(Expression<Func<TEntity, TResult>> field = null, string name = null, Expression<Func<TEntity, bool>> predicate = null);
+        Task<TResult> MaxAsync<TResult>(Expression<Func<TEntity, TResult>> field = null, string name = null, Expression<Func<TEntity, bool>> where = null);
 
         #endregion
 
@@ -418,9 +339,9 @@
         /// <typeparam name="TResult">结果类型</typeparam>
         /// <param name="field">查询字段 与 name 选填一个</param>
         /// <param name="name">字段名称 与 field 选填一个</param>
-        /// <param name="predicate">查询条件</param>
+        /// <param name="where">查询条件</param>
         /// <returns></returns>
-        TResult Min<TResult>(Expression<Func<TEntity, TResult>> field = null, string name = null, Expression<Func<TEntity, bool>> predicate = null);
+        TResult Min<TResult>(Expression<Func<TEntity, TResult>> field = null, string name = null, Expression<Func<TEntity, bool>> where = null);
 
         /// <summary>
         /// 获取最小值
@@ -428,9 +349,9 @@
         /// <typeparam name="TResult">结果类型</typeparam>
         /// <param name="field">查询字段 与 name 选填一个</param>
         /// <param name="name">字段名称 与 field 选填一个</param>
-        /// <param name="predicate">查询条件</param>
+        /// <param name="where">查询条件</param>
         /// <returns></returns>
-        Task<TResult> MinAsync<TResult>(Expression<Func<TEntity, TResult>> field = null, string name = null, Expression<Func<TEntity, bool>> predicate = null);
+        Task<TResult> MinAsync<TResult>(Expression<Func<TEntity, TResult>> field = null, string name = null, Expression<Func<TEntity, bool>> where = null);
 
         #endregion
 
@@ -440,13 +361,13 @@
         /// 获取总数
         /// </summary>
         /// <returns></returns>
-        int Count(Expression<Func<TEntity, bool>> predicate = null);
+        int Count(Expression<Func<TEntity, bool>> where = null);
 
         /// <summary>
         /// 获取总数
         /// </summary>
         /// <returns></returns>
-        Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate = null);
+        Task<int> CountAsync(Expression<Func<TEntity, bool>> where = null);
 
         #endregion
 
@@ -458,9 +379,9 @@
         /// <typeparam name="TResult">结果类型</typeparam>
         /// <param name="field">查询字段 与 name 选填一个</param>
         /// <param name="name">字段名称 与 field 选填一个</param>
-        /// <param name="predicate">查询条件</param>
+        /// <param name="where">查询条件</param>
         /// <returns></returns>
-        TResult Sum<TResult>(Expression<Func<TEntity, TResult>> field = null, string name = null, Expression<Func<TEntity, bool>> predicate = null);
+        TResult Sum<TResult>(Expression<Func<TEntity, TResult>> field = null, string name = null, Expression<Func<TEntity, bool>> where = null);
 
         /// <summary>
         /// 求合计算
@@ -468,9 +389,9 @@
         /// <typeparam name="TResult">结果类型</typeparam>
         /// <param name="field">查询字段 与 name 选填一个</param>
         /// <param name="name">字段名称 与 field 选填一个</param>
-        /// <param name="predicate">查询条件</param>
+        /// <param name="where">查询条件</param>
         /// <returns></returns>
-        Task<TResult> SumAsync<TResult>(Expression<Func<TEntity, TResult>> field = null, string name = null, Expression<Func<TEntity, bool>> predicate = null);
+        Task<TResult> SumAsync<TResult>(Expression<Func<TEntity, TResult>> field = null, string name = null, Expression<Func<TEntity, bool>> where = null);
 
         #endregion
 
@@ -482,9 +403,9 @@
         /// <typeparam name="TResult">结果类型</typeparam>
         /// <param name="field">查询字段 与 name 选填一个</param>
         /// <param name="name">字段名称 与 field 选填一个</param>
-        /// <param name="predicate">查询条件</param>
+        /// <param name="where">查询条件</param>
         /// <returns></returns>
-        TResult Avg<TResult>(Expression<Func<TEntity, TResult>> field = null, string name = null, Expression<Func<TEntity, bool>> predicate = null);
+        TResult Avg<TResult>(Expression<Func<TEntity, TResult>> field = null, string name = null, Expression<Func<TEntity, bool>> where = null);
 
         /// <summary>
         /// 平均计算
@@ -492,9 +413,9 @@
         /// <typeparam name="TResult">结果类型</typeparam>
         /// <param name="field">查询字段 与 name 选填一个</param>
         /// <param name="name">字段名称 与 field 选填一个</param>
-        /// <param name="predicate">查询条件</param>
+        /// <param name="where">查询条件</param>
         /// <returns></returns>
-        Task<TResult> AvgAsync<TResult>(Expression<Func<TEntity, TResult>> field = null, string name = null, Expression<Func<TEntity, bool>> predicate = null);
+        Task<TResult> AvgAsync<TResult>(Expression<Func<TEntity, TResult>> field = null, string name = null, Expression<Func<TEntity, bool>> where = null);
 
         #endregion
     }

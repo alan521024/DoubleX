@@ -60,6 +60,9 @@
     <Reference Include="UTH.Plug">
       <HintPath>..\..\..\Build\netstandard2.0\UTH.Plug.dll</HintPath>
     </Reference>
+    <Reference Include="UTH.Plug.Notification">
+      <HintPath>..\..\..\Build\netstandard2.0\UTH.Plug.Notification.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine.config">
