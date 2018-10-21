@@ -26,27 +26,25 @@ namespace UTH.Framework
             //DO:开始操作
             HttpRequest request = context.Request;
 
-            //DO:执行Hosting->Begin
-            EngineHelper.Worker.OnBegin(context);
-
             //DO:设置语言环境
             WebHelper.SetCulture(context);
 
+            //DO:执行Hosting->Begin
+            EngineHelper.Worker.OnBegin(context);
+            
             //DO:调用结束
             context.Response.OnCompleted(ResponseCompletedCallback, context);
 
-            //var statusCode = context.Response.StatusCode;
             //DO:继续下一下中间件
-
-            //await Next(context);
-            try
-            {
-                await Next(context);
-            }
-            catch (Exception ex)
-            {
-                ExceptionResult(context, ex);
-            }
+            await Next(context);
+            //try
+            //{
+            //    await Next(context);
+            //}
+            //catch (Exception ex)
+            //{
+            //    ExceptionResult(context, ex);
+            //}
         }
 
         private Task ResponseCompletedCallback(object obj)

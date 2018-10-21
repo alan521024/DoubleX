@@ -33,7 +33,7 @@ namespace UTH.Framework
             }
 
             var exp = ex as DbxException;
-            if (exp.IsNull())
+            if (!exp.IsNull())
             {
                 throw ex;
             }

@@ -45,7 +45,6 @@
                 ResultWrapperFactory.CreateFor(context).Wrap(context, ref result);
                 return;
             }
-
-         }
+        }
     }
 }

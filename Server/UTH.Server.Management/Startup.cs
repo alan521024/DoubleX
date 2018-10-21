@@ -35,18 +35,11 @@ namespace UTH.Server.Management
 
             var builder = services.AddWeb(Configuration, hosting, (option) =>
             {
-                option.IsDynamicApi = true;
                 option.IsAutofacDIService = true;
 
                 option.Filters.Add<WebActionFilter>();
                 option.Filters.Add<WebExceptionFilter>();
                 option.Filters.Add<WebResultFilter>();
-
-                DynamicApiHelper.ApiComponents.ForEach((item) =>
-                {
-                    option.MvcApplicationParts.Add(new AssemblyPart(item.Assemblies));
-                });
-
             });
 
             var interceptors = DomainConfiguration.Options.Interceptors.ToList();
