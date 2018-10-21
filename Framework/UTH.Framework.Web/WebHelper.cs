@@ -438,5 +438,21 @@
             return new HtmlString(build.ToString());
         }
 
+        /// <summary>
+        /// 添加页面错误提示
+        /// ModelState.AddModelError
+        /// </summary>
+        /// <param name="controller"></param>
+        /// <param name="message"></param>
+        /// <param name="key"></param>
+        public static void AddPageError(this ControllerBase controller, string message, string key = null)
+        {
+            if (key.IsEmpty())
+            {
+                key = Guid.NewGuid().ToString();
+            }
+            controller.ModelState.AddModelError(key, message);
+        }
+
     }
 }

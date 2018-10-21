@@ -46,39 +46,35 @@ namespace UTH.Server.Management.Controllers
         {
             input.CheckNull();
 
-            #region  验证码 校验
-
             if (input.ImgCode.IsEmpty() || input.ImgCodeKey.IsEmpty())
             {
-                throw new DbxException(EnumCode.校验失败, Lang.userYanZhengMaCuoWu);
+                this.AddPageError(Lang.userYanZhengMaCuoWu);
+                return View();
             }
 
-            var captcha = new CaptchaInput()
+            if (!captchaService.Verify(new CaptchaInput()
             {
                 Category = EnumCaptchaCategory.Login,
                 Mode = EnumCaptchaMode.Image,
                 Key = input.ImgCodeKey,
                 Code = input.ImgCode
-            };
-
-            if (!captchaService.Verify(captcha))
+            }))
             {
-                throw new DbxException(EnumCode.校验失败, Lang.userYanZhengMaCuoWu);
+                this.AddPageError(Lang.userYanZhengMaCuoWu);
+                return View();
             }
-
-            #endregion
 
             var result = PlugCoreHelper.ApiUrl.User.SignIn.GetResult<SignInOutput, SignInInput>(input);
             if (result.Code == EnumCode.成功)
             {
                 AppHelper.SignIn(result.Obj.Token);
+                return !ReturnUrl.IsEmpty() ? Redirect(ReturnUrl) : Redirect("/");
             }
             else
             {
-                throw new DbxException(result.Code, result.Message);
+                this.AddPageError(result.Message);
+                return View();
             }
-
-            return !ReturnUrl.IsEmpty() ? Redirect(ReturnUrl) : Redirect("/");
         }
 
         #endregion

@@ -38,7 +38,7 @@ namespace UTH.Server.Management.Areas.Basics.Controllers
             var model = new AppDTO() { AppType = EnumAppType.Web };
             if (!id.IsEmpty())
             {
-                var result = $"{PlugCoreHelper.ApiUrl.Basics.AppGetId}?id={id}".GetResult<AppDTO>();
+                var result = PlugCoreHelper.ApiUrl.Basics.AppGetId.GetResult<AppDTO, AppEditInput>(new AppEditInput() { Id = id });
                 if (result.Code == EnumCode.成功)
                 {
                     return View(result.Obj);
