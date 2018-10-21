@@ -22,46 +22,13 @@
         IAppApplication
     {
         IDomainDefaultService<AppVersionEntity> versionService;
-        public AppApplication(IDomainDefaultService<AppEntity> _service, IDomainDefaultService<AppVersionEntity> _versionService, IApplicationSession session, ICachingService caching) :
+        public AppApplication(IAppDomainService _service, IDomainDefaultService<AppVersionEntity> _versionService, IApplicationSession session, ICachingService caching) :
             base(_service, session, caching)
         {
             versionService = _versionService;
         }
 
         #region override
-
-        protected override AppEditInput InsertBefore(AppEditInput input)
-        {
-            var isExist = service.Find(where: x => x.Name == input.Name || x.Code == input.Code);
-            if (!isExist.IsEmpty())
-            {
-                throw new DbxException(EnumCode.提示消息, isExist.Where(x => x.Name == input.Name).Count() > 0 ? Lang.sysMingChengYiCunZai : Lang.sysBianMaYiCunZai);
-            }
-            return input;
-        }
-
-        protected override AppEntity UpdateBefore(AppEditInput input, AppEntity entity)
-        {
-            var isExist = service.Find(where: x => x.Name == input.Name || x.Code == input.Code);
-            if (!isExist.IsEmpty())
-            {
-                if (isExist.Where(x => x.Name == input.Name && x.Id != input.Id).Count() > 0)
-                {
-                    throw new DbxException(EnumCode.提示消息, Lang.sysMingChengYiCunZai);
-                }
-                if (isExist.Where(x => x.Code == input.Code && x.Id != input.Id).Count() > 0)
-                {
-                    throw new DbxException(EnumCode.提示消息, Lang.sysBianMaYiCunZai);
-                }
-            }
-
-            entity.Name = input.Name;
-            entity.AppType = input.AppType;
-            entity.Code = input.Code;
-            entity.Key = input.Key;
-            entity.Secret = input.Secret;
-            return entity;
-        }
 
         protected override Expression<Func<AppEntity, bool>> InputToWhere(QueryInput<AppDTO> input)
         {

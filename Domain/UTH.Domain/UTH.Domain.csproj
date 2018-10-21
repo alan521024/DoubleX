@@ -24,7 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Basics\Service\" />
     <Folder Include="_Entities\Core\" />
     <Folder Include="Core\Repository\" />
   </ItemGroup>

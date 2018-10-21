@@ -672,4 +672,13 @@
   <data name="userWeiZhaoDaoZhangHu" xml:space="preserve">
     <value>未找到账户</value>
   </data>
+  <data name="sysMingChengHuoBianMaYiCunZai" xml:space="preserve">
+    <value>名称或编码已存在</value>
+  </data>
+  <data name="sysXingZengChengGong" xml:space="preserve">
+    <value>新增成功</value>
+  </data>
+  <data name="sysXingZengShiBai" xml:space="preserve">
+    <value>新增失败</value>
+  </data>
 </root>

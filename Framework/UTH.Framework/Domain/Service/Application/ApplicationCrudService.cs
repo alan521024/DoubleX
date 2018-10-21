@@ -75,35 +75,22 @@
 
         public virtual DTO Insert(TInsertInput input)
         {
-            input = InsertBefore(input);
-
             var entity = MapperToEntity(input);
-            var output = default(DTO);
-
             if (service.Insert(entity) > 0)
             {
-                output = MapperToDto(entity);
+                return MapperToDto(entity);
             }
-
-            output = InsertAfter(output);
-
-            return output;
+            throw new DbxException(EnumCode.提示消息, Lang.sysXingZengShiBai);
         }
 
         public virtual DTO Update(TUpdateInput input)
         {
-            var entity = UpdateBefore(input, service.Get(input.Id));
-
-            var output = default(DTO);
-
+            var entity = MapperToEntity(input);
             if (service.Update(entity) > 0)
             {
-                output = MapperToDto(entity);
+                return MapperToDto(entity);
             }
-
-            output = UpdateAfter(output);
-
-            return output;
+            throw new DbxException(EnumCode.提示消息, Lang.sysXiuGaiShiBai);
         }
 
         public virtual int Delete(TDeleteInput input)

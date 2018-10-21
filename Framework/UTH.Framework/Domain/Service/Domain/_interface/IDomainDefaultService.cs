@@ -65,16 +65,6 @@
         /// <returns></returns>
         int Update(List<TEntity> list);
 
-        /// <summary>
-        /// 修改操作
-        /// </summary>
-        /// <param name="predicate">条件</param>
-        /// <param name="columns">修改例</param>
-        /// <param name="setValueExpression">设置值</param>
-        /// <param name="entity">对象实体</param>
-        /// <returns></returns>
-        int Update(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, object>> columns = null, Expression<Func<TEntity, bool>> setValueExpression = null, TEntity entity = null);
-
         #region 异步(可等待)操作
 
         /// <summary>
@@ -89,16 +79,6 @@
         /// <param name="list"></param>
         /// <returns></returns>
         Task<int> UpdateAsync(List<TEntity> list);
-
-        /// <summary>
-        /// 修改操作-(可等待)
-        /// </summary>
-        /// <param name="predicate">条件</param>
-        /// <param name="columns">修改例</param>
-        /// <param name="setValueExpression">设置值</param>
-        /// <param name="entity">对象实体</param>
-        /// <returns></returns>
-        Task<int> UpdateAsync(Expression<Func<TEntity, bool>> predicate = null, Expression<Func<TEntity, object>> columns = null, Expression<Func<TEntity, bool>> setValueExpression = null, TEntity entity = null);
 
         #endregion
 
@@ -123,12 +103,6 @@
         /// </summary>
         /// <param name="entity">对象</param>
         int Delete(TEntity entity);
-
-        /// <summary>
-        /// 删除集合
-        /// </summary>
-        /// <param name="predicate">表达式</param>
-        int Delete(Expression<Func<TEntity, bool>> predicate);
 
         /// <summary>
         /// 删除集合
@@ -160,14 +134,7 @@
         /// 删除集合
         /// </summary>
         /// <param name="predicate">表达式</param>
-        Task<int> DeleteAsync(Expression<Func<TEntity, bool>> predicate);
-
-        /// <summary>
-        /// 删除集合
-        /// </summary>
-        /// <param name="predicate">表达式</param>
         Task<int> DeleteAsync(List<TEntity> list);
-
 
         #endregion
 

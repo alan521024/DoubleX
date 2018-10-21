@@ -20,7 +20,7 @@
         where TEntity : class, IEntity
     {
 
-        public DomainDefaultService(IRepository<TEntity> repository, IApplicationSession session, ICachingService caching) : 
+        public DomainDefaultService(IRepository<TEntity> repository, IApplicationSession session, ICachingService caching) :
             base(repository, session, caching)
         {
 
@@ -53,7 +53,11 @@
         /// <param name="entity">对象</param>
         public virtual int Insert(TEntity entity)
         {
-            return Repository.Insert(entity);
+            var items = new List<TEntity>() { entity };
+            InsertBefore(items);
+            int rows = Repository.Insert(items.FirstOrDefault());
+            InsertAfter(items);
+            return rows;
         }
 
         /// <summary>
@@ -63,7 +67,10 @@
         /// <returns></returns>
         public virtual int Insert(List<TEntity> list)
         {
-            return Repository.Insert(list);
+            InsertBefore(list);
+            int rows = Repository.Insert(list);
+            InsertAfter(list);
+            return rows;
         }
 
         #region 异步(可等待)操作
@@ -74,7 +81,11 @@
         /// <param name="entity">对象</param>
         public virtual async Task<int> InsertAsync(TEntity entity)
         {
-            return await Repository.InsertAsync(entity);
+            var items = new List<TEntity>() { entity };
+            InsertBefore(items);
+            var result = await Repository.InsertAsync(items.FirstOrDefault());
+            InsertAfter(items);
+            return result;
         }
 
         /// <summary>
@@ -84,7 +95,10 @@
         /// <returns></returns>
         public virtual async Task<int> InsertAsync(List<TEntity> list)
         {
-            return await Repository.InsertAsync(list);
+            InsertBefore(list);
+            var result = await Repository.InsertAsync(list);
+            InsertAfter(list);
+            return result;
         }
 
         #endregion
@@ -99,7 +113,11 @@
         /// <param name="entity">对象</param>
         public virtual int Update(TEntity entity)
         {
-            return Repository.Update(entity);
+            var items = new List<TEntity>() { entity };
+            UpdateBefore(items);
+            int rows = Repository.Update(items.FirstOrDefault());
+            UpdateAfter(items);
+            return rows;
         }
 
         /// <summary>
@@ -109,20 +127,10 @@
         /// <returns></returns>
         public virtual int Update(List<TEntity> list)
         {
-            return Repository.Update(list);
-        }
-
-        /// <summary>
-        /// 修改操作
-        /// </summary>
-        /// <param name="where">条件</param>
-        /// <param name="columns">修改例</param>
-        /// <param name="setValueExpression">设置值</param>
-        /// <param name="entity">对象实体</param>
-        /// <returns></returns>
-        public virtual int Update(Expression<Func<TEntity, bool>> where = null, Expression<Func<TEntity, object>> columns = null, Expression<Func<TEntity, bool>> setValueExpression = null, TEntity entity = null)
-        {
-            return Repository.Update(where: where, columns: columns, setValueExpression: setValueExpression, entity: entity);
+            UpdateBefore(list);
+            int rows = Repository.Update(list);
+            UpdateAfter(list);
+            return rows;
         }
 
         #region 异步(可等待)操作
@@ -133,7 +141,11 @@
         /// <param name="entity">对象</param>
         public virtual async Task<int> UpdateAsync(TEntity entity)
         {
-            return await Repository.UpdateAsync(entity);
+            var items = new List<TEntity>() { entity };
+            UpdateBefore(items);
+            var result = await Repository.UpdateAsync(items.FirstOrDefault());
+            UpdateAfter(items);
+            return result;
         }
 
         /// <summary>
@@ -143,22 +155,12 @@
         /// <returns></returns>
         public virtual async Task<int> UpdateAsync(List<TEntity> list)
         {
-            return await Repository.UpdateAsync(list);
+            UpdateBefore(list);
+            var result = await Repository.UpdateAsync(list);
+            UpdateAfter(list);
+            return result;
         }
-
-        /// <summary>
-        /// 修改操作-(可等待)
-        /// </summary>
-        /// <param name="where">条件</param>
-        /// <param name="columns">修改例</param>
-        /// <param name="setValueExpression">设置值</param>
-        /// <param name="entity">对象实体</param>
-        /// <returns></returns>
-        public virtual async Task<int> UpdateAsync(Expression<Func<TEntity, bool>> where = null, Expression<Func<TEntity, object>> columns = null, Expression<Func<TEntity, bool>> setValueExpression = null, TEntity entity = null)
-        {
-            return await Repository.UpdateAsync(where: where, columns: columns, setValueExpression: setValueExpression, entity: entity);
-        }
-
+        
         #endregion
 
         #endregion
@@ -171,7 +173,11 @@
         /// <param name="id">Id</param>
         public virtual int Delete(Guid id)
         {
-            return Repository.Delete(id);
+            var ids = new List<Guid>() { id };
+            DeleteBefore(ids);
+            var rows = Repository.Delete(ids.FirstOrDefault());
+            DeleteAfter(ids);
+            return rows;
         }
 
         /// <summary>
@@ -180,7 +186,10 @@
         /// <param name="ids">Ids</param>
         public virtual int Delete(List<Guid> ids)
         {
-            return Repository.Delete(ids);
+            DeleteBefore(ids);
+            var rows = Repository.Delete(ids);
+            DeleteAfter(ids);
+            return rows;
         }
 
         /// <summary>
@@ -189,16 +198,11 @@
         /// <param name="entity">对象</param>
         public virtual int Delete(TEntity entity)
         {
-            return Repository.Delete(entity);
-        }
-
-        /// <summary>
-        /// 删除集合
-        /// </summary>
-        /// <param name="where">表达式</param>
-        public virtual int Delete(Expression<Func<TEntity, bool>> where)
-        {
-            return Repository.Delete(where);
+            var ids = new List<Guid>() { entity.Id };
+            DeleteBefore(ids);
+            var rows = Repository.Delete(ids.FirstOrDefault());
+            DeleteAfter(ids);
+            return rows;
         }
 
         /// <summary>
@@ -207,7 +211,11 @@
         /// <param name="where">表达式</param>
         public virtual int Delete(List<TEntity> list)
         {
-            return Repository.Delete(list);
+            var ids = list.Select(x => x.Id).ToList();
+            DeleteBefore(ids);
+            var rows = Repository.Delete(ids);
+            DeleteAfter(ids);
+            return rows;
         }
 
         #region 异步(可等待)操作
@@ -218,7 +226,11 @@
         /// <param name="id">Id</param>
         public virtual async Task<int> DeleteAsync(Guid id)
         {
-            return await Repository.DeleteAsync(id);
+            var ids = new List<Guid>() { id };
+            DeleteBefore(ids);
+            var result = await Repository.DeleteAsync(ids.FirstOrDefault());
+            DeleteAfter(ids);
+            return result;
         }
 
         /// <summary>
@@ -227,7 +239,10 @@
         /// <param name="ids">Ids</param>
         public virtual async Task<int> DeleteAsync(List<Guid> ids)
         {
-            return await Repository.DeleteAsync(ids);
+            DeleteBefore(ids);
+            var result = await Repository.DeleteAsync(ids);
+            DeleteAfter(ids);
+            return result;
         }
 
         /// <summary>
@@ -236,25 +251,24 @@
         /// <param name="entity">对象</param>
         public virtual async Task<int> DeleteAsync(TEntity entity)
         {
-            return await Repository.DeleteAsync(entity);
+            var ids = new List<Guid>() { entity.Id };
+            DeleteBefore(ids);
+            var result = await Repository.DeleteAsync(ids.FirstOrDefault());
+            DeleteAfter(ids);
+            return result;
         }
-
-        /// <summary>
-        /// 删除集合
-        /// </summary>
-        /// <param name="where">表达式</param>
-        public virtual async Task<int> DeleteAsync(Expression<Func<TEntity, bool>> where)
-        {
-            return await Repository.DeleteAsync(where);
-        }
-
+        
         /// <summary>
         /// 删除集合
         /// </summary>
         /// <param name="where">表达式</param>
         public virtual async Task<int> DeleteAsync(List<TEntity> list)
         {
-            return await Repository.DeleteAsync(list);
+            var ids = list.Select(x => x.Id).ToList();
+            DeleteBefore(ids);
+            var result = await Repository.DeleteAsync(ids);
+            DeleteAfter(ids);
+            return result;
         }
 
 
@@ -531,6 +545,22 @@
         {
             return await Repository.AvgAsync(field: field, name: name, where: where);
         }
+
+        #endregion
+
+        #region 增改删回调
+
+        protected virtual void InsertBefore(List<TEntity> list) { }
+
+        protected virtual void InsertAfter(List<TEntity> list) { }
+
+        protected virtual void UpdateBefore(List<TEntity> list) { }
+
+        protected virtual void UpdateAfter(List<TEntity> list) { }
+
+        protected virtual void DeleteBefore(List<Guid> ids) { }
+
+        protected virtual void DeleteAfter(List<Guid> ids) { }
 
         #endregion
     }

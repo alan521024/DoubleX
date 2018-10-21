@@ -47,7 +47,7 @@ namespace UTH.Infrastructure.Resource.Culture {
         }
         
         /// <summary>
-        ///   使用此强类型资源类，为所有资源查找
+        ///   重写当前线程的 CurrentUICulture 属性
         ///   重写当前线程的 CurrentUICulture 属性。
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
@@ -718,6 +718,15 @@ namespace UTH.Infrastructure.Resource.Culture {
         }
         
         /// <summary>
+        ///   查找类似 名称或编码已存在 的本地化字符串。
+        /// </summary>
+        public static string sysMingChengHuoBianMaYiCunZai {
+            get {
+                return ResourceManager.GetString("sysMingChengHuoBianMaYiCunZai", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 名称已存在 的本地化字符串。
         /// </summary>
         public static string sysMingChengYiCunZai {
@@ -1011,6 +1020,24 @@ namespace UTH.Infrastructure.Resource.Culture {
         public static string sysXiaYiBu {
             get {
                 return ResourceManager.GetString("sysXiaYiBu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 新增成功 的本地化字符串。
+        /// </summary>
+        public static string sysXingZengChengGong {
+            get {
+                return ResourceManager.GetString("sysXingZengChengGong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 新增失败 的本地化字符串。
+        /// </summary>
+        public static string sysXingZengShiBai {
+            get {
+                return ResourceManager.GetString("sysXingZengShiBai", resourceCulture);
             }
         }
         
