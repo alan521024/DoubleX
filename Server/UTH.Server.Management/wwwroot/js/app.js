@@ -190,7 +190,7 @@
                     if (that.util.isFunction(error)) {
                         error(res);
                     } else {
-                        alert(res.message);
+                        app.message(res.message);
                     }
                 }
             };
