@@ -27,20 +27,6 @@
 
         }
 
-        #region override
-
-        protected override MeetingProfileEntity UpdateBefore(MeetingProfileEditInput input, MeetingProfileEntity entity)
-        {
-            entity.SourceLang = input.SourceLang;
-            entity.TargetLangs = input.TargetLangs;
-            entity.Speed = input.Speed;
-            entity.FontSize = input.FontSize;
-            entity.LastDt = DateTime.Now;
-            return base.UpdateBefore(input, entity);
-        }
-
-        #endregion
-
         /// <summary>
         /// 获取当前登录账号(Session)配置,如不存在，创建
         /// </summary>

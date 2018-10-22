@@ -28,21 +28,6 @@
 
         #region override
 
-        protected override MeetingEditInput InsertBefore(MeetingEditInput input)
-        {
-            var maxNum = service.Max<string>(field: x => x.Num);
-            if (maxNum.IsEmpty())
-            {
-                input.Num = "100000";
-            }
-            else
-            {
-                input.Num = StringHelper.Get(IntHelper.Get(maxNum) + 1);
-            }
-
-            return base.InsertBefore(input);
-        }
-
         #endregion
 
         /// <summary>

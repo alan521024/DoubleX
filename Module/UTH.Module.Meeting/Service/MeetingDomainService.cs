@@ -19,10 +19,30 @@
     /// </summary>
     public class MeetingDomainService : DomainDefaultService<IMeetingRepository, MeetingEntity>, IMeetingDomainService
     {
-        public MeetingDomainService(IMeetingRepository repository, IApplicationSession session, ICachingService caching) : 
+        public MeetingDomainService(IMeetingRepository repository, IApplicationSession session, ICachingService caching) :
             base(repository, session, caching)
         {
         }
+
+        #region override
+
+        protected override void InsertBefore(List<MeetingEntity> list)
+        {
+            var queryNum = Max<string>(field: x => x.Num);
+            if (queryNum.IsEmpty())
+            {
+                queryNum = "100000";
+            }
+            var currentNum = IntHelper.Get(queryNum);
+            list.ForEach(item =>
+            {
+                currentNum = currentNum + 1;
+                item.Num = StringHelper.Get(currentNum);
+            });
+            base.InsertBefore(list);
+        }
+
+        #endregion
 
         /// <summary>
         /// 查找同步记录

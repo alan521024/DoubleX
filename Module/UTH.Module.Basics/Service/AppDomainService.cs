@@ -34,7 +34,7 @@
             var names = list.Select(x => x.Name).ToList();
             var codes = list.Select(x => x.Code).ToList();
 
-            var isExist = Repository.Any(x => names.Contains(x.Name) || codes.Contains(x.Code));
+            var isExist = Any(x => names.Contains(x.Name) || codes.Contains(x.Code));
             if (isExist)
             {
                 throw new DbxException(EnumCode.提示消息, Lang.sysMingChengHuoBianMaYiCunZai);
@@ -50,8 +50,8 @@
             var names = list.Select(x => x.Name).ToList();
             var codes = list.Select(x => x.Code).ToList();
 
-            var entitys = Repository.Find(where: x => ids.Contains(x.Id));
-            var exists = Repository.Find(where: x => names.Contains(x.Name) || codes.Contains(x.Code));
+            var entitys = Find(where: x => ids.Contains(x.Id));
+            var exists = Find(where: x => names.Contains(x.Name) || codes.Contains(x.Code));
 
             foreach (var entity in entitys)
             {

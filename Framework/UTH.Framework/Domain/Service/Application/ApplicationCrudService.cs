@@ -95,8 +95,6 @@
 
         public virtual int Delete(TDeleteInput input)
         {
-            input = DeleteBefore(input);
-
             if (!input.Ids.IsEmpty())
             {
                 return service.Delete(input.Ids);
@@ -141,17 +139,6 @@
         {
             return input.Sorting;
         }
-
-        protected virtual TInsertInput InsertBefore(TInsertInput input) { return input; }
-
-        protected virtual DTO InsertAfter(DTO output) { return output; }
-
-
-        protected virtual TEntity UpdateBefore(TUpdateInput input, TEntity entity) { return entity; }
-
-        protected virtual DTO UpdateAfter(DTO output) { return output; }
-
-        protected virtual TDeleteInput DeleteBefore(TDeleteInput input) { return input; }
 
         protected virtual DTO MapperToDto<T>(T source)
         {

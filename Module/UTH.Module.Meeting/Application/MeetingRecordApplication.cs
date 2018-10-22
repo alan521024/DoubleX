@@ -23,22 +23,13 @@
     {
         IDomainDefaultService<MeetingTranslationEntity> translateService;
 
-        public MeetingRecordApplication(IDomainDefaultService<MeetingRecordEntity> _service, IDomainDefaultService<MeetingTranslationEntity> _translateService, IApplicationSession session, ICachingService caching) :
+        public MeetingRecordApplication(IMeetingRecordDomainService _service, IDomainDefaultService<MeetingTranslationEntity> _translateService, IApplicationSession session, ICachingService caching) :
             base(_service, session, caching)
         {
             translateService = _translateService;
         }
 
         #region override
-
-        protected override MeetingRecordEditInput InsertBefore(MeetingRecordEditInput input)
-        {
-            if (input.LocalId.IsEmpty())
-            {
-                input.LocalId = Guid.NewGuid();
-            }
-            return base.InsertBefore(input);
-        }
 
         #endregion
 
