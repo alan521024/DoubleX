@@ -190,7 +190,7 @@
                     if (that.util.isFunction(error)) {
                         error(res);
                     } else {
-                        app.message(res.message);
+                        app.tip(res.message);
                     }
                 }
             };
@@ -211,6 +211,15 @@
             content: [url]
         }, opt);
         layer.open(setting);
+    };
+
+    app.tip = function (msg, callback) {
+        layer.alert(msg || "", { title: __language.sysTiShi }, function (index) {
+            if (callback) {
+                callback();
+            }
+            layer.close(layer.index);
+        });
     };
 
     app.message = function (msg, callback) {

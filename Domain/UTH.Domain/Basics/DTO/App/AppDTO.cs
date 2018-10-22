@@ -15,7 +15,7 @@
     /// <summary>
     /// 应用程序基本信息(DTO)
     /// </summary>
-    public class AppDTO: IKeys, IOutput
+    public class AppDTO : IKeys, IOutput
     {
         /// <summary>
         /// Id

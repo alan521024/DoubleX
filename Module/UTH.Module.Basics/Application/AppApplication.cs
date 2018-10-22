@@ -18,7 +18,7 @@
     /// 应用程序应用服务
     /// </summary>
     public class AppApplication :
-        ApplicationCrudService<AppEntity, AppDTO, AppEditInput>,
+        ApplicationCrudService<IAppDomainService, AppEntity, AppDTO, AppEditInput, AppQuery>,
         IAppApplication
     {
         IDomainDefaultService<AppVersionEntity> versionService;
@@ -30,17 +30,13 @@
 
         #region override
 
-        protected override Expression<Func<AppEntity, bool>> InputToWhere(QueryInput<AppDTO> input)
+        protected override Expression<Func<AppEntity, bool>> InputToWhere(QueryInput<AppQuery> input)
         {
             if (!input.IsNull() && !input.Query.IsNull())
             {
                 var exp = ExpressHelper.Get<AppEntity>();
 
-                var key = "";//input.Query.GetString("key");
-                var appType = EnumsHelper.Get<EnumAppType>(input.Query.AppType);
-
-                exp = exp.AndIF(!key.IsEmpty(), x => (x.Name).Contains(key));
-                exp = exp.AndIF(appType != EnumAppType.Default, x => x.AppType == appType);
+                exp = exp.AndIF(!input.Query.Search.IsEmpty(), x => (x.Name + x.Code).Contains(input.Query.Search));
 
                 return exp.ToExpression();
             }

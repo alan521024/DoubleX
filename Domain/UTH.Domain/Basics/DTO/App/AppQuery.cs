@@ -6,17 +6,20 @@
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using System.Security.Claims;
+    using System.ComponentModel;
+    using FluentValidation;
     using UTH.Infrastructure.Resource.Culture;
     using UTH.Infrastructure.Utility;
     using UTH.Framework;
 
     /// <summary>
-    /// 应用程序应用服务接口
+    /// 应用程序查询信息
     /// </summary>
-    public interface IAppApplication :
-        IApplicationCrudService<AppDTO, AppEditInput, AppQuery>,
-        IApplicationService
+    public class AppQuery : AppDTO, IKeys
     {
+        /// <summary>
+        /// 搜索关键字
+        /// </summary>
+        public string Search { get; set; }
     }
 }

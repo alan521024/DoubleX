@@ -18,7 +18,7 @@
     /// 会议记录信息业务
     /// </summary>
     public class MeetingRecordApplication :
-        ApplicationCrudService<MeetingRecordEntity, MeetingRecordDTO, MeetingRecordEditInput>,
+        ApplicationCrudService<IMeetingRecordDomainService,MeetingRecordEntity, MeetingRecordDTO, MeetingRecordEditInput>,
         IMeetingRecordApplication
     {
         IDomainDefaultService<MeetingTranslationEntity> translateService;

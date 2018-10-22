@@ -61,12 +61,14 @@
             EngineHelper.RegisterType<IMeetingApplication, MeetingApplication>(DomainConfiguration.Options.IocServiceOption);
 
             //record
+            EngineHelper.RegisterType<IMeetingRecordDomainService, MeetingRecordDomainService>(DomainConfiguration.Options.IocServiceOption);
             EngineHelper.RegisterType<IMeetingRecordApplication, MeetingRecordApplication>(DomainConfiguration.Options.IocServiceOption);
 
             //translation
             EngineHelper.RegisterType<IMeetingTranslationApplication, MeetingTranslationApplication>(DomainConfiguration.Options.IocServiceOption);
 
             //Profile
+            EngineHelper.RegisterType<IMeetingProfileDomainService, MeetingProfileDomainService>(DomainConfiguration.Options.IocServiceOption);
             EngineHelper.RegisterType<IMeetingProfileApplication, MeetingProfileApplication>(DomainConfiguration.Options.IocServiceOption);
         }
 

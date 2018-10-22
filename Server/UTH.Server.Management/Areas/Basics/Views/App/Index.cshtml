@@ -19,7 +19,7 @@
             </div>
             <div class="right">
                 <div class="dxm-input-search layui-inline">
-                    <input id="txt-key" type="text" placeholder="@(Lang.sysQingShuRuGuanJianZi)" autocomplete="off" class="layui-input">
+                    <input id="txt-search" type="text" placeholder="@(Lang.sysQingShuRuGuanJianZi)" autocomplete="off" class="layui-input">
                     <a><i class="iconfont icon-tool15"></i></a>
                 </div>
                 <div class="layui-inline">
@@ -117,7 +117,7 @@
                     return {
                         page: page,
                         size: size,
-                        query: { key: ($("#txt-key").val() || "") },
+                        query: { search: ($("#txt-search").val() || "") },
                         sorting: [{key:"code",value:"asc"}]
                     };
                 }

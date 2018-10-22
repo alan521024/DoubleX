@@ -18,10 +18,10 @@
     /// 会议账号配置信息业务
     /// </summary>
     public class MeetingProfileApplication :
-        ApplicationCrudService<MeetingProfileEntity, MeetingProfileDTO, MeetingProfileEditInput>,
+        ApplicationCrudService<IMeetingProfileDomainService, MeetingProfileEntity, MeetingProfileDTO, MeetingProfileEditInput>,
         IMeetingProfileApplication
     {
-        public MeetingProfileApplication(IDomainDefaultService<MeetingProfileEntity> _service, IApplicationSession session, ICachingService caching) :
+        public MeetingProfileApplication(IMeetingProfileDomainService _service, IApplicationSession session, ICachingService caching) :
             base(_service, session, caching)
         {
 
