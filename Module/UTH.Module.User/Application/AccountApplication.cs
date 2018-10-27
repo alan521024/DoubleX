@@ -123,7 +123,7 @@
 
             account.Password = HashSecurityHelper.GetSecurity(input.Password);
 
-            return service.Update(account) > 0;
+            return !service.Update(account).IsNull();
         }
 
         /// <summary>
@@ -148,7 +148,7 @@
 
             account.Password = HashSecurityHelper.GetSecurity(input.NewPassword);
 
-            return service.Update(account) > 0;
+            return !service.Update(account).IsNull();
         }
 
 

@@ -18,12 +18,30 @@
     /// 会议信息应用服务
     /// </summary>
     public class AppVersionApplication :
-        ApplicationCrudService<AppVersionEntity, AppVersionDTO, AppVersionEditInput>,
+        ApplicationCrudService<IAppVersionDomainService, AppVersionEntity, AppVersionDTO, AppVersionEditInput>,
         IAppVersionApplication
     {
-        public AppVersionApplication(IDomainDefaultService<AppVersionEntity> _service, IApplicationSession session, ICachingService caching) : 
+        public AppVersionApplication(IAppVersionDomainService _service, IApplicationSession session, ICachingService caching) :
             base(_service, session, caching)
         {
         }
+
+        #region override
+
+        protected override Expression<Func<AppVersionEntity, bool>> InputToWhere(QueryInput<AppVersionDTO> input)
+        {
+
+            if (!input.IsNull() && !input.Query.IsNull())
+            {
+                var exp = ExpressHelper.Get<AppVersionEntity>();
+
+                exp = exp.AndIF(!input.Query.AppId.IsEmpty(), x => x.AppId == input.Query.AppId);
+
+                return exp.ToExpression();
+            }
+            return base.InputToWhere(input);
+        }
+
+        #endregion
     }
 }

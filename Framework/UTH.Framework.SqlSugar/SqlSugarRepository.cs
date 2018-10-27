@@ -877,7 +877,7 @@
         /// <returns>TEntity 对象 or null</returns>
         public virtual TEntity Get(TKey key)
         {
-            var entity = GetQueryable().InSingle(key);
+            var entity = GetQueryable().Where(x => x.Id.Equals(key)).First();
             return entity;
         }
 

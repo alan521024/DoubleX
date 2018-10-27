@@ -48,18 +48,6 @@ namespace UTH.Meeting.Win.View
             viewModel.CheckNull();
         }
 
-        private void btnSave_Click(object sender, RoutedEventArgs e)
-        {
-            var mainWin = WpfHelper.GetParent<UTH.Meeting.Win.View.Main>(this);
-            var msg = viewModel.Save(mainWin.IsNull() ? Guid.Empty : mainWin.MeetingId);
-            if (!msg.IsEmpty())
-            {
-                WpfHelper.Message(msg);
-                return;
-            }
-            WpfHelper.Message(culture.Lang.sysCaoZuoChengGong);
-        }
-
         private void nuFontSize_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double?> e)
         {
             viewModel?.ChangeMainUIFontSize();

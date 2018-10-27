@@ -18,7 +18,7 @@
     /// 会议记录信息业务
     /// </summary>
     public class MeetingRecordApplication :
-        ApplicationCrudService<IMeetingRecordDomainService,MeetingRecordEntity, MeetingRecordDTO, MeetingRecordEditInput>,
+        ApplicationCrudService<IMeetingRecordDomainService, MeetingRecordEntity, MeetingRecordDTO, MeetingRecordEditInput>,
         IMeetingRecordApplication
     {
         IDomainDefaultService<MeetingTranslationEntity> translateService;
@@ -29,9 +29,57 @@
             translateService = _translateService;
         }
 
-        #region override
+        /// <summary>
+        /// 创建会议记录
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns>返回同步数所有(会议记录+翻译列表)</returns>
+        public List<MeetingSyncModel> Create(MeetingSyncModel input)
+        {
+            List<MeetingSyncModel> results = new List<MeetingSyncModel>();
 
-        #endregion
+            var recEntity = MapperToEntity(input);
+            if (service.Insert(recEntity).IsNull())
+            {
+                return results;
+            }
+            var recModel = EngineHelper.Map<MeetingSyncModel>(recEntity);
+            recModel.SyncType = 1;
+            recModel.RefreshDt = DateTime.Now;
+            results.Add(recModel);
+
+
+            var translations = PlugCoreHelper.TranslationGet(input.Content, input.Langue, input.LangueTrs);
+            if (translations.IsEmpty())
+            {
+                return results;
+            }
+
+            var trsEntitys = new List<MeetingTranslationEntity>();
+            translations.ForEach(item =>
+            {
+                trsEntitys.Add(new MeetingTranslationEntity()
+                {
+                    MeetingId = recEntity.MeetingId,
+                    RecordId = recEntity.Id,
+                    Langue = item.TgtLang,
+                    Content = item.TgtText,
+                    Sort = 0
+                });
+            });
+            if (!translateService.Insert(trsEntitys).IsEmpty())
+            {
+                var trsModels = EngineHelper.Map<List<MeetingSyncModel>>(trsEntitys);
+                trsModels.ForEach(item =>
+                {
+                    item.SyncType = 2;
+                    item.RefreshDt = DateTime.Now;
+                });
+                results.AddRange(trsModels);
+            }
+
+            return results;
+        }
 
         /// <summary>
         /// 添加会议记录(含翻译记录)
@@ -68,14 +116,12 @@
             });
 
             var result = translateService.InsertAsync(inputs).Result;
-            if (result > 0)
+            if (!result.IsNull())
             {
                 output.Translations = EngineHelper.Map<List<MeetingTranslationDTO>>(inputs);
             }
 
             return output;
         }
-
-
     }
 }

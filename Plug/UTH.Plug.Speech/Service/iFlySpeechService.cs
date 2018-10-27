@@ -23,12 +23,6 @@ namespace UTH.Plug.Speech
             options = opt;
         }
 
-        #region 公共属性
-
-        #endregion
-
-        #region 私有变量
-
         /// <summary>
         /// 配置信息
         /// </summary>
@@ -43,12 +37,9 @@ namespace UTH.Plug.Speech
         /// 数据对列
         /// </summary>
         volatile ConcurrentQueue<SpeechData> _queue = new ConcurrentQueue<SpeechData>();
-
         string param, session, sentence;
         AudioStatus audio;
         DateTime preResultDt = DateTime.MinValue;
-
-        #endregion
 
         /// <summary>
         /// 配置设置
@@ -66,8 +57,16 @@ namespace UTH.Plug.Speech
         {
             ClearWork();
 
-            param = string.Format("sub=iat,language={0},domain=iat,accent={1},sample_rate={2},asr_denoise=1,aue=speex-web,result_type=plain,vad_enable=0,vad_eos={3},result_encoding={4}",
-                options.Language, options.Accent, options.Rate, options.Speed, options.Encode);
+            //language zh_cn / en_us
+            //ent=sms-en16k或者ent=sms-en;
+
+            var extStr = "";
+            if (options.Language.ToLower() == "en_us")
+            {
+                extStr = "ent=sms-en,";
+            }
+            param = string.Format("{0}sub=iat,language={1},domain=iat,accent={2},sample_rate={3},asr_denoise=1,aue=speex-web,result_type=plain,vad_enable=0,vad_eos={4},result_encoding={5}",
+                extStr, options.Language, options.Accent, options.Rate, options.Speed, options.Encode);
 
             audio = AudioStatus.ISR_AUDIO_SAMPLE_FIRST;
 
@@ -99,6 +98,15 @@ namespace UTH.Plug.Speech
             {
                 _queue.Enqueue(data);
             }
+        }
+
+        /// <summary>
+        /// 重新开始
+        /// </summary>
+        public void Restart()
+        {
+            Stop();
+            Start();
         }
 
 
@@ -137,10 +145,15 @@ namespace UTH.Plug.Speech
                 }
                 catch (Exception ex)
                 {
-                    throw ex;
                 }
             }
+            _queue = new ConcurrentQueue<SpeechData>();
+            session = null;
+            sentence = string.Empty;
+            preResultDt = DateTime.MinValue;
+            audio = AudioStatus.ISR_AUDIO_SAMPLE_INIT;
         }
+
 
         /// <summary>
         /// 写入语音数据进行识别
@@ -196,12 +209,11 @@ namespace UTH.Plug.Speech
             {
                 sentence += result;
                 preResultDt = DateTime.Now;
-
                 options.OnResult?.Invoke(key, result, recog == RecogStatus.ISR_REC_STATUS_SPEECH_COMPLETE);
             }
 
             //内容断句
-            if (!sentence.IsEmpty() && (recog == RecogStatus.ISR_REC_STATUS_SPEECH_COMPLETE || DateTime.Now > preResultDt.AddMilliseconds(300)))
+            if (!sentence.IsEmpty() && (recog == RecogStatus.ISR_REC_STATUS_SPEECH_COMPLETE || DateTime.Now > preResultDt.AddMilliseconds(options.SentenceMilliseconds)))
             {
                 options.OnSentence?.Invoke(key, sentence);
                 sentence = "";
@@ -221,7 +233,6 @@ namespace UTH.Plug.Speech
 
             return ret;
         }
-
 
         /// <summary>
         /// 指针转字符串

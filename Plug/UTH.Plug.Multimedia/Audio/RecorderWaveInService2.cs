@@ -136,7 +136,7 @@ namespace UTH.Plug.Multimedia
             waveIn.DataAvailable += (sender, e) =>
             {
                 options.DataEvent?.Invoke(sender, e);
-                options.VolumeEvent?.Invoke(GetVolumeValue(sender, e));
+                options.VolumeEvent?.Invoke(sender, e, GetVolumeValue(sender, e));
                 wavFile?.Write(e.Buffer, 0, e.BytesRecorded);
             };
 

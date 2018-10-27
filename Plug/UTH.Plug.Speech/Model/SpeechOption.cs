@@ -47,6 +47,11 @@ namespace UTH.Plug.Speech
         public int BufferMilliseconds { get; set; } = 100;
 
         /// <summary>
+        /// 停止数据后时间断句。推荐值为1500 ms
+        /// </summary>
+        public int SentenceMilliseconds { get; set; } = 1500;
+
+        /// <summary>
         /// 语言
         /// </summary>
         public string Language { get; set; } = "zh_cn";

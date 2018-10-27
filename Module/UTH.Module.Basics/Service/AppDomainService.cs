@@ -26,10 +26,10 @@
 
         #region override
 
-        protected override void InsertBefore(List<AppEntity> list)
+        protected override List<AppEntity> InsertBefore(List<AppEntity> list)
         {
             if (list.IsEmpty())
-                return;
+                return list;
 
             var names = list.Select(x => x.Name).ToList();
             var codes = list.Select(x => x.Code).ToList();
@@ -39,12 +39,13 @@
             {
                 throw new DbxException(EnumCode.提示消息, Lang.sysMingChengHuoBianMaYiCunZai);
             }
+            return list;
         }
 
-        protected override void UpdateBefore(List<AppEntity> list)
+        protected override List<AppEntity> UpdateBefore(List<AppEntity> list)
         {
             if (list.IsEmpty())
-                return;
+                return list;
 
             var ids = list.Select(x => x.Id).ToList();
             var names = list.Select(x => x.Name).ToList();
@@ -78,7 +79,7 @@
                 entity.Secret = input.Secret;
             }
 
-            list = entitys;
+            return entitys;
         }
 
         #endregion

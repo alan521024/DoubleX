@@ -41,15 +41,15 @@ namespace UTH.Meeting.Win.Areas.Conference.View
         {
             InitializeComponent();
             Initialize(code, meeting);
+            this.Loaded += Meeting_Loaded;
+            this.Unloaded += Meeting_Unloaded;
         }
-        
+
         private void Initialize(string code = null, MeetingDTO meeting = null)
         {
             viewModel = DataContext as MeetingViewModel;
             viewModel.CheckNull();
             viewModel.Loading(code, meeting);
-            this.Loaded += Meeting_Loaded;
-            this.Unloaded += Meeting_Unloaded;
         }
 
         private void Meeting_Loaded(object sender, RoutedEventArgs e)
@@ -57,22 +57,21 @@ namespace UTH.Meeting.Win.Areas.Conference.View
             parent = this.GetParent<Win.View.Main>();
             if (!parent.IsNull())
             {
-                parent.MeetingId = viewModel.Meeting.Id;
+                //parent.MeetingId = viewModel.Meeting.Id;
                 parent.CloseAction = (obj, closeEvent) =>
                 {
-                    viewModel.Cancel();
+                    viewModel?.Cancel();
                 };
             }
         }
 
         private void Meeting_Unloaded(object sender, RoutedEventArgs e)
         {
-            viewModel?.Stop();
+            viewModel?.Cancel();
         }
 
         private void btnStart_Click(object sender, RoutedEventArgs e)
         {
-            viewModel.Stop();
             viewModel.Start();
         }
 

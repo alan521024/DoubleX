@@ -1,4 +1,30 @@
-﻿; !(function () {
+﻿; Date.prototype.format = function (format) {
+    if (!format) {
+        format = 'yyyy-MM-dd hh:mm'
+    }
+    var o = {
+        "M+": this.getMonth() + 1, //month
+        "d+": this.getDate(),    //day
+        "h+": this.getHours(),   //hour
+        "m+": this.getMinutes(), //minute
+        "s+": this.getSeconds(), //second
+        "q+": Math.floor((this.getMonth() + 3) / 3),  //quarter
+        "S": this.getMilliseconds() //millisecond
+    }
+    if (/(y+)/.test(format)) format = format.replace(RegExp.$1,
+        (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o) if (new RegExp("(" + k + ")").test(format))
+        format = format.replace(RegExp.$1,
+            RegExp.$1.length == 1 ? o[k] :
+                ("00" + o[k]).substr(("" + o[k]).length));
+    return format;
+};
+String.prototype.date = function (format) {
+    var date = new Date(this);
+    return date.format(format);
+}
+
+!(function () {
 
     " use strict ";
 
@@ -206,7 +232,7 @@
             type: 2,
             title: __language.sysCaoZuo,
             shade: [0.3],
-            area: ['660px', '500px'],
+            area: ['740px', '540px'],
             maxmin: true, //开启最大化最小化按钮
             content: [url]
         }, opt);

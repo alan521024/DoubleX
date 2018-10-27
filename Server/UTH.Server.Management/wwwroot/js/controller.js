@@ -9,7 +9,7 @@
         var that = this;
 
         var _headerItemCallback = function (_type, _field, _title, _width, _align) {
-            var $item = $("<th class=\"txt-" + _align+"\"></th>");
+            var $item = $("<th class=\"txt-" + _align + "\"></th>");
             $item.attr("data-field", _field);
 
             if (_type === "checkbox") {
@@ -28,7 +28,7 @@
             return $item;
         }
         var _bodyItemCallback = function (_type, _data, _field, _value, _width, _align) {
-            var $item = $("<td class=\"txt-" + _align +"\"></td>");
+            var $item = $("<td class=\"txt-" + _align + "\"></td>");
             $item.attr("data-field", _field);
             if (_type == "checkbox") {
                 $item.addClass("dxm-list-chk-item");
@@ -316,6 +316,7 @@
         form.render('checkbox', filter);
     }
 
+
     var pagingObj = function (options) {
 
         var that = this;
@@ -348,9 +349,152 @@
         paging.render(that.config);
     }
 
+
+    var fileObj = function (options) {
+        var that = this;
+        that.guid = app.util.getId(), that.__ = window.top, that.__$ = window.top.$, that.__layer = window.top.layer, that.__WebUploader = window.top.WebUploader;
+        that.obj = null, that.container = null, that.uploader = null;
+
+        that.config = $.extend({}, {
+            id: null,
+            files: []
+        }, options);
+
+        that.render();
+    }
+
+    fileObj.prototype.render = function (options) {
+        var that = this;
+        that.obj = null;
+        that.container = null;
+        that.uploader = null;
+
+        if (options) {
+            that.config = $.extend({}, that.config, options);
+        };
+
+        that.obj = $("<div class='files-list'></div><div class='files-select'><a href='#'>选择</a></div>");
+        $(that.config.id).html(that.obj);
+
+        $(that.config.id).find('.files-select').unbind("click").on("click", function () {
+            that.open();
+        });
+    }
+
+    fileObj.prototype.open = function () {
+        var that = this;
+        var selectId = "btn-" + that.guid + "-select";
+
+        var html = "";
+        html += "<div class=\"assets\" data-id=\"" + that.guid + "\">";
+        html += "    <div class=\"assets-navs\">";
+        html += "        <div class=\"tabs\">";
+        html += "            <span class=\"active\">上传</span>";
+        html += "            <span>管理</span>";
+        html += "        </div>";
+        html += "        <div class=\"links\">";
+        html += "            <a href=\"javascript:;\" id=\"" + selectId + "\">选择</a>";
+        html += "        </div>";
+        html += "    </div>";
+        html += "    <div class=\"assets-main\">"
+        html += "       <div class=\"assets-items\">";
+        html += "       </div>";
+        html += "       <div class=\"assets-manage\">";
+        html += "       </div>";
+        html += "    </div>";
+        html += "    <div class=\"assets-footer\">"
+        html += "           <a href='javascript:;' class='layui-btn layui-btn-sm btn-upload'>上传</a>";
+        html += "    </div>";
+        html += "</div>";
+
+        that.__layer.open({
+            type: 1,
+            title: '资源管理器',
+            content: html,
+            area: ['540px', '340px'],
+        });
+
+        that.container = that.__$("div[data-id='" + that.guid + "']");
+
+        that.uploader = that.__WebUploader.create({
+            swf: '/js/Uploader.swf',
+            server: '/common/upload',
+            pick: "#" + selectId,
+            resize: false,
+            duplicate: true,
+            chunked: true,
+            chunkSize: 5242880,  //5M
+            chunkRetry: 5
+        });
+
+        that.uploader.on('beforeFileQueued', function (file) {
+            if (that.container.find(".assets-up-file[data-name='" + file.name + "'][data-size='" + file.size + "']").length > 0) {
+                return false;
+            }
+            return true;
+        });
+
+        that.uploader.on('fileQueued', function (file) {
+
+            var _html = "";
+            _html += "<div class='assets-up-file' data-id='" + file.id + "' data-name='" + file.name + "' data-size='" + file.size + "'>";
+            _html += "  <span>" + file.name + "</span>";
+            _html += "  <span class='info'><em class='status'>0%</em><em class='close'>x</em></span>";
+            _html += "</div>";
+
+            console.log(_html);
+            console.log(that.container);
+            console.log(that.container.find(".assets-items"));
+            that.container.find(".assets-items").append(_html);
+            syncFiles();
+        });
+
+        that.uploader.on('uploadProgress', function (file, percentage) {
+            console.log(percentage);
+        });
+
+        that.uploader.on('uploadSuccess', function (file, response) {
+            console.log("uploadSuccess:", file, response);
+        });
+
+        that.uploader.on('uploadError', function (file, reason) {
+            console.log("uploadError:", file, reason);
+        });
+
+        that.uploader.on('error', function (type) {
+            console.log(type);
+        });
+
+
+        that.container.on("click", "em.close", function () {
+            var _id = $(this).parents(".assets-up-file").data("id");
+            that.uploader.removeFile(_id, true);
+            $(this).parents(".assets-up-file").remove();
+            syncFiles();
+        });
+
+        that.container.on("click", ".btn-upload", function () {
+            that.uploader.upload();
+        });
+
+
+        (function syncFiles() {
+            var uploadBtn = that.container.find(".btn-upload");
+            var files = that.uploader.getFiles();
+            uploadBtn.addClass("layui-btn-disabled");
+            if (files.length > 0) {
+                uploadBtn.removeClass("layui-btn-disabled");
+            }
+            console.log(files);
+        })();
+    }
+
+
+
     var control = {
         list: function (opt) { return new listObj(opt); },
-        paging: function (opt) { return new pagingObj(opt); }
+        paging: function (opt) { return new pagingObj(opt); },
+        file: function (opt) { return new fileObj(opt); }
     }
 
     if (typeof exports !== 'undefined') {

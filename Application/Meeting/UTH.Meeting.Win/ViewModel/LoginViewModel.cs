@@ -92,9 +92,15 @@ namespace UTH.Meeting.Win.ViewModel
             }
 
             WpfHelper.SignIn(result.Obj.Token);
+
+            AppHelper.ServerObj.Sign(result.Obj.Token);
+
             ToMain();
         }
 
+        /// <summary>
+        /// 跳转主界面
+        /// </summary>
         private void ToMain()
         {
             View.Main mainForm = new View.Main();

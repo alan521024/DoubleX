@@ -32,17 +32,11 @@ namespace UTH.Meeting.Server
         [SecurityPermission(SecurityAction.Demand)]
         static void Main(string[] args)
         {
+            //events
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
 
-            //isrun
-            bool isAppRunning = false;
-            var process = Process.GetCurrentProcess();
-            Mutex mutex = new Mutex(true, process.ProcessName, out isAppRunning);
-            if (!isAppRunning)
-            {
-                Console.WriteLine(culture.Lang.sysChengXuYiJingYunXingQingWuChongFuCaoZuo);
-                Environment.Exit(1);
-            }
+            //only one
+            WpfHelper.AppIsOnlyRun();
 
             //hosting
             var appHosting = new AppHosting();
@@ -50,7 +44,6 @@ namespace UTH.Meeting.Server
             //engine
             EngineHelper.Worker.Startup(appHosting);
             EngineHelper.Worker.OnStart();
-
 
             // 创建一个IPC信道 注册这个IPC信道. 向信道暴露一个远程对象.
             IpcServerChannel serverChannel = new IpcServerChannel("channel");

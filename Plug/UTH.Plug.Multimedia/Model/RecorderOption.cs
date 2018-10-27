@@ -41,7 +41,7 @@ namespace UTH.Plug.Multimedia
         /// 使用的缓冲区数量（通常为2或3）
         /// </summary>
         public int? NumberOfBuffers { get; set; }
-        
+
         /// <summary>
         /// 设备号
         /// </summary>
@@ -67,12 +67,12 @@ namespace UTH.Plug.Multimedia
         /// 录音停止事件
         /// string 停止消息,如存在意思失败
         /// </summary>
-        public Action<object,StoppedEventArgs> StopedEvent { get; set; }
+        public Action<object, StoppedEventArgs> StopedEvent { get; set; }
 
         /// <summary>
         /// 音亮事件(1-100)
         /// </summary>
-        public Action<float> VolumeEvent { get; set; }
+        public Action<object, WaveInEventArgs, float> VolumeEvent { get; set; }
 
     }
 }

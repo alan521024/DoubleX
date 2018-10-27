@@ -69,9 +69,9 @@ namespace UTH.Update.Win
         public static string ExecuteAppPath { get; set; }
 
         /// <summary>
-        /// 执行程序进程
+        /// 执行程序进程(需杀掉的)
         /// </summary>
-        public static int ExecuteAppProcess { get; set; }
+        public static string ExecuteAppProcessIds { get; set; }
 
         #endregion
 

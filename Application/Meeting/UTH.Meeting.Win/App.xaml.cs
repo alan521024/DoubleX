@@ -13,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using Newtonsoft.Json.Linq;
 using MahApps.Metro.Controls;
 using GalaSoft.MvvmLight;
@@ -36,100 +37,48 @@ namespace UTH.Meeting.Win
     /// </summary>
     public partial class App : Application
     {
+        private IHosting appHosting { get; set; }
+
         public App()
         {
             DispatcherHelper.Initialize();
 
-            appHosting = new AppHosting();
+            DispatcherUnhandledException += App_DispatcherUnhandledException;
 
             Exit += App_Exit;
-            DispatcherUnhandledException += App_DispatcherUnhandledException;
+
+            appHosting = new AppHosting();
         }
 
-        private void App_Exit(object sender, ExitEventArgs e)
-        {
-            AppHelper.ServerClose();
-        }
-
-        private IHosting appHosting { get; set; }
-        
         protected override void OnStartup(StartupEventArgs e)
         {
-            //init 
-            AppHelper.ServerClose();
+            //only one
+            WpfHelper.AppIsOnlyRun();
 
-            //run
-            Process current = Process.GetCurrentProcess();
-            Process[] processes = Process.GetProcessesByName(current.ProcessName);
-            if (processes.Where(x => x.Id != current.Id).Count() > 0)
-            {
-                WpfHelper.Message(culture.Lang.sysChengXuYiJingYunXingQingWuChongFuCaoZuo);
-                Environment.Exit(1);
-            }
-            
             //engine
             EngineHelper.Worker.Startup(appHosting);
             EngineHelper.Worker.OnStart();
             base.OnStartup(e);
 
             //server
-            AppHelper.ServerStart(isClose: true);
+            var process = WpfHelper.AppServerStart(AppHelper.ServerName, AppHelper.ServerPath, AppHelper.ServerObj, isOnly: true);
         }
 
-        void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
-            if (EngineHelper.Configuration.IsDebugger)
+            WpfHelper.AppError(sender, e, () =>
             {
-                e.Handled = true;
-            }
-
-            DbxException exception = e.Exception as DbxException;
-            if (exception.IsNull() && e.Exception.InnerException != null)
-            {
-                exception = e.Exception.InnerException as DbxException;
-            }
-
-            if (exception != null && (exception.Code == EnumCode.提示消息 || exception.Code == EnumCode.校验失败))
-            {
-                e.Handled = true;
-                WpfHelper.Error(exception.Message);
-                return;
-            }
-
-            if (exception != null && exception.Code == EnumCode.初始失败)
-            {
-                e.Handled = true;
-                WpfHelper.Error("初始化错误，请检查设备/服务/会议信息并重启应用程序 ", action: () =>
+                WpfHelper.AppServerClose(AppHelper.ServerName);
+                if (!EngineHelper.Configuration.IsDebugger)
                 {
-                    AppShutdown();
-                });
-                return;
-            }
-
-            string msgText = ExceptionHelper.GetMessage(e.Exception);
-            if (e.Exception.InnerException != null)
-            {
-                msgText = ExceptionHelper.GetMessage(e.Exception.InnerException);
-            }
-            if (msgText.IsEmpty())
-            {
-                msgText = "未知错误";
-            }
-            EngineHelper.LoggingError(msgText);
-            
-            WpfHelper.Error(string.Format("System Error: {0} {1}", Environment.NewLine, msgText), action: () =>
-            {
-                AppShutdown();
+                    Environment.Exit(0);
+                }
             });
         }
 
-        private void AppShutdown()
+        private void App_Exit(object sender, ExitEventArgs e)
         {
-            AppHelper.ServerClose();
-            if (!EngineHelper.Configuration.IsDebugger)
-            {
-                Environment.Exit(0);
-            }
+            WpfHelper.AppServerClose(AppHelper.ServerName);
         }
     }
 }

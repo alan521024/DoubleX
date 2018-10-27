@@ -49,6 +49,61 @@
         /// </summary>
         public const double CountdownSecond = 15;
 
+
+        /// <summary>
+        /// 服务名称
+        /// </summary>
+        public const string ServerName = "UTH.Meeting.Server";
+
+        /// <summary>
+        /// 服务路径
+        /// </summary>
+        public static string ServerPath = $"{AppDomain.CurrentDomain.BaseDirectory}{ServerName}.exe";
+
+        /// <summary>
+        /// 服务对象
+        /// </summary>
+        public static ServerMarshalByRefObject ServerObj
+        {
+            get
+            {
+
+                if (_serverObj == null)
+                {
+                    IpcClientChannel channel = new IpcClientChannel();
+                    ChannelServices.RegisterChannel(channel, false);
+                    _serverObj = (ServerMarshalByRefObject)(Activator.GetObject(typeof(ServerMarshalByRefObject), "ipc://channel/ServerMarshalByRefObject.rem"));
+                    //RemotingConfiguration.RegisterWellKnownClientType(typeof(RecognizeRemotingService), "ipc://channel/RecognizeRemotingService.rem");
+                    //serverRemoteObj = new RecognizeRemotingService();
+                }
+                return _serverObj;
+            }
+        }
+        static ServerMarshalByRefObject _serverObj = null;
+
+        /// <summary>
+        /// 应用程序路径
+        /// </summary>
+        public static string ApplicationPath
+        {
+            get
+            {
+                return $"{AppDomain.CurrentDomain.SetupInformation.ApplicationBase}{AppDomain.CurrentDomain.SetupInformation.ApplicationName}";
+            }
+        }
+
+        /// <summary>
+        /// 更新工具路径
+        /// </summary>
+        public static string UpdateToolPath
+        {
+            get
+            {
+                return $"{AppDomain.CurrentDomain.BaseDirectory}/Tool/UTH.Update.Win.exe";
+            }
+        }
+
+
         #endregion
 
         #region 注册表（使用时间/次数）
@@ -130,6 +185,24 @@
         #region 应用程序/授权文件
 
         /// <summary>
+        /// 获取应用程序相关进程Id
+        /// </summary>
+        /// <returns></returns>
+        public static List<int> GetAppProcessIds()
+        {
+            var ids = new List<int>();
+            ids.Add(Process.GetCurrentProcess().Id);
+
+            var serverNames = Process.GetProcessesByName("UTH.Meeting.Server");
+            if (!serverNames.IsEmpty())
+            {
+                ids.AddRange(serverNames.Select(x => x.Id).ToList());
+            }
+
+            return ids;
+        }
+
+        /// <summary>
         /// 应用程序名称
         /// </summary>
         public static string AppTitle
@@ -191,83 +264,22 @@
             }
         }
 
-        #endregion
-
-        #region 服务/设备/语音
-
         /// <summary>
-        /// 服务启动
+        /// 应用程序更新
         /// </summary>
-        /// <param name="server"></param>
-        /// <param name="isClose"></param>
-        public static void ServerStart(string server = "UTH.Meeting.Server", bool isClose = false, Action<int, int> action = null)
+        public static void AppUpdate(bool isCloseAll = false)
         {
-            if (isClose)
+            var currentVersion = VersionHelper.Get();
+            var currentIds = GetAppProcessIds();
+            var upProcess = WpfHelper.AppUpdate(currentVersion, Current, ApplicationPath, UpdateToolPath, currentIds.ToArray());
+            if (isCloseAll)
             {
-                ProcessHelper.Kill(server);
-            }
-
-            //System.Runtime.Remoting.RemotingException:“向 IPC 端口写入失败: 管道正在被关闭。
-            //System.Runtime.Remoting.RemotingException:“连接到 IPC 端口失败: 系统找不到指定的文件。
-            var progress = ProcessHelper.Start($"{AppDomain.CurrentDomain.BaseDirectory}{server}.exe", style: EngineHelper.Configuration.IsDebugger ? ProcessWindowStyle.Minimized : ProcessWindowStyle.Hidden);
-
-            var serverObj = GetServerMarshalByRefObject();
-
-            // 1000*30 30秒后未启动异常
-            //loop check isconnection 
-            bool loaded = false;
-            int current = 0, total = 30;
-            while (!loaded)
-            {
-                action?.Invoke(current, total);
-
-                try
-                {
-                    loaded = serverObj.IsConnection;
-                }
-                catch (Exception ex)
-                {
-                    if (current > total)
-                    {
-                        throw ex;
-                    }
-                    current++;
-                }
-                Thread.Sleep(500);
+                Thread.Sleep(800);
+                ProcessHelper.Kill(currentIds.Where(x => x != Process.GetCurrentProcess().Id).ToArray());
+                Thread.Sleep(200);
+                ProcessHelper.Kill(Process.GetCurrentProcess().Id);
             }
         }
-
-        /// <summary>
-        /// 服务关闭
-        /// </summary>
-        /// <param name="server"></param>
-        public static void ServerClose(string server = "UTH.Meeting.Server")
-        {
-            if (!server.IsEmpty())
-            {
-                ProcessHelper.Kill(server);
-            }
-        }
-
-        /// <summary>
-        /// 远程服务获取
-        /// </summary>
-        /// <param name="server"></param>
-        public static ServerMarshalByRefObject GetServerMarshalByRefObject()
-        {
-            //后台远程服务
-            if (serverObj == null)
-            {
-                IpcClientChannel channel = new IpcClientChannel();
-                ChannelServices.RegisterChannel(channel, false);
-                serverObj = (ServerMarshalByRefObject)(Activator.GetObject(typeof(ServerMarshalByRefObject), "ipc://channel/ServerMarshalByRefObject.rem"));
-                //RemotingConfiguration.RegisterWellKnownClientType(typeof(RecognizeRemotingService), "ipc://channel/RecognizeRemotingService.rem");
-                //serverRemoteObj = new RecognizeRemotingService();
-            }
-            return serverObj;
-        }
-        static ServerMarshalByRefObject serverObj = null;
-
         #endregion
 
         #region 会议业务资料

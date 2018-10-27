@@ -9,12 +9,15 @@ namespace UTH.Meeting.Win.ViewModel
     using System.Threading;
     using System.Threading.Tasks;
     using System.ComponentModel;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Input;
     using Newtonsoft.Json.Linq;
     using GalaSoft.MvvmLight;
     using GalaSoft.MvvmLight.Command;
     using GalaSoft.MvvmLight.Threading;
     using GalaSoft.MvvmLight.Messaging;
-    using CommonServiceLocator;
+    using MahApps.Metro.Controls;
     using culture = UTH.Infrastructure.Resource.Culture;
     using UTH.Infrastructure.Utility;
     using UTH.Framework;
@@ -28,7 +31,24 @@ namespace UTH.Meeting.Win.ViewModel
     {
         public SettingViewModel() : base(culture.Lang.sysSheZhi, "")
         {
-            Initialize();
+            Sources = new ObservableCollection<KeyValueModel>();
+            AppHelper.MeetingSourceLangs.ForEach(i =>
+            {
+                Sources.Add(i);
+            });
+
+            Targets = new ObservableCollection<TargetLangObservable>();
+            AppHelper.MeetingTargetLangs.ForEach(i =>
+            {
+                Targets.Add(new TargetLangObservable() { Text = i.Key, Lang = i.Value, IsSelected = false, IsEnable = false });
+            });
+
+            Speeds = new ObservableCollection<KeyValueModel<string, int>>();
+            Speeds.Add(new KeyValueModel<string, int>("低速", 1));
+            Speeds.Add(new KeyValueModel<string, int>("中速", 5));
+            Speeds.Add(new KeyValueModel<string, int>("高速", 10));
+
+            Loading();
         }
 
         /// <summary>
@@ -44,22 +64,6 @@ namespace UTH.Meeting.Win.ViewModel
             }
         }
         private ObservableCollection<KeyValueModel> _sources;
-
-        /// <summary>
-        /// 源语言选中项
-        /// </summary>
-        public KeyValueModel Source
-        {
-            get { return _source; }
-            set
-            {
-                _source = value;
-                RaisePropertyChanged(() => Source);
-                SyncLangSelect();
-                RaisePropertyChanged(() => Targets);
-            }
-        }
-        private KeyValueModel _source;
 
         /// <summary>
         /// 目标语言列表
@@ -88,7 +92,36 @@ namespace UTH.Meeting.Win.ViewModel
         private ObservableCollection<KeyValueModel<string, int>> _speeds;
 
         /// <summary>
-        /// 语速选中项
+        /// 源语言
+        /// </summary>
+        public KeyValueModel Source
+        {
+            get { return _source; }
+            set
+            {
+                _source = value;
+                RaisePropertyChanged(() => Source);
+                LangSelectSync();
+            }
+        }
+        private KeyValueModel _source;
+
+        /// <summary>
+        /// 目标语言
+        /// </summary>
+        public string TargetValue
+        {
+            get { return _targetValue; }
+            set
+            {
+                _targetValue = value;
+                RaisePropertyChanged(() => TargetValue);
+            }
+        }
+        private string _targetValue;
+
+        /// <summary>
+        /// 语速
         /// </summary>
         public KeyValueModel<string, int> Speed
         {
@@ -101,7 +134,7 @@ namespace UTH.Meeting.Win.ViewModel
         private KeyValueModel<string, int> _speed;
 
         /// <summary>
-        /// 字体大小
+        /// 字体
         /// </summary>I would rather use [RegionMemberLifetime(KeepAlive = false)] than creating a new property in my view model ;) 
         public int FontSize
         {
@@ -118,83 +151,94 @@ namespace UTH.Meeting.Win.ViewModel
         /// 会议用户配置数据
         /// </summary>
         public MeetingSettingModel DataModel { get; set; }
-        
-        private void Initialize()
+
+        /// <summary>
+        /// 保存事件
+        /// </summary>
+        public ICommand OnSaveCommand
         {
-            //初始选择项
+            get
+            {
+                return new RelayCommand<object>((obj) =>
+                {
+                    Save();
+                });
+            }
+        }
+
+        /// <summary>
+        /// 加载配置
+        /// </summary>
+        private void Loading()
+        {
             var result = PlugCoreHelper.ApiUrl.Meeting.MeetingProfileLoginAccountGet.GetResult<MeetingProfileDTO, MeetingProfileEditInput>();
             if (result.Code != EnumCode.成功)
             {
                 throw new DbxException(EnumCode.提示消息, result.Message);
             }
 
-            DataModel = EngineHelper.Map<MeetingSettingModel>(result.Obj);
-
-            Sources = new ObservableCollection<KeyValueModel>();
-            AppHelper.MeetingSourceLangs.ForEach(i =>
-            {
-                Sources.Add(i);
-            });
-
-            Targets = new ObservableCollection<TargetLangObservable>();
-            AppHelper.MeetingTargetLangs.ForEach(i =>
-            {
-                Targets.Add(new TargetLangObservable() { Text = i.Key, Lang = i.Value, IsSelected = false, IsEnable = false });
-            });
-
-            Speeds = new ObservableCollection<KeyValueModel<string, int>>();
-            Speeds.Add(new KeyValueModel<string, int>("低速", 1));
-            Speeds.Add(new KeyValueModel<string, int>("中速", 5));
-            Speeds.Add(new KeyValueModel<string, int>("高速", 10));
-
             //设置选择值
-            Source = Sources.Where(x => x.Value == DataModel.SourceLang).FirstOrDefault();
-            Speed = Speeds.Where(x => x.Value == DataModel.Speed).FirstOrDefault();
-            FontSize = DataModel.FontSize;
-        }
-
-        private void SyncLangSelect()
-        {
-            var tagSelectValues = StringHelper.GetToArray(DataModel.TargetLangs, new string[] { "|" }).ToList();
-            Targets.ToList().ForEach(i =>
-            {
-                i.IsEnable = true;
-
-                var obj = tagSelectValues.Where(x => x == i.Lang).FirstOrDefault();
-                i.IsSelected = !obj.IsNull();
-
-                if (i.Lang == Source.Value)
-                {
-                    i.IsSelected = false;
-                    i.IsEnable = false;
-                }
-            });
+            TargetValue = result.Obj.TargetLangs;
+            Source = Sources.Where(x => x.Value == result.Obj.SourceLang).FirstOrDefault();
+            Speed = Speeds.Where(x => x.Value == result.Obj.Speed).FirstOrDefault();
+            FontSize = result.Obj.FontSize;
         }
 
         /// <summary>
         /// 保存配置
         /// </summary>
         /// <returns></returns>
-        public string Save(Guid id)
+        public void Save()
         {
-            var input = new MeetingProfileEditInput()
+            var meetingId = Guid.Empty;
+            var meetingViewModel = WpfHelper.GetViewModel<MeetingViewModel>();
+            if (!meetingViewModel.IsNull() && !meetingViewModel.Meeting.IsNull())
             {
-                SourceLang = Source.Value,
-                TargetLangs = StringHelper.Get(Targets.Where(x => x.IsSelected).Select(x => x.Lang).ToArray(), separator: "|"),
-                Speed = Speed.Value,
-                FontSize = FontSize,
-                MeetingId = id,
-            };
-
-            var result = PlugCoreHelper.ApiUrl.Meeting.MeetingProfileLoginAccountSave.GetResult<MeetingProfileDTO, MeetingProfileEditInput>(input);
-            if (result.Code != EnumCode.成功)
-            {
-                return result.Message;
+                meetingId = meetingViewModel.Meeting.Id;
             }
 
-            DataModel = EngineHelper.Map<MeetingSettingModel>(result.Obj);
+            TargetValue = StringHelper.Get(Targets.Where(x => x.IsSelected).Select(x => x.Lang).ToArray(), separator: "|");
 
-            return string.Empty;
+            var result = PlugCoreHelper.ApiUrl.Meeting.MeetingProfileLoginAccountSave.GetResult<MeetingProfileDTO, MeetingProfileEditInput>(new MeetingProfileEditInput()
+            {
+                MeetingId = meetingId,
+                SourceLang = Source.Value,
+                TargetLangs = TargetValue,
+                Speed = Speed.Value,
+                FontSize = FontSize,
+            });
+            if (result.Code != EnumCode.成功)
+            {
+                MessageAlert(result.Message ?? culture.Lang.sysBaoCunShiBai);
+                return;
+            }
+
+            MessageAlert(culture.Lang.sysBaoCunChengGong);
+        }
+
+        /// <summary>
+        /// 源/目标语音选择同步
+        /// </summary>
+        private void LangSelectSync()
+        {
+            var values = StringHelper.GetToArray(TargetValue, new string[] { "|" }).ToList();
+            Targets.ToList().ForEach(i =>
+            {
+                i.IsEnable = true;
+                i.IsSelected = false;
+
+                if (values.Contains(i.Lang))
+                {
+                    i.IsSelected = true;
+                }
+                if (i.Lang == Source.Value)
+                {
+                    i.IsEnable = false;
+                    i.IsSelected = false;
+                }
+            });
+            RaisePropertyChanged(() => Targets);
+            TargetValue = StringHelper.Get(Targets.Where(x => x.IsSelected).Select(x => x.Lang).ToArray(), separator: "|");
         }
 
         /// <summary>
@@ -202,7 +246,11 @@ namespace UTH.Meeting.Win.ViewModel
         /// </summary>
         public void ChangeMainUIFontSize()
         {
-            //WpfHelper.GetViewModel<MainViewModel>().RecordFontSize = FontSize;
+            var meeting = WpfHelper.GetViewModel<MeetingViewModel>();
+            if (!meeting.IsNull())
+            {
+                meeting.RecordFontSize = FontSize;
+            }
         }
     }
 }

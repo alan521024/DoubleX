@@ -18,11 +18,20 @@
     /// </summary>
     public class MeetingSyncInput : IInput
     {
+        /// <summary>
+        /// Ids
+        /// </summary>
+        public List<Guid> Ids { get; set; }
+
+        /// <summary>
+        /// 读取数量
+        /// </summary>
         public int Top { get; set; } = 10;
 
+        /// <summary>
+        /// 所属会议
+        /// </summary>
         public Guid MeetingId { get; set; }
-
-        public List<Guid> Ids { get; set; }
 
         /// <summary>
         /// 方向（向前/pre:加载历义记录,向后/next:加载最新记录）

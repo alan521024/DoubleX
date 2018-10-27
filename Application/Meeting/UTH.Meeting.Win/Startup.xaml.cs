@@ -27,6 +27,7 @@ using UTH.Domain;
 using UTH.Plug;
 using UTH.Meeting.Win.View;
 using UTH.Meeting.Win.ViewModel;
+using System.Diagnostics;
 
 namespace UTH.Meeting.Win
 {
@@ -41,43 +42,20 @@ namespace UTH.Meeting.Win
         {
             InitializeComponent();
             Initialize();
+            this.Loaded += Startup_Loaded;
         }
 
         private void Initialize()
         {
             viewModel = DataContext as StartupViewModel;
             viewModel.CheckNull();
-
-            new Thread(() => { StartTask(); }).Start();
+            viewModel.Configuration(this);
         }
 
-        private void StartTask()
+        private void Startup_Loaded(object sender, RoutedEventArgs e)
         {
-            WpfHelper.ExcuteUI(() =>
-            {
-                try
-                {
-                    viewModel.CheckLicense();
-                    viewModel.CheckVersion();
-                    viewModel.UpdateUse();
-                    this.ToMain();
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
-            });
+            viewModel.Start();
         }
 
-        private void ToMain()
-        {
-            if (viewModel.ProgressValue < 100)
-            {
-                throw new DbxException(EnumCode.初始失败);
-            }
-            _LayoutAccount form = new _LayoutAccount();
-            form.Show();
-            this.Close();
-        }
     }
 }

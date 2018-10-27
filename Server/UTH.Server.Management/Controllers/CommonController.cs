@@ -77,6 +77,18 @@ namespace UTH.Server.Management.Controllers
         }
 
         /// <summary>
+        /// 文件上传
+        /// </summary>
+        /// <param name="files"></param>
+        /// <returns></returns>
+        [Produces("application/json")]
+        public JsonResult Upload(IFormCollection files)
+        {
+               var ddd = files;
+            return new JsonResult(new { code = 0 });
+        }
+
+        /// <summary>
         /// 验证码校验
         /// </summary>
         /// <param name="category"></param>

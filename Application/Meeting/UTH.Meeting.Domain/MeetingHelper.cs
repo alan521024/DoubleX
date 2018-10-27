@@ -51,6 +51,8 @@
             {
                 case "zs":
                     return "zh_cn";
+                case "en":
+                    return "en_us";
                 default:
                     return lang;
             }

@@ -73,11 +73,11 @@ namespace UTH.Meeting.Server
             //接口访问处理
             PlugCoreHelper.ApiServerAuthError = (token) =>
             {
-                throw new DbxException(EnumCode.认证错误);
+                //throw new DbxException(EnumCode.认证错误);
             };
             PlugCoreHelper.ApiServerResultError = (code, msg, obj) =>
             {
-                throw new DbxException(code, msg);
+                //throw new DbxException(code, msg);
             };
 
             //IOC注入

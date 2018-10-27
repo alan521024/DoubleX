@@ -26,8 +26,11 @@
 
         #region override
 
-        protected override void InsertBefore(List<MeetingEntity> list)
+        protected override List<MeetingEntity> InsertBefore(List<MeetingEntity> list)
         {
+            if (list.IsEmpty())
+                return list;
+
             var queryNum = Max<string>(field: x => x.Num);
             if (queryNum.IsEmpty())
             {
@@ -39,7 +42,8 @@
                 currentNum = currentNum + 1;
                 item.Num = StringHelper.Get(currentNum);
             });
-            base.InsertBefore(list);
+
+            return list;
         }
 
         #endregion

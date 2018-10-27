@@ -63,5 +63,16 @@
         public EnumUpdateType UpdateType { get; set; }
 
 
+        /// <summary>
+        /// 应用程序名称
+        /// </summary>
+        [SugarColumn(IsIgnore = true)]
+        public string AppName { get; set; }
+
+        /// <summary>
+        /// 应用程序Code
+        /// </summary>
+        [SugarColumn(IsIgnore = true)]
+        public string AppCode { get; set; }
     }
 }

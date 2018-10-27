@@ -57,5 +57,10 @@
         /// 序号
         /// </summary>
         public int Sort { get; set; }
+
+        /// <summary>
+        /// 翻译
+        /// </summary>
+        public List<MeetingTranslationDTO> Translations { get; set; }
     }
 }

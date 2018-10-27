@@ -72,5 +72,20 @@
         /// </summary>
         public EnumUpdateType UpdateType { get; set; }
 
+        /// <summary>
+        /// 应用程序名称
+        /// </summary>
+        public string AppName { get; set; }
+
+        /// <summary>
+        /// 应用程序Code
+        /// </summary>
+
+        public string AppCode { get; set; }
+
+        /// <summary>
+        /// 更新类型名称
+        /// </summary>
+        public string UpdateTypeName { get { return UpdateType.ToString(); } }
     }
 }

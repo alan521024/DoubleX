@@ -29,7 +29,9 @@
     <controls:MetroWindow.RightWindowCommands>
         <controls:WindowCommands>
             <Button x:Name="btnEmploye" Content="{x:Static culture:Lang.userZhangHaoGuanLi}" ToolTip="{x:Static culture:Lang.userZhangHaoGuanLi}" Click="btnEmploye_Click" Visibility="{Binding IsOrganize}" />
-            <Button x:Name="btnExport" Content="{x:Static culture:Lang.sysDaoChu}" ToolTip="{x:Static culture:Lang.sysDaoChu}" Click="btnExport_Click" />
+            <Button x:Name="btnExport" Content="{x:Static culture:Lang.sysDaoChu}" ToolTip="{x:Static culture:Lang.sysDaoChu}" 
+                    Command="{Binding OnExportCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"></Button>
+            
             <Button x:Name="btnSetting" Content="{x:Static culture:Lang.sysSheZhi}" ToolTip="{x:Static culture:Lang.sysSheZhi}" Click="btnSetting_Click" />
             <Button x:Name="btnHelp" Content="{x:Static culture:Lang.sysBangZhu}" ToolTip="{x:Static culture:Lang.sysBangZhu}" Click="btnHelp_Click" />
             <Button x:Name="btnAbout" Content="{x:Static culture:Lang.sysGuanYu}" ToolTip="{x:Static culture:Lang.sysGuanYu}" Click="btnAbout_Click" />

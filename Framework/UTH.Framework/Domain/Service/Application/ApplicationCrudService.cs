@@ -75,8 +75,8 @@
 
         public virtual DTO Insert(TInsertInput input)
         {
-            var entity = MapperToEntity(input);
-            if (service.Insert(entity) > 0)
+            var entity = service.Insert(MapperToEntity(input));
+            if (!entity.IsNull())
             {
                 return MapperToDto(entity);
             }
@@ -85,8 +85,8 @@
 
         public virtual DTO Update(TUpdateInput input)
         {
-            var entity = MapperToEntity(input);
-            if (service.Update(entity) > 0)
+            var entity = service.Update(MapperToEntity(input));
+            if (!entity.IsNull())
             {
                 return MapperToDto(entity);
             }
@@ -127,8 +127,6 @@
 
             return result;
         }
-
-
 
         protected virtual Expression<Func<TEntity, bool>> InputToWhere(QueryInput<TQueryInput> input)
         {

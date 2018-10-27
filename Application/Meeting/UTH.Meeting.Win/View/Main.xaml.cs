@@ -71,25 +71,6 @@ namespace UTH.Meeting.Win.View
             mainFrame.Navigate(new Areas.User.View.EmployeList());
         }
 
-        private void btnExport_Click(object sender, RoutedEventArgs e)
-        {
-            ThreadPool.QueueUserWorkItem((obj) =>
-            {
-                WpfHelper.ExcuteUI(() =>
-                {
-                    viewModel.MaskShow("正在导出....");
-                });
-
-                viewModel.Export(MeetingId);
-
-                WpfHelper.ExcuteUI(() =>
-                {
-                    viewModel.MaskHide();
-                    System.Diagnostics.Process.Start("explorer.exe", System.IO.Path.GetDirectoryName(MeetingHelper.GetMeetingTextFile(MeetingId)));
-                });
-            });
-        }
-
         private void btnSetting_Click(object sender, RoutedEventArgs e)
         {
             _LayoutSetting form = new _LayoutSetting();
@@ -118,7 +99,7 @@ namespace UTH.Meeting.Win.View
 
         private void hlUpdate_Click(object sender, RoutedEventArgs e)
         {
-            WpfHelper.AppUpdate(VersionHelper.Get(), AppHelper.Current);
+            AppHelper.AppUpdate();
         }
 
         private void Main_Closing(object sender, System.ComponentModel.CancelEventArgs e)

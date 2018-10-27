@@ -15,6 +15,7 @@ namespace UTH.Meeting.Win.ViewModel
     using System.Runtime.Remoting.Channels.Ipc;
     using System.Windows;
     using System.Windows.Media.Imaging;
+    using System.Windows.Input;
     using Newtonsoft.Json.Linq;
     using CommonServiceLocator;
     using GalaSoft.MvvmLight;
@@ -79,20 +80,47 @@ namespace UTH.Meeting.Win.ViewModel
         /// </summary>
         public Visibility IsOrganize { get { return CurrentUser.User.Type == EnumAccountType.组织 ? Visibility.Visible : Visibility.Collapsed; } }
 
+
+        /// <summary>
+        /// 导出事件
+        /// </summary>
+        public ICommand OnExportCommand
+        {
+            get
+            {
+                return new RelayCommand<object>((obj) =>
+                {
+                    Export();
+                });
+            }
+        }
+
         /// <summary>
         /// 导出记录
         /// </summary>
         /// <param name="id"></param>
-        public void Export(Guid id)
+        public void Export(Guid? meetingId = null)
         {
+            if (meetingId.IsEmpty())
+            {
+                var meetingViewModel = WpfHelper.GetViewModel<MeetingViewModel>();
+                if (meetingViewModel.IsNull() || (!meetingViewModel.IsNull() && meetingViewModel.Meeting.IsNull())
+                     || (!meetingViewModel.IsNull() && !meetingViewModel.Meeting.IsNull() && meetingViewModel.Meeting.Id.IsEmpty()))
+                {
+                    throw new DbxException(EnumCode.提示消息, culture.Lang.metWeiKaiShiHuiYi);
+                }
+                meetingId = meetingViewModel.Meeting.Id;
+            }
+
             StreamWriter file = null;
             try
             {
+                this.MaskShow("正在导出....");
                 var session = EngineHelper.Resolve<IApplicationSession>() as DefaultSession;
-                var res = MeetingHelper.GetRecordService(id); 
-                var trs = MeetingHelper.GetTranslateService(id);
+                var res = MeetingHelper.GetRecordService(meetingId.Value);
+                var trs = MeetingHelper.GetTranslateService(meetingId.Value);
 
-                string filePath = MeetingHelper.GetMeetingTextFile(id);
+                string filePath = MeetingHelper.GetMeetingTextFile(meetingId.Value);
                 if (File.Exists(filePath))
                 {
                     FilesHelper.DeleteFile(filePath);
@@ -114,6 +142,7 @@ namespace UTH.Meeting.Win.ViewModel
                         });
                     });
                 }
+                System.Diagnostics.Process.Start("explorer.exe", System.IO.Path.GetDirectoryName(MeetingHelper.GetMeetingTextFile(meetingId.Value)));
             }
             catch (Exception ex)
             {
@@ -124,6 +153,7 @@ namespace UTH.Meeting.Win.ViewModel
                 file?.Close();
                 file?.Dispose();
                 file = null;
+                this.MaskHide();
             }
         }
 

@@ -22,14 +22,14 @@
         /// 添加对象
         /// </summary>
         /// <param name="entity">对象</param>
-        int Insert(TEntity entity);
+        TEntity Insert(TEntity entity);
 
         /// <summary>
         /// 添加集合
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        int Insert(List<TEntity> list);
+        List<TEntity> Insert(List<TEntity> list);
 
         #region 异步(可等待)操作
 
@@ -37,14 +37,14 @@
         /// 添加对象-(可等待)
         /// </summary>
         /// <param name="entity">对象</param>
-        Task<int> InsertAsync(TEntity entity);
+        Task<TEntity> InsertAsync(TEntity entity);
 
         /// <summary>
         /// 添加集合-(可等待)
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        Task<int> InsertAsync(List<TEntity> list);
+        Task<List<TEntity>> InsertAsync(List<TEntity> list);
 
         #endregion
 
@@ -56,14 +56,14 @@
         /// 修改对象
         /// </summary>
         /// <param name="entity">对象</param>
-        int Update(TEntity entity);
+        TEntity Update(TEntity entity);
 
         /// <summary>
         /// 修改集合
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        int Update(List<TEntity> list);
+        List<TEntity> Update(List<TEntity> list);
 
         #region 异步(可等待)操作
 
@@ -71,14 +71,14 @@
         /// 修改对象-(可等待)
         /// </summary>
         /// <param name="entity">对象</param>
-        Task<int> UpdateAsync(TEntity entity);
+        Task<TEntity> UpdateAsync(TEntity entity);
 
         /// <summary>
         /// 修改集合-(可等待)
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        Task<int> UpdateAsync(List<TEntity> list);
+        Task<List<TEntity>> UpdateAsync(List<TEntity> list);
 
         #endregion
 

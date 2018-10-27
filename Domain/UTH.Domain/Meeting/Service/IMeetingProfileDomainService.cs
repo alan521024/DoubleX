@@ -16,5 +16,11 @@
     /// </summary>
     public interface IMeetingProfileDomainService : IDomainDefaultService<MeetingProfileEntity>
     {
+        /// <summary>
+        /// 获取账号会议配置(不存在时创建默认)
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <returns></returns>
+        MeetingProfileEntity GetOrInsertDefaultByAccount(Guid accountId);
     }
 }

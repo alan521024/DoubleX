@@ -147,7 +147,7 @@
             account.LoginLastDt = DateTimeHelper.DefaultDateTime;
 
             account.Status = account.Status == EnumAccountStatus.Default ? EnumAccountStatus.正常 : account.Status;
-            if (Insert(account) != 1)
+            if (Insert(account).IsNull())
             {
                 throw new DbxException(EnumCode.提示消息, Lang.userZhuCeShiBai);
             }
@@ -203,7 +203,7 @@
                     throw new DbxException(EnumCode.提示消息, Lang.userQingShuRuYouXiaoDeYuanMiMa);
                 }
                 account.Password = HashSecurityHelper.GetSecurity(newPassword);
-                return Update(account) > 0 ? account : null;
+                return Update(account);
             }
 
             //修改认证方式2：手机/邮箱认证码

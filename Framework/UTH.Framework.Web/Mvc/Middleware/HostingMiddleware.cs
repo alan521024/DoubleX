@@ -36,15 +36,15 @@ namespace UTH.Framework
             context.Response.OnCompleted(ResponseCompletedCallback, context);
 
             //DO:继续下一下中间件
-            await Next(context);
-            //try
-            //{
-            //    await Next(context);
-            //}
-            //catch (Exception ex)
-            //{
-            //    ExceptionResult(context, ex);
-            //}
+            //await Next(context);
+            try
+            {
+                await Next(context);
+            }
+            catch (Exception ex)
+            {
+                ExceptionResult(context, ex);
+            }
         }
 
         private Task ResponseCompletedCallback(object obj)

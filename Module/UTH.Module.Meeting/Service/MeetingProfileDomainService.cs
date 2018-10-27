@@ -26,10 +26,10 @@
 
         #region override
 
-        protected override void UpdateBefore(List<MeetingProfileEntity> list)
+        protected override List<MeetingProfileEntity> UpdateBefore(List<MeetingProfileEntity> list)
         {
             if (list.IsEmpty())
-                return;
+                return list;
 
             var ids = list.Select(x => x.Id).ToList();
             var entitys = Find(where: x => ids.Contains(x.Id));
@@ -48,11 +48,32 @@
                 entity.LastDt = DateTime.Now;
             }
 
-            list = entitys;
-
-            base.UpdateBefore(list);
+            return entitys;
         }
 
         #endregion
+
+        /// <summary>
+        /// 获取账号会议配置(不存在时创建默认)
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <returns></returns>
+        public virtual MeetingProfileEntity GetOrInsertDefaultByAccount(Guid accountId)
+        {
+            accountId.CheckEmpty();
+            var entity = Get(x => x.AccountId == Session.User.Id);
+            if (entity.IsNull())
+            {
+                entity = Insert(new MeetingProfileEntity()
+                {
+                    AccountId = accountId,
+                    SourceLang = "zs",
+                    TargetLangs = "en",
+                    Speed = 5,
+                    FontSize = 16
+                });
+            }
+            return entity;
+        }
     }
 }

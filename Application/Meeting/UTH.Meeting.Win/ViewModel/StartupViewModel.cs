@@ -22,19 +22,14 @@ namespace UTH.Meeting.Win.ViewModel
     using UTH.Plug;
     using UTH.Plug.Multimedia;
     using UTH.Meeting.Domain;
+    using System.Diagnostics;
 
     public class StartupViewModel : UTHViewModel
     {
         public StartupViewModel() : base(culture.Lang.winQiDongQi, "")
         {
-            Initialize();
+
         }
-
-        #region 私有变量
-
-        #endregion
-
-        #region 公共属性
 
         /// <summary>
         /// 启动进度
@@ -46,16 +41,16 @@ namespace UTH.Meeting.Win.ViewModel
         }
         private double _progressValue = 0;
 
-        #endregion
-
-        #region 辅助操作
-
-        private void Initialize()
+        public void Start()
         {
-
+            new Thread(() =>
+            {
+                CheckLicense();
+                UpdateVersion();
+                UpdateAppUse();
+                WpfHelper.ExcuteUI(ToLogin);
+            }).Start();
         }
-
-        #endregion
 
         /// <summary>
         /// 授权信息校验
@@ -118,32 +113,40 @@ namespace UTH.Meeting.Win.ViewModel
         }
 
         /// <summary>
-        /// 程序版本校验
+        /// 更新应用版本版本
         /// </summary>
-        public void CheckVersion()
+        public void UpdateVersion()
         {
             ProgressValue = 45;
 
             var currentVersion = VersionHelper.Get();
-            var status = AppHelper.CheckVersion(VersionHelper.Get(), AppHelper.Current);
+            var status = AppHelper.VersionUpdate(VersionHelper.Get(), AppHelper.Current);
             if (status == EnumUpdateType.Forced)
             {
-                WpfHelper.AppUpdate(currentVersion, AppHelper.Current);
-                Environment.Exit(0);
+                AppHelper.AppUpdate(isCloseAll: true);
             }
-
             ProgressValue = 80;
         }
 
         /// <summary>
-        /// 更新使用信息
+        /// 更新应用使用记录
         /// </summary>
-        public void UpdateUse()
+        public void UpdateAppUse()
         {
             //增加使用次数
             AppHelper.AddUseTimes();
 
             ProgressValue = 100;
+        }
+
+        /// <summary>
+        /// 跳转登录
+        /// </summary>
+        protected void ToLogin()
+        {
+            View._LayoutAccount form = new View._LayoutAccount();
+            form.Show();
+            ((UTHWindow)DependencyObj).Close();
         }
     }
 }

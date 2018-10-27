@@ -36,6 +36,7 @@
 
   <ItemGroup>
     <Folder Include="DynamicApi\Configuration\" />
+    <Folder Include="Model\" />
     <Folder Include="Mvc\Identity\Authorize\" />
   </ItemGroup>
 

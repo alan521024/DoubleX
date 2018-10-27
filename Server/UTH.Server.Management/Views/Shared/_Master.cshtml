@@ -7,11 +7,13 @@
     @RenderSection("Heads", required: false)
     <environment include="Development">
         <link type="text/css" rel="stylesheet" href="~/icon/iconfont.css" />
+        <link rel="stylesheet" type="text/css" href="~/lib/webuploader/webuploader.css">
         <link type="text/css" rel="stylesheet" href="~/lib/layui/css/layui.css" />
         <link type="text/css" rel="stylesheet" href="~/css/style.css" />
     </environment>
     <environment exclude="Development">
         <link type="text/css" rel="stylesheet" href="~/icon/iconfont.css" asp-append-version="true" />
+        <link rel="stylesheet" type="text/css" href="~/lib/webuploader/webuploader.css" asp-append-version="true">
         <link type="text/css" rel="stylesheet" href="~/lib/layui/css/layui.css" asp-append-version="true" />
         <link type="text/css" rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
     </environment>
@@ -27,6 +29,7 @@
         <script src="~/lib/underscore/underscore.js"></script>
         <script src="~/lib/underscore/underscore.string.js"></script>
         <script src="~/lib/underscore-contrib/dist/underscore-contrib.js"></script>
+        <script src="~/lib/webuploader/webuploader.js"></script>
         <script src="~/lib/layui/layui.all.js"></script>
         <script src="~/js/app.js"></script>
         <script src="~/js/controller.js"></script>
@@ -42,6 +45,7 @@
         <script src="~/lib/underscore/underscore.js" asp-append-version="true"></script>
         <script src="~/lib/underscore/underscore.string.js" asp-append-version="true"></script>
         <script src="~/lib/underscore-contrib/dist/underscore-contrib.js" asp-append-version="true"></script>
+        <script src="~/lib/webuploader/webuploader.js" asp-append-version="true"></script>
         <script src="~/lib/layui/layui.all.js" asp-append-version="true"></script>
         <script src="~/js/app.js" asp-append-version="true"></script>
         <script src="~/js/controller.js" asp-append-version="true"></script>

@@ -50,9 +50,11 @@ namespace UTH.Update.Win.View
         private void btnUpdate_Click(object sender, RoutedEventArgs e)
         {
             //杀掉进程
-            if (AppHelper.ExecuteAppProcess > 0)
+            var killIds = StringHelper.GetToArray(AppHelper.ExecuteAppProcessIds, separator: new string[] { "|" })
+                .Select(x => IntHelper.Get(x)).ToArray();
+            if (killIds.Length > 0)
             {
-                ProcessHelper.Kill(AppHelper.ExecuteAppProcess);
+                ProcessHelper.Kill(killIds);
             }
 
             //执行更新

@@ -27,5 +27,10 @@ namespace UTH.Plug.Speech
         /// 发送数据
         /// </summary>
         void Send(SpeechData data);
+
+        /// <summary>
+        /// 重新开始
+        /// </summary>
+        void Restart();
     }
 }

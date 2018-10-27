@@ -26,10 +26,11 @@
 
         #region override
 
-        protected override void InsertBefore(List<MeetingRecordEntity> list)
+        protected override List<MeetingRecordEntity> InsertBefore(List<MeetingRecordEntity> list)
         {
             if (list.IsEmpty())
-                return;
+                return list;
+
             list.ForEach(item =>
             {
                 if (item.LocalId.IsEmpty())
@@ -38,7 +39,7 @@
                 }
             });
 
-            base.InsertBefore(list);
+            return list;
         }
 
         #endregion

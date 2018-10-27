@@ -19,6 +19,13 @@
         IApplicationService
     {
         /// <summary>
+        /// 创建会议记录
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns>返回同步数所有(会议记录+翻译列表)</returns>
+        List<MeetingSyncModel> Create(MeetingSyncModel input);
+
+        /// <summary>
         /// 添加会议记录(含翻译记录)
         /// </summary>
         /// <param name="input"></param>

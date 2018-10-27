@@ -40,56 +40,75 @@ namespace UTH.Meeting.Win.ViewModel
     {
         public MeetingViewModel() : base(culture.Lang.metHuiYiShi, "")
         {
-            Initialize();
         }
 
-        private MeetingSettingModel setting
+        /// <summary>
+        /// 会议信息
+        /// </summary>
+        public MeetingDTO Meeting
+        {
+            get { return _meeting; }
+            set
+            {
+                _meeting = value; RaisePropertyChanged(() => Meeting);
+            }
+        }
+        private MeetingDTO _meeting = null;
+
+        /// <summary>
+        /// 会议配置
+        /// </summary>
+        public MeetingSettingModel Setting
         {
             get
             {
-                //单列，应用程序唯一(Setting 界面修改后，不需要重新读取数据库)
-                var value = ServiceLocator.Current.GetInstance<SettingViewModel>().DataModel;
-                value.Rate = 16000;
-                value.Channel = 1;
-                value.BitDepth = 16;
-                value.BufferMilliseconds = 150;
-                value.SentenceMilliseconds = 3500;
-                value.RemoteAddress = "ipc://channel/ServerRemoteObject.rem";
-                value.ByteLength = MultimediaHelper.GetAudioByteLength(value.Rate, value.BitDepth, value.BufferMilliseconds);
-                return value;
-            }
-        }
-        private IRecorderService<WaveInCapabilities> recorder { get; set; }
-        private ServerMarshalByRefObject server
-        {
-            get
-            {
-                if (_server.IsNull())
+                if (_seeting.IsNull())
                 {
-                    _server = AppHelper.GetServerMarshalByRefObject();
+                    _seeting = new MeetingSettingModel();
                 }
-                if (_server.IsNull())
-                {
-                    EngineHelper.LoggingError($"server is null");
-                    taskException?.Cancel();
-                }
-                try
-                {
-                    var check = _server.IsConnection;
-                }
-                catch (Exception ex)
-                {
-                    EngineHelper.LoggingError(ex);
-                    taskException.Cancel();
-                }
-                return _server;
-            }
-        }
-        private ServerMarshalByRefObject _server;
-        private CancellationTokenSource taskException = new CancellationTokenSource();
-        private CancellationTokenSource taskCancel = new CancellationTokenSource();
 
-        
+                _seeting.Rate = 16000;
+                _seeting.Channel = 1;
+                _seeting.BitDepth = 16;
+                _seeting.BufferMilliseconds = 150;
+                _seeting.SentenceMilliseconds = IntHelper.Get(EngineHelper.Configuration.Settings.GetValue("sentenceMilliseconds"), 3000);
+                _seeting.RemoteAddress = "ipc://channel/ServerRemoteObject.rem";
+                _seeting.ByteLength = MultimediaHelper.GetAudioByteLength(_seeting.Rate, _seeting.BitDepth, _seeting.BufferMilliseconds);
+
+                _seeting.SourceLang = seetingViewModel.Source.Value;
+                _seeting.TargetLangs = StringHelper.Get(seetingViewModel.Targets.Where(x => x.IsSelected).Select(x => x.Lang).ToArray(), separator: "|");
+                _seeting.Speed = seetingViewModel.Speed.Value;
+                _seeting.FontSize = seetingViewModel.FontSize;
+
+                return _seeting;
+            }
+        }
+        private MeetingSettingModel _seeting;
+
+        /// <summary>
+        /// 会议二维码
+        /// </summary>
+        public BitmapSource MeetingCode
+        {
+            get { return _meetingCode; }
+            set
+            {
+                _meetingCode = value; RaisePropertyChanged(() => MeetingCode);
+            }
+        }
+        private BitmapSource _meetingCode = null;
+
+
+        /// <summary>
+        /// 麦克风音量
+        /// </summary>
+        public float MicrophoneVolume
+        {
+            get { return _microphoneVolume; }
+            set { _microphoneVolume = value; RaisePropertyChanged(() => MicrophoneVolume); }
+        }
+        private float _microphoneVolume = 0;
+
         /// <summary>
         /// 麦克风列表
         /// </summary>
@@ -109,68 +128,6 @@ namespace UTH.Meeting.Win.ViewModel
             set { _microphone = value; RaisePropertyChanged(() => Microphone); }
         }
         private KeyValueModel<int, WaveInCapabilities> _microphone;
-
-        /// <summary>
-        /// 麦克风音量
-        /// </summary>
-        public float MicrophoneVolume
-        {
-            get { return _microphoneVolume; }
-            set { _microphoneVolume = value; RaisePropertyChanged(() => MicrophoneVolume); }
-        }
-        private float _microphoneVolume = 0;
-
-        /// <summary>
-        /// 记录字号
-        /// </summary>
-        public int RecordFontSize
-        {
-            get { return _recordFontSize; }
-            set
-            {
-                _recordFontSize = value;
-                RaisePropertyChanged(() => RecordFontSize);
-            }
-        }
-        private int _recordFontSize;
-
-
-        /// <summary>
-        /// 会议信息
-        /// </summary>
-        public MeetingDTO Meeting
-        {
-            get { return _meeting; }
-            set { _meeting = value; RaisePropertyChanged(() => Meeting); }
-        }
-        private MeetingDTO _meeting;
-
-        /// <summary>
-        /// 会议二维码
-        /// </summary>
-        public BitmapSource MeetingCode
-        {
-            get { return _meetingCode; }
-            set
-            {
-                _meetingCode = value; RaisePropertyChanged(() => MeetingCode);
-            }
-        }
-        private BitmapSource _meetingCode = null;
-
-        /// <summary>
-        /// 会议记录
-        /// </summary>
-        public ObservableCollection<RecordObservable> Records
-        {
-            get { return _records; }
-            set
-            {
-                _records = value;
-                RaisePropertyChanged(() => Records);
-            }
-        }
-        private ObservableCollection<RecordObservable> _records = new ObservableCollection<RecordObservable>();
 
         /// <summary>
         /// 是否开始
@@ -202,7 +159,6 @@ namespace UTH.Meeting.Win.ViewModel
         }
         private bool _canClear = false;
 
-
         /// <summary>
         /// 是否显示记录
         /// </summary>
@@ -213,41 +169,85 @@ namespace UTH.Meeting.Win.ViewModel
         }
         private Visibility _isRecords = Visibility.Collapsed;
 
+        /// <summary>
+        /// 记录字号
+        /// </summary>
+        public int RecordFontSize
+        {
+            get { return _recordFontSize; }
+            set
+            {
+                _recordFontSize = value;
+                RaisePropertyChanged(() => RecordFontSize);
+            }
+        }
+        private int _recordFontSize;
+
+        /// <summary>
+        /// 会议记录
+        /// </summary>
+        public ObservableCollection<RecordObservable> Records
+        {
+            get { return _records; }
+            set
+            {
+                _records = value;
+                RaisePropertyChanged(() => Records);
+            }
+        }
+        private ObservableCollection<RecordObservable> _records = new ObservableCollection<RecordObservable>();
+
+
+        private SettingViewModel seetingViewModel = WpfHelper.GetViewModel<SettingViewModel>();
+        private Task syncTask = null;
+        private CancellationTokenSource syncTaskCancel = null;
+        private ServerMarshalByRefObject server = AppHelper.ServerObj;
+        private IRecorderService<WaveInCapabilities> recorderService = new RecorderWaveInService2();
+        private float PreVol = 0;
+        private DateTime PreVolDt = DateTime.MinValue;
+        private bool IsRecording { get; set; } //根据语音音量变化判断是否在录音中
 
         /// <summary>
         /// 加载会议
         /// </summary>
-        /// <param name="code"></param>
         public void Loading(string code = null, MeetingDTO meeting = null)
         {
-            //加载/创建
-            if (code.IsEmpty() && meeting.IsNull())
+            //meeting
+            if (!meeting.IsNull())
             {
-                Meeting.Id = Guid.Empty;
-                var result = PlugCoreHelper.ApiUrl.Meeting.MeetingInsert.GetResult<MeetingDTO, MeetingEditInput>(EngineHelper.Map<MeetingEditInput>(Meeting));
-                if (result.Code == EnumCode.成功)
-                {
-                    Meeting = result.Obj;
-                }
+                Meeting = meeting;
             }
             else if (!code.IsEmpty())
             {
                 var result = PlugCoreHelper.ApiUrl.Meeting.MeetingGetCode.GetResult<MeetingDTO, MeetingEditInput>(new MeetingEditInput() { Num = code });
                 if (result.Code == EnumCode.成功)
                 {
+                    Meeting = meeting;
+                }
+            }
+            else if (Meeting.IsNull())
+            {
+                //else if(Meeting.IsNull()) 全局会议保持
+                var result = PlugCoreHelper.ApiUrl.Meeting.MeetingInsert.GetResult<MeetingDTO, MeetingEditInput>(new MeetingEditInput()
+                {
+                    Id = Guid.Empty,
+                    Name = culture.Lang.metName,
+                    Descript = culture.Lang.metDescript,
+                    Setting = JsonHelper.Serialize(Setting)
+                });
+                if (result.Code == EnumCode.成功)
+                {
                     Meeting = result.Obj;
                 }
             }
-            else if (!meeting.IsNull())
-            {
-                Meeting = meeting;
-            }
-
-            //会议校验
-            if (Meeting.Id.IsEmpty() || Meeting.Num.IsEmpty())
+            if (Meeting.IsNull() || (!Meeting.IsNull() && (Meeting.Id.IsEmpty() || Meeting.Num.IsEmpty())))
             {
                 throw new DbxException(EnumCode.初始失败);
             }
+
+            //device
+            Microphones = RecordingHelper.Microphones();
+            Microphone = Microphones.FirstOrDefault();
 
             //二维码
             var codeBitmap = QrCodeHelper.GetCode(string.Format(EngineHelper.Configuration.Settings.GetValue("meetingViewUrl"), Meeting.Id));
@@ -260,49 +260,18 @@ namespace UTH.Meeting.Win.ViewModel
                 FilesHelper.CopyFile(MeetingHelper.TemplateDatabaseFilePath, meetingDatabasePath);
             }
 
-            //远程初始
-            server.Initialize(Meeting, Session.Accessor.Token);
-
-            //UI状态
-            SyncUIStatus(EnumTaskStatus.Init);
+            //记录字体
+            RecordFontSize = Setting.FontSize;
 
             //同步任务
-            taskException.Token.Register(() =>
-            {
-                taskCancel?.Cancel();
-                throw new DbxException(EnumCode.服务异常);
-            });
-            taskCancel.Token.Register(() =>
-            {
-            });
-            CancellationTokenSource compositeCancel = CancellationTokenSource.CreateLinkedTokenSource(taskException.Token, taskCancel.Token);
-            compositeCancel.Token.Register(() =>
-            {
-                SyncUIStatus(EnumTaskStatus.Stoped);
-                SyncUIStatus(EnumTaskStatus.Clear);
-            });
-            Task.Factory.StartNew(() =>
-            {
-                while (true && !compositeCancel.IsCancellationRequested)
-                {
-                    ThreadPool.QueueUserWorkItem((Object state) =>
-                    {
-                        DispatcherHelper.CheckBeginInvokeOnUI(() =>
-                        {
-                            try
-                            {
-                                SyncData();
-                            }
-                            catch (Exception ex)
-                            {
-                                EngineHelper.LoggingError(ex);
-                                compositeCancel.Cancel();
-                            }
-                        });
-                    });
-                    Thread.Sleep(10);
-                }
-            }, compositeCancel.Token);
+            SyncTask();
+
+            //同步状态
+            SyncUI(EnumTaskStatus.Default);
+            SyncUI(EnumTaskStatus.Init);
+
+            //远程服务同步任务
+            AppHelper.ServerObj.MeetingSyncTask();
         }
 
         /// <summary>
@@ -310,38 +279,57 @@ namespace UTH.Meeting.Win.ViewModel
         /// </summary>
         public void Start()
         {
+            //check
             Meeting.CheckNull();
             Microphone.CheckNull();
+            recorderService.CheckNull();
 
-            recorder.Configruation((opt) =>
+            //server[speech]
+            server.SpeechStart(Setting);
+
+            //recorder
+            recorderService.Configruation((opt) =>
             {
                 opt.DeviceNum = Microphone.Key;
-                opt.Rate = setting.Rate;
-                opt.BitDepth = setting.BitDepth;
-                opt.Channel = setting.Channel;
-                opt.BufferMilliseconds = setting.BufferMilliseconds;
+                opt.Rate = Setting.Rate;
+                opt.BitDepth = Setting.BitDepth;
+                opt.Channel = Setting.Channel;
+                opt.BufferMilliseconds = Setting.BufferMilliseconds;
                 opt.DataEvent = (sender, e) =>
                 {
-                    server.MeetingSend(Meeting.Id, e.Buffer, 0, e.BytesRecorded);
+                    //server.MeetingSend(Meeting.Id, e.Buffer, 0, e.BytesRecorded);
+                    server.SpeechSend(new Plug.Speech.SpeechData()
+                    {
+                        Key = Meeting.Id,
+                        Data = e.Buffer,
+                        Offset = 0,
+                        Length = e.BytesRecorded,
+                        LastDt = DateTime.Now
+                    });
                 };
-                opt.VolumeEvent = (volume) =>
+                opt.VolumeEvent = (sender, e, volume) =>
                 {
                     MicrophoneVolume = volume;
+                    if (PreVol != volume)
+                    {
+                        PreVolDt = DateTime.Now;
+                    }
+                    PreVol = volume;
+                    //Trace.WriteLine($"v:{volume} / {PreVolDt}  {DateTime.Now - PreVolDt}");
                 };
                 opt.StopedEvent = (sender, e) =>
                 {
                     Trace.WriteLine($"stop: {DateTime.Now}");
                 };
-
                 opt.FileName = MeetingHelper.GetMeetingWavFile(Meeting.Id);
-
             });
-            recorder.Start();
+            recorderService.Start();
 
-            server.Configuration(setting);
-            server.MeetingStart();
+            //task
+            SyncTask();
 
-            SyncUIStatus(EnumTaskStatus.Started);
+            //sync
+            SyncUI(EnumTaskStatus.Started);
         }
 
         /// <summary>
@@ -349,17 +337,21 @@ namespace UTH.Meeting.Win.ViewModel
         /// </summary>
         public void Stop()
         {
-            recorder?.Stop();
-            server?.MeetingStop();
-            SyncUIStatus(EnumTaskStatus.Stoped);
+            //server[speech]
+            server.SpeechStop();
+
+            //recorder
+            recorderService?.Stop();
+
+            SyncUI(EnumTaskStatus.Stoped);
         }
 
         /// <summary>
-        /// 清除记录
+        /// 清除会议
         /// </summary>
         public void Clear()
         {
-            SyncUIStatus(EnumTaskStatus.Clear);
+            SyncUI(EnumTaskStatus.Clear);
         }
 
         /// <summary>
@@ -367,117 +359,173 @@ namespace UTH.Meeting.Win.ViewModel
         /// </summary>
         public void Cancel()
         {
-            recorder?.Stop();
-            //server?.MeetingStop();
-            taskCancel?.Cancel();
+            syncTaskCancel?.Cancel();
         }
 
 
-        private void Initialize()
+        /// <summary>
+        /// 同步任务
+        /// </summary>
+        private void SyncTask()
         {
-            //UI状态
-            SyncUIStatus(EnumTaskStatus.Default);
-
-            //会议初始
-            Meeting = new MeetingDTO()
+            if (syncTask.IsNull() || (!syncTask.IsNull() && (syncTask.IsCompleted || syncTask.IsCanceled)))
             {
-                Id = Guid.Empty,
-                Name = culture.Lang.metName,
-                Descript = culture.Lang.metDescript,
-                Setting = JsonHelper.Serialize(setting)
-            };
-
-            //麦克风列表
-            Microphones = RecordingHelper.Microphones();
-            Microphone = Microphones.FirstOrDefault();
-
-            //记录字体
-            RecordFontSize = setting.FontSize;
-
-            //录音器
-            recorder = new RecorderWaveInService2();
-        }
-        private void SyncData()
-        {
-            //本地最后一条数据,空段xx秒后 处理
-            var last = Records.Where(x => !x.IsComplete).LastOrDefault();
-            if (!last.IsNull())
-            {
-                if (DateTime.Now > last.RefreshDt.AddMilliseconds(setting.SentenceMilliseconds))
+                syncTaskCancel = new CancellationTokenSource();
+                syncTaskCancel.Token.Register(() =>
                 {
-                    last.IsComplete = true;
-                }
-                if (last.IsComplete)
+                    Stop();
+                });
+
+                syncTask = Task.Factory.StartNew(() =>
                 {
-                    if (last.Content.Length > 0 && !StringHelper.Punctuations.Contains(last.Content.Substring(last.Content.Length - 1, 1)))
+                    var syncError = 0;
+                    while (true && !syncTaskCancel.IsCancellationRequested)
                     {
-                        last.Content = last.Content + "。";
+                        WpfHelper.ExcuteUI(() =>
+                        {
+                            try
+                            {
+                                if (syncError > 10)
+                                {
+                                    syncTaskCancel.Cancel();
+                                    throw new DbxException(EnumCode.提示消息, "同步错误(中文)");
+                                }
+                                SyncLast();
+                                SyncData(server.MeetingDataGet(Meeting.Id));
+                                SyncUI(EnumTaskStatus.Loading);
+                            }
+                            catch (Exception ex)
+                            {
+                                syncError++;
+                                EngineHelper.LoggingError(ex);
+                            }
+                        });
+                        Thread.Sleep(10);
                     }
-                    if (last.Content.IsEmpty())
-                    {
-                        Records.Remove(last);
-                    }
-                    else
-                    {
-                        server.MeetingInsert(last.LocalId, last.MeetingId, last.Langue, last.LangueTrs, last.Content);
-                    }
-                }
+                }, syncTaskCancel.Token);
             }
 
-            var model = server.MeetingSync();
+            if (!(syncTask.Status == TaskStatus.Running || syncTask.Status == TaskStatus.WaitingToRun))
+            {
+                syncTask.Start();
+            }
+        }
 
-            if (model.IsNull())
-                return;
+        /// <summary>
+        /// 同步UI状态
+        /// </summary>
+        /// <param name="status"></param>
+        private void SyncUI(EnumTaskStatus status)
+        {
+            switch (status)
+            {
+                case EnumTaskStatus.Default:
+                    CanStart = false;
+                    CanStop = false;
+                    CanClear = false;
+                    IsRecords = Visibility.Collapsed;
+                    break;
+                case EnumTaskStatus.Init:
+                    CanStart = true;
+                    CanStop = false;
+                    break;
+                case EnumTaskStatus.Started:
+                    CanStart = false;
+                    CanStop = true;
+                    break;
+                case EnumTaskStatus.Stoped:
+                    CanStart = true;
+                    CanStop = false;
+                    break;
+                case EnumTaskStatus.Clear:
+                    CanClear = false;
+                    IsRecords = Visibility.Collapsed;
+                    Records = new ObservableCollection<RecordObservable>();
+                    break;
+                case EnumTaskStatus.Loading:
+                    if (Records.Count > 0 && IsRecords != Visibility.Visible)
+                    {
+                        IsRecords = Visibility.Visible;
+                        CanClear = true;
+                    }
+                    if (Records.Count == 0 && IsRecords != Visibility.Collapsed)
+                    {
+                        IsRecords = Visibility.Collapsed;
+                        CanClear = false;
+                    }
+                    if (Records.Count > 100)
+                    {
+                        //TODO:RECORDS.COUNT > 100
+                    }
+                    break;
+            }
+        }
+        
+        private void SyncLast()
+        {
+            //没有语音[声音大小]输入10秒后判断最后一条数据
+            if ((DateTime.Now - PreVolDt).TotalMilliseconds > Setting.SentenceMilliseconds)
+            {
+                Records.Where(x => !x.IsComplete).ToList().ForEach(item =>
+                {
+                    if (!StringHelper.Punctuations.Contains(item.Content.Substring(item.Content.Length - 1, 1)))
+                    {
+                        item.Content = item.Content + (Setting.SourceLang == "zs" ? "。" : ".");
+                    }
+                    item.RefreshDt = DateTime.Now;
+                    item.IsComplete = true;
+                });
+            }
 
-            if (model.Content.TrimStartPunctuation().IsEmpty())
+            //add new
+            Records.Where(x => x.IsComplete && x.Id.IsEmpty()).ToList().ForEach(item =>
+            {
+                var result = PlugCoreHelper.ApiUrl.Meeting.MeetingRecordCreate.GetResult<List<MeetingSyncModel>, MeetingSyncModel>(new MeetingSyncModel()
+                {
+                    LocalId = item.LocalId,
+                    MeetingId = item.MeetingId,
+                    Langue = item.Langue,
+                    LangueTrs = item.LangueTrs,
+                    Content = item.Content,
+                    Sort = 0
+                });
+                if (result.Code == EnumCode.成功)
+                {
+                    result.Obj.ForEach(x =>
+                    {
+                        SyncData(x);
+                    });
+                }
+            });
+        }
+
+        private void SyncData(MeetingSyncModel model)
+        {
+            if (model == null || (model != null && model.Content.IsEmpty()))
                 return;
 
             if (model.SyncType <= 0)
             {
-                var content = model.Content.TrimStartPunctuation().TrimEndPunctuation();
-                var record = Records.Where(x => !x.IsComplete).LastOrDefault();
-
-                if (record.IsNull() && !content.IsEmpty())
+                var last = Records.Where(x => !x.IsComplete).LastOrDefault();
+                if (last.IsNull())
                 {
-                    record = new RecordObservable();
-                    record.Id = Guid.Empty;
-                    record.LocalId = Guid.NewGuid();
-                    record.MeetingId = Meeting.Id;
-                    record.Langue = setting.SourceLang;
-                    record.LangueTrs = setting.TargetLangs;
-                    record.Translations = new ObservableCollection<TranslationObservable>();
-                    Records.Add(record);
+                    last = new RecordObservable();
+                    last.Id = Guid.Empty;
+                    last.LocalId = Guid.Empty;
+                    last.IsComplete = false;
+                    last.Translations = new ObservableCollection<TranslationObservable>();
+                    Records.Add(last);
                 }
-
-                if (record.IsNull())
-                    return;
-
-                if (!record.Content.IsEmpty() && !StringHelper.Punctuations.Contains(model.Content.Substring(0, 1)))
+                last.MeetingId = Meeting.Id;
+                last.Langue = Setting.SourceLang;
+                last.LangueTrs = Setting.TargetLangs;
+                last.Content = last.Content + model.Content;
+                last.RefreshDt = DateTime.Now;
+                last.IsComplete = model.SyncType == 0;
+                if (last.LocalId == Guid.Empty)
                 {
-                    record.Content = record.Content + "，";
-                }
-                if (record.Content.IsEmpty())
-                {
-                    record.Content = model.Content.TrimStartPunctuation();
-                }
-                else
-                {
-                    record.Content = record.Content + model.Content;
-                }
-
-                record.IsComplete = model.SyncType == 0; //-1:当前句子未完,0：当交句子为最后完成
-                record.RefreshDt = DateTime.Now;
-
-                if (record.IsComplete)
-                {
-                    if (record.Content.IsEmpty())
-                    {
-                        Records.Remove(record);
-                    }
-                    else
-                    {
-                        server.MeetingInsert(record.LocalId, record.MeetingId, record.Langue, record.LangueTrs, record.Content);
-                    }
+                    last.LocalId = Guid.NewGuid();
+                    last.Content = last.Content.TrimStartPunctuation();
                 }
             }
 
@@ -518,77 +566,19 @@ namespace UTH.Meeting.Win.ViewModel
                 {
                     translation = new TranslationObservable();
                 }
+
                 translation.Id = model.TranslationId;
                 translation.MeetingId = model.MeetingId;
                 translation.RecordId = model.RecordId;
                 translation.Langue = model.Langue;
                 translation.Content = model.Content;
                 translation.Sort = model.Sort;
+
                 if (isAdd)
                 {
                     record.Translations.Add(translation);
                 }
             }
-
-            SyncUIStatus(EnumTaskStatus.Loading);
         }
-        private void SyncUIStatus(EnumTaskStatus status)
-        {
-            switch (status)
-            {
-                case EnumTaskStatus.Default:
-
-                    CanStart = false;
-                    CanStop = false;
-                    CanClear = false;
-                    IsRecords = Visibility.Collapsed;
-                    Records = new ObservableCollection<RecordObservable>();
-
-                    break;
-                case EnumTaskStatus.Init:
-
-                    CanStart = true;
-                    CanStop = false;
-
-                    break;
-                case EnumTaskStatus.Started:
-
-                    CanStart = false;
-                    CanStop = true;
-
-                    break;
-                case EnumTaskStatus.Stoped:
-
-                    CanStart = true;
-                    CanStop = false;
-
-                    break;
-                case EnumTaskStatus.Clear:
-
-                    CanClear = false;
-                    IsRecords = Visibility.Collapsed;
-                    Records = new ObservableCollection<RecordObservable>();
-
-                    break;
-                case EnumTaskStatus.Loading:
-
-                    if (Records.Count > 0 && IsRecords != Visibility.Visible)
-                    {
-                        IsRecords = Visibility.Visible;
-                        CanClear = true;
-                    }
-                    if (Records.Count == 0 && IsRecords != Visibility.Collapsed)
-                    {
-                        IsRecords = Visibility.Collapsed;
-                        CanClear = false;
-                    }
-                    if (Records.Count > 100)
-                    {
-                        //TODO:RECORDS.COUNT > 100
-                    }
-                    break;
-            }
-        }
-
     }
 }

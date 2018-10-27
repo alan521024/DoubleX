@@ -14,8 +14,14 @@ using UTH.Framework;
 
 namespace UTH.Domain
 {
+    /// <summary>
+    /// 会议领域配置文件
+    /// </summary>
     public class MeetingDomainProfile : IDomainProfile
     {
+        /// <summary>
+        /// 领域配置
+        /// </summary>
         public void Configuration()
         {
             EngineHelper.RegisterType(typeof(IValidator<MeetingEditInput>), typeof(MeetingEditInputValidator));
@@ -27,6 +33,10 @@ namespace UTH.Domain
             EngineHelper.RegisterType(typeof(IValidator<MeetingProfileEditInput>), typeof(MeetingProfileEditInputValidator));
         }
 
+        /// <summary>
+        /// 对象映射
+        /// </summary>
+        /// <param name="config"></param>
         public void Mapper(IMapperConfigurationExpression config)
         {
             config.CreateMap<MeetingEntity, MeetingDTO>();
@@ -37,40 +47,58 @@ namespace UTH.Domain
             config.CreateMap<MeetingRecordEntity, MeetingRecordDTO>();
             config.CreateMap<MeetingRecordDTO, MeetingRecordEntity>();
             config.CreateMap<MeetingRecordEditInput, MeetingRecordEntity>();
-            config.CreateMap<MeetingRecordEntity, MeetingRecordOutput>();
-            config.CreateMap<MeetingRecordDTO, MeetingRecordOutput>();
+            config.CreateMap<MeetingRecordEditInput, MeetingRecordDTO>();
 
             config.CreateMap<MeetingTranslationEntity, MeetingTranslationDTO>();
             config.CreateMap<MeetingTranslationDTO, MeetingTranslationEntity>();
             config.CreateMap<MeetingTranslationEditInput, MeetingTranslationEntity>();
+            config.CreateMap<MeetingTranslationEditInput, MeetingTranslationDTO>();
 
             config.CreateMap<MeetingProfileEntity, MeetingProfileDTO>();
             config.CreateMap<MeetingProfileDTO, MeetingProfileEntity>();
             config.CreateMap<MeetingProfileEditInput, MeetingProfileEntity>();
+            config.CreateMap<MeetingProfileEditInput, MeetingProfileDTO>();
 
-
-
-
-            config.CreateMap<MeetingSyncModel, MeetingRecordEditInput>()
-                .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.RecordId));
             config.CreateMap<MeetingSyncModel, MeetingRecordEntity>()
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.RecordId));
             config.CreateMap<MeetingRecordEntity, MeetingSyncModel>()
                 .ForMember(dest => dest.RecordId, opts => opts.MapFrom(src => src.Id));
-            config.CreateMap<MeetingRecordOutput, MeetingSyncModel>()
-                .ForMember(dest => dest.RecordId, opts => opts.MapFrom(src => src.Id));
 
-            config.CreateMap<MeetingSyncModel, MeetingTranslationEditInput>()
-                .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.TranslationId));
             config.CreateMap<MeetingSyncModel, MeetingTranslationEntity>()
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.TranslationId));
             config.CreateMap<MeetingTranslationEntity, MeetingSyncModel>()
                 .ForMember(dest => dest.TranslationId, opts => opts.MapFrom(src => src.Id));
-            config.CreateMap<MeetingTranslationDTO, MeetingSyncModel>()
-                .ForMember(dest => dest.TranslationId, opts => opts.MapFrom(src => src.Id));
 
             config.CreateMap<MeetingProfileDTO, MeetingSettingModel>()
                 .ForMember(dest => dest.ProfileId, opt => opt.MapFrom(src => src.Id));
+
+            //config.CreateMap<MeetingRecordEditInput, MeetingRecordEntity>();
+            //config.CreateMap<MeetingRecordEntity, MeetingRecordOutput>();
+            //config.CreateMap<MeetingRecordDTO, MeetingRecordOutput>();
+
+            //config.CreateMap<MeetingSyncModel, MeetingRecordEditInput>()
+            //    .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.RecordId));
+
+            //config.CreateMap<MeetingSyncModel, MeetingRecordEntity>()
+            //    .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.RecordId));
+
+            //config.CreateMap<MeetingRecordEntity, MeetingSyncModel>()
+            //    .ForMember(dest => dest.RecordId, opts => opts.MapFrom(src => src.Id));
+
+            //config.CreateMap<MeetingRecordOutput, MeetingSyncModel>()
+            //    .ForMember(dest => dest.RecordId, opts => opts.MapFrom(src => src.Id));
+
+            //config.CreateMap<MeetingSyncModel, MeetingTranslationEditInput>()
+            //    .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.TranslationId));
+            //config.CreateMap<MeetingSyncModel, MeetingTranslationEntity>()
+            //    .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.TranslationId));
+            //config.CreateMap<MeetingTranslationEntity, MeetingSyncModel>()
+            //    .ForMember(dest => dest.TranslationId, opts => opts.MapFrom(src => src.Id));
+            //config.CreateMap<MeetingTranslationDTO, MeetingSyncModel>()
+            //    .ForMember(dest => dest.TranslationId, opts => opts.MapFrom(src => src.Id));
+
+            //config.CreateMap<MeetingProfileDTO, MeetingSettingModel>()
+            //    .ForMember(dest => dest.ProfileId, opt => opt.MapFrom(src => src.Id));
         }
     }
 }

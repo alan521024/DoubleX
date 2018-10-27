@@ -17,7 +17,14 @@
     /// </summary>
     public class MeetingSyncOutput : IOutput
     {
+        /// <summary>
+        /// 会议记录
+        /// </summary>
         public List<MeetingSyncModel> Records { get; set; }
+
+        /// <summary>
+        /// 翻译记录
+        /// </summary>
         public List<MeetingSyncModel> Translations { get; set; }
     }
 }

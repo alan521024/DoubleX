@@ -99,9 +99,11 @@ namespace UTH.Infrastructure.Utility
             for (var i = 0; i < procs.Length; i++)
             {
                 ids[i] = procs[i].Id;
-                //不使用procs直接杀出，根据名称（多线程或先杀后立马启用新进程/根据名称杀没操作完，就启用新的，可能把新的也同时杀死）;
-                //Trace.WriteLine($"id: {ids[i]}");
             }
+
+            //不使用根据名称查到的进程直接杀出. 原因：[在多线程或先杀后立马启用新进程等情况下，杀掉的可能是最新的不是原进程];
+            //Trace.WriteLine($"id: {ids[i]}");
+
             Kill(ids);
         }
 

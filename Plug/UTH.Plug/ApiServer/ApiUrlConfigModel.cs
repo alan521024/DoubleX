@@ -67,6 +67,8 @@
     {
         #region App
 
+        public string AppGetModel { get; set; } = "/api/basics/app/getmodel";
+
         public string AppGetId { get; set; } = "/api/basics/app/get";
         public string AppInsert { get; set; } = "/api/basics/app/insert";
         public string AppUpdate { get; set; } = "/api/basics/app/update";
@@ -74,7 +76,16 @@
         public string AppQuery { get; set; } = "/api/basics/app/query";
         public string AppPaging { get; set; } = "/api/basics/app/paging";
 
-        public string AppGetModel { get; set; } = "/api/basics/app/getmodel";
+        #endregion
+
+        #region version
+
+        public string AppVersionGetId { get; set; } = "/api/basics/appversion/get";
+        public string AppVersionInsert { get; set; } = "/api/basics/appversion/insert";
+        public string AppVersionUpdate { get; set; } = "/api/basics/appversion/update";
+        public string AppVersionDelete { get; set; } = "/api/basics/appversion/delete";
+        public string AppVersionQuery { get; set; } = "/api/basics/appversion/query";
+        public string AppVersionPaging { get; set; } = "/api/basics/appversion/paging";
 
         #endregion
     }
@@ -94,7 +105,7 @@
 
         #region Notify
 
-        public string NotifySend { get; set; } = "/api/core/Notify/send";
+        public string NotifySend { get; set; } = "/api/core/notify/send";
 
         #endregion
     }
@@ -104,15 +115,15 @@
     /// </summary>
     public class ApiUrlUser
     {
-        public string CheckName { get; set; } = "/api/user/account/checkname";
+        #region Account
+
         public string SignIn { get; set; } = "/api/user/account/signin";
         public string SignOut { get; set; } = "/api/user/account/signout";
         public string Refresh { get; set; } = "/api/user/account/refresh";
         public string Regist { get; set; } = "/api/user/account/regist";
         public string FindPwd { get; set; } = "/api/user/account/findpwd";
         public string EditPwd { get; set; } = "/api/user/account/editpwd";
-
-        #region Account
+        public string CheckName { get; set; } = "/api/user/account/checkname";
 
         public string AccountGetId { get; set; } = "/api/user/account/get";
         public string AccountUpdate { get; set; } = "/api/user/account/update";
@@ -147,6 +158,7 @@
         public string EmployeDelete { get; set; } = "/api/user/employe/delete";
         public string EmployeQuery { get; set; } = "/api/user/employe/query";
         public string EmployePaging { get; set; } = "/api/user/employe/paging";
+
         #endregion
     }
 
@@ -163,21 +175,15 @@
     /// </summary>
     public class ApiUrlMeeting
     {
-        #region Sync
+        #region Meeting
 
+        public string MeetingGetCode { get; set; } = "/api/meet/meeting/getbycode";
         public string MeetingSyncQuery { get; set; } = "/api/meet/meeting/syncquery";
 
-        #endregion
-
-        #region Meeting
-        public string MeetingGetCode { get; set; } = "/api/meet/meeting/getbycode";
         public string MeetingGetId { get; set; } = "/api/meet/meeting/get";
-        public string MeetingGetIds { get; set; } = "/api/meet/meeting/getids";
         public string MeetingInsert { get; set; } = "/api/meet/meeting/insert";
         public string MeetingUpdate { get; set; } = "/api/meet/meeting/update";
         public string MeetingDelete { get; set; } = "/api/meet/meeting/delete";
-        public string MeetingDeleteId { get; set; } = "/api/meet/meeting/deleteid";
-        public string MeetingDeleteIds { get; set; } = "/api/meet/v/deleteids";
         public string MeetingQuery { get; set; } = "/api/meet/meeting/query";
         public string MeetingPaging { get; set; } = "/api/meet/meeting/paging";
 
@@ -185,28 +191,24 @@
 
         #region Record
 
+        public string MeetingRecordAdd { get; set; } = "/api/meet/meetingrecord/add";
+        public string MeetingRecordCreate { get; set; } = "/api/meet/meetingrecord/create";
+
         public string MeetingRecordGetId { get; set; } = "/api/meet/meetingrecord/get";
-        public string MeetingRecordGetIds { get; set; } = "/api/meet/meetingrecord/getids";
         public string MeetingRecordInsert { get; set; } = "/api/meet/meetingrecord/insert";
         public string MeetingRecordUpdate { get; set; } = "/api/meet/meetingrecord/update";
         public string MeetingRecordDelete { get; set; } = "/api/meet/meetingrecord/delete";
-        public string MeetingRecordDeleteId { get; set; } = "/api/meet/meetingrecord/deleteid";
-        public string MeetingRecordDeleteIds { get; set; } = "/api/meet/v/deleteids";
         public string MeetingRecordQuery { get; set; } = "/api/meet/meetingrecord/query";
         public string MeetingRecordPaging { get; set; } = "/api/meet/meetingrecord/paging";
-        public string MeetingRecordAdd { get; set; } = "/api/meet/meetingrecord/add";
 
         #endregion
 
         #region Translation
 
         public string MeetingTranslationGetId { get; set; } = "/api/meet/meetingtranslation/get";
-        public string MeetingTranslationGetIds { get; set; } = "/api/meet/meetingtranslation/getids";
         public string MeetingTranslationInsert { get; set; } = "/api/meet/meetingtranslation/insert";
         public string MeetingTranslationUpdate { get; set; } = "/api/meet/meetingtranslation/update";
         public string MeetingTranslationDelete { get; set; } = "/api/meet/meetingtranslation/delete";
-        public string MeetingTranslationDeleteId { get; set; } = "/api/meet/meetingtranslation/deleteid";
-        public string MeetingTranslationDeleteIds { get; set; } = "/api/meet/v/deleteids";
         public string MeetingTranslationQuery { get; set; } = "/api/meet/meetingtranslation/query";
         public string MeetingTranslationPaging { get; set; } = "/api/meet/meetingtranslation/paging";
 
@@ -215,7 +217,6 @@
         #region Profile
 
         public string MeetingProfileLoginAccountGet { get; set; } = "/api/meet/meetingprofile/getloginaccountprofile";
-
         public string MeetingProfileLoginAccountSave { get; set; } = "/api/meet/meetingprofile/saveloginaccountprofile";
 
         #endregion

@@ -672,4 +672,34 @@
   <data name="sysMingChengHuoBianMaYiCunZai" xml:space="preserve">
     <value>名称或编码已存在</value>
   </data>
+  <data name="sysBaoCunShiBai" xml:space="preserve">
+    <value>保存失败</value>
+  </data>
+  <data name="sysRenZhengShiBaiHuoGuoQi" xml:space="preserve">
+    <value>认证失败或过期</value>
+  </data>
+  <data name="metWeiKaiShiHuiYi" xml:space="preserve">
+    <value>未开始会议</value>
+  </data>
+  <data name="basBanBengGuanLi" xml:space="preserve">
+    <value>版本管理</value>
+  </data>
+  <data name="basBanBengHao" xml:space="preserve">
+    <value>版本号</value>
+  </data>
+  <data name="basGengXinLeiXing" xml:space="preserve">
+    <value>更新类型</value>
+  </data>
+  <data name="sysFaBuShiJian" xml:space="preserve">
+    <value>发布时间</value>
+  </data>
+  <data name="sysWenJian" xml:space="preserve">
+    <value>文件</value>
+  </data>
+  <data name="sysBeiZhu" xml:space="preserve">
+    <value>备注</value>
+  </data>
+  <data name="sysMiaoShu" xml:space="preserve">
+    <value>描述</value>
+  </data>
 </root>

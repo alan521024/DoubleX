@@ -52,7 +52,7 @@ namespace UTH.Update.Win
 
             AppHelper.ExecuteAppCode = args[0];
             AppHelper.ExecuteAppVersion = args[1];
-            AppHelper.ExecuteAppProcess = IntHelper.Get(args[2]);
+            AppHelper.ExecuteAppProcessIds = args[2];
             AppHelper.ExecuteAppPath = args[3];
 
             UTH.Update.Win.App app = new UTH.Update.Win.App();

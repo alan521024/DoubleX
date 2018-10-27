@@ -48,9 +48,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Upload\4\9\87\v1001.zip">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="Upload\9\E\A0\v1000.zip">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

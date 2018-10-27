@@ -1,0 +1,131 @@
+﻿@model AppVersionEdit
+@{
+    ViewData["Title"] = Lang.basBanBengGuanLi;
+    Layout = string.Format("~/Views/Shared/{0}.cshtml", AppHelper.IsMaster ? "_Master" : "_Layout");
+}
+
+@section Heads{ }
+
+@section Styles{ }
+
+@if (!AppHelper.IsMaster)
+{
+    @section Menus{
+        @await Html.PartialAsync("~/Areas/Basics/Views/_Menus.cshtml")
+    }
+}
+
+<div class="dxm-page dxm-page-pos dxm-page-pos-no-head layui-form">
+    <div class="dxm-page-content bg-white">
+        <div class="dxm-page-content-inner flex-form">
+            <div class="form-line">
+                <label>@(Lang.basYingYongChengXu)：</label>
+                <div class="item">
+                    <select id="dll-app" @(!Model.Detail.AppId.IsEmpty() ? "disabled" : "")>
+                        @foreach (var item in Model.Apps)
+                        {
+                            if (item.Id == Model.Detail.Id)
+                            {
+                                <option value="@(item.Id)" selected="selected">@(item.Name)</option>
+                            }
+                            else
+                            {
+                                <option value="@(item.Id)">@(item.Name)</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="form-line">
+                <label>@(Lang.basBanBengHao)：</label>
+                <div class="item">
+                    <input id="txt-no" autocomplete="off" class="layui-input" type="text" value="@(Model.Detail.No)" />
+                </div>
+            </div>
+            <div class="form-line">
+                <label>@(Lang.basGengXinLeiXing)：</label>
+                <div class="group">
+                    <div class="group-item">
+                        @(WebHelper.GetEnumSelectHtml<EnumUpdateType>(id: "ddl-updatetype", selected: Model.Detail.UpdateType.GetValue()))
+                    </div>
+                    <div class="group-item"><span>*强制更新，增量更新</span></div>
+                </div>
+            </div>
+            <div class="form-line">
+                <label>@(Lang.sysFaBuShiJian)：</label>
+                <div class="item">
+                    <input id="txt-releasedt" autocomplete="off" class="layui-input" type="text" value="@(Model.Detail.ReleaseDt)" />
+                </div>
+            </div>
+            <div class="form-line">
+                <label>@(Lang.sysWenJian)：</label>
+                <div class="item">
+                    <div id="version-file"></div>
+                </div>
+            </div>
+            <div class="form-line">
+                <label>@(Lang.sysMiaoShu)：</label>
+                <div class="item">
+                    <textarea id="txt-descript" class="layui-textarea">@(Model.Detail.Descript)</textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="dxm-page-foot clearfix bg-white">
+        <div class="left">
+        </div>
+        <div class="right">
+            <button id="btn-save" class="layui-btn">@(Lang.sysBaoCun)</button>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+    <script type="text/javascript">
+        var pageView = {};
+        var id = "@(Model.Detail.Id)";
+        var callback = "@(WebHelper.GetQueryValue(this.Context, "callback"))";
+        $(document).ready(function () { pageView.init(); pageView.event(); });
+    </script>
+    <script type="text/javascript">
+
+        pageView.init = function () {
+            layui.laydate.render({
+                elem: '#txt-releasedt',
+                format: 'yyyy-MM-dd HH:mm:ss'
+            });
+            control.file({ id: "#version-file" });
+        };
+
+        pageView.event = function () {
+            $("#btn-save").on("click", pageView.save);
+        };
+
+        pageView.save = function () {
+            var model = {
+                id: id,
+                appId: $("#dll-app").val(),
+                no: $("#txt-no").val(),
+                updateType: $("#ddl-updatetype").val(),
+                releaseDt: $("#txt-releasedt").val(),
+                descript: $("#txt-descript").val()
+            };
+
+            var url = "/common/do?action=/basics/appversion/insert";
+            if (!app.isEmpty(id)) {
+                url = "/common/do?action=/basics/appversion/update";
+            }
+            app.request(url, { data: model }, function (result) {
+                app.message(__language.sysBaoCunChengGong, function () {
+                    if (!app.isEmpty(callback)) {
+                        app.parentFunc(callback);
+                    }
+                });
+            });
+        };
+
+    </script>
+}
+

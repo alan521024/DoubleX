@@ -34,25 +34,7 @@
         public MeetingProfileDTO GetLoginAccountProfile()
         {
             Session.User.Id.CheckEmpty();
-
-            var entity = service.Get(x => x.AccountId == Session.User.Id);
-            if (entity.IsNull())
-            {
-                entity = new MeetingProfileEntity()
-                {
-                    AccountId = Session.User.Id,
-                    SourceLang = "zs",
-                    TargetLangs = "en",
-                    Speed = 5,
-                    FontSize = 16
-                };
-                if (service.Insert(entity) == 0)
-                {
-                    return null;
-                }
-            }
-
-            return MapperToDto(entity);
+            return MapperToDto(service.GetOrInsertDefaultByAccount(Session.User.Id));
         }
 
         /// <summary>
@@ -62,14 +44,11 @@
         public MeetingProfileDTO SaveLoginAccountProfile(MeetingProfileEditInput input)
         {
             Session.User.Id.CheckEmpty();
-
-            var entity = service.Get(x => x.AccountId == Session.User.Id);
+            var entity = service.GetOrInsertDefaultByAccount(Session.User.Id);
             entity.CheckNull();
-
             input.Id = entity.Id;
 
             var output = Update(input);
-
             if (!output.IsEmpty() && !input.MeetingId.IsEmpty())
             {
                 var meetingRep = EngineHelper.Resolve<IMeetingRepository>();
@@ -78,8 +57,9 @@
                 meeting.Setting = JsonHelper.Serialize(EngineHelper.Map<MeetingSettingModel>(output));
                 meetingRep.Update(meeting);
             }
-
             return output;
         }
+
+
     }
 }

@@ -99,30 +99,41 @@
         }
 
         /// <summary>
-        /// 程序版本校验
+        /// 程序版本更新
         /// </summary>
-        public static EnumUpdateType CheckVersion(Version curVersion, ApplicationModel model)
+        /// <param name="version">当前版本</param>
+        /// <param name="model">应用信息</param>
+        /// <returns></returns>
+        public static EnumUpdateType VersionUpdate(Version version, ApplicationModel model)
         {
-            curVersion.CheckNull();
+            version.CheckNull();
             model.CheckNull();
+
             model.Versions.CheckNull();
             model.Versions.No.CheckNull();
 
             var lastVersion = model.Versions.No;
 
-            if (curVersion == lastVersion)
+            if (version == lastVersion)
             {
                 return EnumUpdateType.Default;
             }
-
-            if (curVersion.Major != lastVersion.Major || curVersion.Minor != lastVersion.Minor)
+            else
             {
-                return EnumUpdateType.Forced;
-            }
+                if (model.Versions.UpdateType == EnumUpdateType.Forced)
+                {
+                    return EnumUpdateType.Forced;
+                }
 
-            if (curVersion.Build != lastVersion.Build || curVersion.Revision != lastVersion.Revision)
-            {
-                return EnumUpdateType.Incremental;
+                if (version.Major != lastVersion.Major || version.Minor != lastVersion.Minor)
+                {
+                    return EnumUpdateType.Forced;
+                }
+
+                if (version.Build != lastVersion.Build || version.Revision != lastVersion.Revision)
+                {
+                    return EnumUpdateType.Incremental;
+                }
             }
 
             return EnumUpdateType.Default;

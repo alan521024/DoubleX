@@ -51,13 +51,12 @@
         /// 添加对象
         /// </summary>
         /// <param name="entity">对象</param>
-        public virtual int Insert(TEntity entity)
+        public virtual TEntity Insert(TEntity entity)
         {
-            var items = new List<TEntity>() { entity };
-            InsertBefore(items);
-            int rows = Repository.Insert(items.FirstOrDefault());
-            InsertAfter(items);
-            return rows;
+            entity = InsertBefore(new List<TEntity>() { entity }).FirstOrDefault();
+            var rows = Repository.Insert(entity);
+            entity = InsertAfter(new List<TEntity>() { entity }).FirstOrDefault();
+            return rows > 0 ? entity : null;
         }
 
         /// <summary>
@@ -65,12 +64,12 @@
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        public virtual int Insert(List<TEntity> list)
+        public virtual List<TEntity> Insert(List<TEntity> list)
         {
-            InsertBefore(list);
-            int rows = Repository.Insert(list);
-            InsertAfter(list);
-            return rows;
+            var entitys = InsertBefore(list);
+            var rows = Repository.Insert(entitys);
+            entitys = InsertAfter(entitys);
+            return rows > 0 ? entitys : null;
         }
 
         #region 异步(可等待)操作
@@ -79,13 +78,12 @@
         /// 添加对象-(可等待)
         /// </summary>
         /// <param name="entity">对象</param>
-        public virtual async Task<int> InsertAsync(TEntity entity)
+        public virtual async Task<TEntity> InsertAsync(TEntity entity)
         {
-            var items = new List<TEntity>() { entity };
-            InsertBefore(items);
-            var result = await Repository.InsertAsync(items.FirstOrDefault());
-            InsertAfter(items);
-            return result;
+            entity = InsertBefore(new List<TEntity>() { entity }).FirstOrDefault();
+            var rows = await Repository.InsertAsync(entity);
+            entity = InsertAfter(new List<TEntity>() { entity }).FirstOrDefault();
+            return rows > 0 ? entity : null;
         }
 
         /// <summary>
@@ -93,12 +91,12 @@
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        public virtual async Task<int> InsertAsync(List<TEntity> list)
+        public virtual async Task<List<TEntity>> InsertAsync(List<TEntity> list)
         {
-            InsertBefore(list);
-            var result = await Repository.InsertAsync(list);
-            InsertAfter(list);
-            return result;
+            var entitys = InsertBefore(list);
+            var rows = await Repository.InsertAsync(entitys);
+            entitys = InsertAfter(entitys);
+            return rows > 0 ? entitys : null;
         }
 
         #endregion
@@ -111,13 +109,12 @@
         /// 修改对象
         /// </summary>
         /// <param name="entity">对象</param>
-        public virtual int Update(TEntity entity)
+        public virtual TEntity Update(TEntity entity)
         {
-            var items = new List<TEntity>() { entity };
-            UpdateBefore(items);
-            int rows = Repository.Update(items.FirstOrDefault());
-            UpdateAfter(items);
-            return rows;
+            entity = UpdateBefore(new List<TEntity>() { entity }).FirstOrDefault();
+            var rows = Repository.Update(entity);
+            entity = UpdateAfter(new List<TEntity>() { entity }).FirstOrDefault();
+            return rows > 0 ? entity : null;
         }
 
         /// <summary>
@@ -125,12 +122,12 @@
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        public virtual int Update(List<TEntity> list)
+        public virtual List<TEntity> Update(List<TEntity> list)
         {
-            UpdateBefore(list);
-            int rows = Repository.Update(list);
-            UpdateAfter(list);
-            return rows;
+            var entitys = UpdateBefore(list);
+            var rows = Repository.Update(entitys);
+            entitys = UpdateAfter(entitys);
+            return rows > 0 ? entitys : null;
         }
 
         #region 异步(可等待)操作
@@ -139,13 +136,12 @@
         /// 修改对象-(可等待)
         /// </summary>
         /// <param name="entity">对象</param>
-        public virtual async Task<int> UpdateAsync(TEntity entity)
+        public virtual async Task<TEntity> UpdateAsync(TEntity entity)
         {
-            var items = new List<TEntity>() { entity };
-            UpdateBefore(items);
-            var result = await Repository.UpdateAsync(items.FirstOrDefault());
-            UpdateAfter(items);
-            return result;
+            entity = UpdateBefore(new List<TEntity>() { entity }).FirstOrDefault();
+            var rows = await Repository.UpdateAsync(entity);
+            entity = UpdateAfter(new List<TEntity>() { entity }).FirstOrDefault();
+            return rows > 0 ? entity : null;
         }
 
         /// <summary>
@@ -153,14 +149,14 @@
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        public virtual async Task<int> UpdateAsync(List<TEntity> list)
+        public virtual async Task<List<TEntity>> UpdateAsync(List<TEntity> list)
         {
-            UpdateBefore(list);
-            var result = await Repository.UpdateAsync(list);
-            UpdateAfter(list);
-            return result;
+            var entitys = UpdateBefore(list);
+            var rows = await Repository.UpdateAsync(entitys);
+            entitys = UpdateAfter(entitys);
+            return rows > 0 ? entitys : null;
         }
-        
+
         #endregion
 
         #endregion
@@ -257,7 +253,7 @@
             DeleteAfter(ids);
             return result;
         }
-        
+
         /// <summary>
         /// 删除集合
         /// </summary>
@@ -550,13 +546,13 @@
 
         #region 增改删回调
 
-        protected virtual void InsertBefore(List<TEntity> list) { }
+        protected virtual List<TEntity> InsertBefore(List<TEntity> inputs) { return inputs; }
 
-        protected virtual void InsertAfter(List<TEntity> list) { }
+        protected virtual List<TEntity> InsertAfter(List<TEntity> inputs) { return inputs; }
 
-        protected virtual void UpdateBefore(List<TEntity> list) { }
+        protected virtual List<TEntity> UpdateBefore(List<TEntity> inputs) { return inputs; }
 
-        protected virtual void UpdateAfter(List<TEntity> list) { }
+        protected virtual List<TEntity> UpdateAfter(List<TEntity> inputs) { return inputs; }
 
         protected virtual void DeleteBefore(List<Guid> ids) { }
 

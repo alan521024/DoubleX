@@ -44,7 +44,33 @@ namespace UTH.Framework.Wpf
         [DllImport("gdi32")]
         static extern int DeleteObject(IntPtr o);
 
-        #region 系统/注册表/...操作
+        #region 系统
+
+        /// <summary>
+        /// 系统日志
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="ex"></param>
+        public static void SystemLog(string source, Exception ex)
+        {
+            SystemLog(source, ex.IsNull() ? " ex empty " : ex.ToString());
+        }
+
+        /// <summary>
+        /// 系统日志
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="message"></param>
+        public static void SystemLog(string source, string message)
+        {
+            var log = new EventLog();
+            log.Source = source;
+            log.WriteEntry(message);
+        }
+
+        #endregion
+
+        #region 注册表
 
         //读注册表：
         //    string portName = RegistryGet(Registry.LocalMachine, "SOFTWARE\\TagReceiver\\Params\\SerialPort", "PortName");
@@ -131,31 +157,9 @@ namespace UTH.Framework.Wpf
             return _exit;
         }
 
-        /// <summary>
-        /// 系统日志
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="ex"></param>
-        public static void SystemLog(string source, Exception ex)
-        {
-            SystemLog(source, ex.IsNull() ? " ex empty " : ex.ToString());
-        }
-
-        /// <summary>
-        /// 系统日志
-        /// </summary>
-        /// <param name="source"></param>
-        /// <param name="message"></param>
-        public static void SystemLog(string source, string message)
-        {
-            var log = new EventLog();
-            log.Source = source;
-            log.WriteEntry(message);
-        }
-
         #endregion
 
-        #region 应用/窗体/控件操作
+        #region 窗体/消息/UI...
 
         /// <summary>
         /// 获取父对象
@@ -191,9 +195,6 @@ namespace UTH.Framework.Wpf
             return GetParent<Window>(reference);
         }
 
-
-        //TODO:MessageBox 位置(基本主窗体，非屏幕)
-        //http://www.360doc.com/content/09/1117/16/466494_9221971.shtml
 
         /// <summary>
         /// 弹出消息
@@ -324,23 +325,6 @@ namespace UTH.Framework.Wpf
         /// <summary>
         /// 通知主线程去完成更新(执行方法)
         /// </summary>
-        /// <param name="win"></param>
-        /// <param name="action"></param>
-        public static void ExcuteAction(Window win, Action action)
-        {
-            //正确的写法：通知主线程去完成更新
-            new Thread(() =>
-            {
-                win.Dispatcher.Invoke(new Action(() =>
-                {
-                    action();
-                }));
-            }).Start();
-        }
-
-        /// <summary>
-        /// 通知主线程去完成更新(执行方法)
-        /// </summary>
         /// <param name="action"></param>
         public static void ExcuteUI(Action action)
         {
@@ -355,6 +339,7 @@ namespace UTH.Framework.Wpf
         /// </summary>
         /// <param name="call"></param>
         /// <param name="data"></param>
+        [Obsolete("该方法己过时，仅供参考，请调用ExcuteUI")]
         public static void ExcueUISynchronization(SendOrPostCallback call, object data = null)
         {
             ThreadPool.QueueUserWorkItem(delegate
@@ -365,74 +350,21 @@ namespace UTH.Framework.Wpf
         }
 
         /// <summary>
-        /// 应用程序错误处理
+        /// 通知主线程去完成更新(执行方法)
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="win"></param>
         /// <param name="action"></param>
-        public static void AppError(object sender, DispatcherUnhandledExceptionEventArgs e, Action action = null)
+        [Obsolete("该方法己过时，仅供参考，请调用ExcuteUI")]
+        public static void ExcuteAction(Window win, Action action)
         {
-            if (EngineHelper.Configuration.IsDebugger)
+            //正确的写法：通知主线程去完成更新
+            new Thread(() =>
             {
-                e.Handled = true;
-            }
-
-            //log
-            EngineHelper.LoggingError(e.Exception);
-
-            //DbxException
-            DbxException exception = e.Exception as DbxException;
-            if (exception.IsNull() && e.Exception.InnerException != null)
-            {
-                exception = e.Exception.InnerException as DbxException;
-            }
-            if (exception != null && (exception.Code == EnumCode.提示消息 || exception.Code == EnumCode.校验失败))
-            {
-                e.Handled = true;
-                Error(exception.Message);
-                return;
-            }
-            if (exception != null && exception.Code == EnumCode.初始失败)
-            {
-                e.Handled = true;
-                Error("初始化错误，请检查设备/服务/会议信息并重启应用程序 ", action: action);
-                return;
-            }
-
-            //MsgException
-            string msgText = ExceptionHelper.GetMessage(e.Exception);
-            if (e.Exception.InnerException != null)
-            {
-                msgText = ExceptionHelper.GetMessage(e.Exception.InnerException);
-            }
-            if (msgText.IsEmpty())
-            {
-                msgText = "未知错误";
-            }
-            WpfHelper.Error(string.Format("System Error: {0} {1}", Environment.NewLine, msgText), action: action);
-        }
-
-        /// <summary>
-        /// 启动更新程序
-        /// </summary>
-        /// <param name="version"></param>
-        /// <param name="model"></param>
-        /// <param name="updateExePath"></param>
-        public static void AppUpdate(Version version, ApplicationModel model, string updateExePath = null)
-        {
-            version.CheckNull();
-            model.CheckNull();
-            if (updateExePath.IsEmpty())
-            {
-                updateExePath = string.Format(@"{0}/Tool/UTH.Update.Win.exe", AppDomain.CurrentDomain.BaseDirectory);
-            }
-
-            string updateArgs = string.Format("{0} {1} {2} {3}", model.Code, version.ToString(), Process.GetCurrentProcess().Id, CodingHelper.UrlEncoding(System.Windows.Forms.Application.ExecutablePath));
-            var pros = ProcessHelper.Start(updateExePath, args: updateArgs, style: ProcessWindowStyle.Normal);
-            Thread.Sleep(1000);
-
-            //pros.WaitForExit();
-            //Application.Current.Shutdown(1);
+                win.Dispatcher.Invoke(new Action(() =>
+                {
+                    action();
+                }));
+            }).Start();
         }
 
         #endregion
@@ -455,17 +387,212 @@ namespace UTH.Framework.Wpf
 
         #endregion
 
+        #region 控件(图片/文档/音视频)
+
+        /// <summary>
+        /// 转图片
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <returns></returns>
+        public static BitmapImage BitmapToImage(Bitmap bitmap)
+        {
+            MemoryStream ms = new MemoryStream();
+            bitmap.Save(ms, ImageFormat.Png);
+            BitmapImage bit = new BitmapImage();
+            bit.BeginInit();
+            bit.StreamSource = ms;
+            bit.EndInit();
+            return bit;
+        }
+
+        /// <summary>
+        /// 转图片源
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <returns></returns>
+        public static BitmapSource BitmapToSource(Bitmap bitmap)
+        {
+            IntPtr ip = bitmap.GetHbitmap();
+            BitmapSource bitmapSource = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(ip, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+            DeleteObject(ip);
+            return bitmapSource;
+        }
+
+        #endregion
+
+        #region 应用程序
+
+        /// <summary>
+        /// 应用程序(当前运行)仅能运行一个进程
+        /// </summary>
+        public static void AppIsOnlyRun()
+        {
+            Process currentProcess = Process.GetCurrentProcess();
+            Process[] processes = Process.GetProcessesByName(currentProcess.ProcessName);
+            if (processes.Where(x => x.Id != currentProcess.Id).Count() > 0)
+            {
+                WpfHelper.Message(Lang.sysChengXuYiJingYunXingQingWuChongFuCaoZuo);
+                Environment.Exit(1);
+            }
+        }
+
+        /// <summary>
+        /// 应用程序错误处理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <param name="action"></param>
+        public static void AppError(object sender, DispatcherUnhandledExceptionEventArgs e, Action action = null)
+        {
+            if (EngineHelper.Configuration.IsDebugger)
+            {
+                e.Handled = true;
+            }
+
+            //log
+            EngineHelper.LoggingError(e.Exception);
+
+            //DbxException
+            DbxException exp = e.Exception as DbxException;
+            if (exp.IsNull() && e.Exception.InnerException != null)
+            {
+                exp = e.Exception.InnerException as DbxException;
+            }
+
+            if (exp != null && (exp.Code == EnumCode.提示消息 || exp.Code == EnumCode.校验失败))
+            {
+                e.Handled = true;
+                Error(exp.Message);
+                return;
+            }
+
+            if (exp != null && exp.Code == EnumCode.初始失败)
+            {
+                e.Handled = true;
+                Error("初始化错误，请检查设备/服务/会议信息并重启应用程序 ", action: action);
+                return;
+            }
+
+            //other msg
+            string msg = ExceptionHelper.GetMessage(e.Exception);
+            if (e.Exception.InnerException != null)
+            {
+                msg = ExceptionHelper.GetMessage(e.Exception.InnerException);
+            }
+            if (msg.IsEmpty())
+            {
+                msg = "未知错误";
+            }
+            Error(string.Format("System Error: {0} {1}", Environment.NewLine, msg), action: action);
+        }
+
+        /// <summary>
+        /// 启动更新程序
+        /// </summary>
+        /// <param name="version">当前版本</param>
+        /// <param name="model">最新版本</param>
+        /// <param name="appPath">应用程序目录</param>
+        /// <param name="toolPath">更新工具目录</param>
+        /// <param name="processIds">要删除的进程Id</param>
+        public static Process AppUpdate(Version version, ApplicationModel model, string appPath, string toolPath, params int[] processIds)
+        {
+            version.CheckNull();
+            model.CheckNull();
+            processIds.CheckEmpty();
+            
+            string updateArgs = $"{model.Code} {version.ToString()} {StringHelper.Get(processIds, "|")} {CodingHelper.UrlEncoding(appPath)}";
+            return ProcessHelper.Start(toolPath, args: updateArgs, style: ProcessWindowStyle.Normal);
+        }
+
+        #endregion
+
+        #region 应用服务
+
+        /// <summary>
+        /// 应用服务启动
+        /// </summary>
+        /// <param name="serverName"></param>
+        /// <param name="serverPath"></param>
+        /// <param name="serverObj"></param>
+        /// <param name="isOnly"></param>
+        /// <param name="startAction"></param>
+        public static Process AppServerStart(string serverName, string serverPath, IServerMarshalByRefObject serverObj, bool isOnly = false, Action<int, int> startAction = null)
+        {
+            if (isOnly)
+            {
+                AppServerClose(serverName);
+            }
+
+            //System.Runtime.Remoting.RemotingException:“向 IPC 端口写入失败: 管道正在被关闭。
+            //System.Runtime.Remoting.RemotingException:“连接到 IPC 端口失败: 系统找不到指定的文件。
+            var serverProcess = ProcessHelper.Start(serverPath, style: EngineHelper.Configuration.IsDebugger ? ProcessWindowStyle.Minimized : ProcessWindowStyle.Hidden);
+
+            //loop check isconnection and out 30s exception
+            bool loaded = false;
+            int current = 0, error = 0, max = 300;
+            while (!loaded)
+            {
+                startAction?.Invoke(current, max);
+
+                if (current > max)
+                {
+                    loaded = true;
+                    throw new DbxException(EnumCode.服务异常, "应用程序服务启动失败");
+                }
+
+                try
+                {
+                    loaded = serverObj.IsConnection;
+                }
+                catch (Exception ex)
+                {
+                    error++;
+                    EngineHelper.LoggingError(ex);
+                }
+
+                current++;
+
+                Thread.Sleep(100);
+            }
+
+            return serverProcess;
+        }
+
+        /// <summary>
+        /// 应用服务关闭
+        /// </summary>
+        /// <param name="serverName"></param>
+        public static void AppServerClose(string serverName)
+        {
+            var error = 0;
+            while (Process.GetProcessesByName(serverName).Length > 0)
+            {
+                //30s
+                if (error > 300)
+                {
+                    throw new DbxException(EnumCode.服务异常, "应用程序服务停止失败");
+                    //break;
+                }
+                ProcessHelper.Kill(serverName);
+                Thread.Sleep(100);
+                error++;
+            }
+        }
+
+        #endregion
+
         #region 身份认证
 
         /// <summary>
         /// 账号签入
         /// </summary>
         /// <param name="token"></param>
+        /// <param name="principal"></param>
         public static void SignIn(string token, IPrincipal principal = null)
         {
             if (token.IsEmpty())
                 return;
-            
+
             var jwtToken = EngineHelper.Resolve<ITokenService>().Resolve(token);
 
             var claims = jwtToken.Claims.ToList();
@@ -513,37 +640,5 @@ namespace UTH.Framework.Wpf
 
         #endregion
 
-        #region 图片/文档/音视频
-
-        /// <summary>
-        /// 转图片
-        /// </summary>
-        /// <param name="bitmap"></param>
-        /// <returns></returns>
-        public static BitmapImage BitmapToImage(Bitmap bitmap)
-        {
-            MemoryStream ms = new MemoryStream();
-            bitmap.Save(ms, ImageFormat.Png);
-            BitmapImage bit = new BitmapImage();
-            bit.BeginInit();
-            bit.StreamSource = ms;
-            bit.EndInit();
-            return bit;
-        }
-
-        /// <summary>
-        /// 转图片源
-        /// </summary>
-        /// <param name="bitmap"></param>
-        /// <returns></returns>
-        public static BitmapSource BitmapToSource(Bitmap bitmap)
-        {
-            IntPtr ip = bitmap.GetHbitmap();
-            BitmapSource bitmapSource = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(ip, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
-            DeleteObject(ip);
-            return bitmapSource;
-        }
-
-        #endregion
     }
 }
