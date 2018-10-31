@@ -7,6 +7,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using System.Net;
+    using System.IO;
     using System.Reflection;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
@@ -265,6 +266,30 @@
             }
         }
 
+
+        /// <summary>
+        /// 获取上传文件信息
+        /// </summary>
+        /// <param name="items"></param>
+        /// <returns></returns>
+        public static FileUploadModel GetFileUploadModel(IFormCollection items)
+        {
+            FileUploadModel model = new FileUploadModel();
+            foreach (var item in items)
+            {
+                model.Add(item.Key, item.Value);
+            }
+            using (Stream stream = items.Files.FirstOrDefault().OpenReadStream())
+            {
+                model.Bytes = new byte[stream.Length];
+                stream.Read(model.Bytes, 0, (int)stream.Length);
+                stream.Close();
+            }
+            return model;
+        }
+
+
+
         /// <summary>
         /// 判断是否ajax请求
         /// </summary>
@@ -363,6 +388,7 @@
             return true;
         }
 
+
         /// <summary>
         /// 设置Response无缓存
         /// </summary>
@@ -453,6 +479,5 @@
             }
             controller.ModelState.AddModelError(key, message);
         }
-
     }
 }

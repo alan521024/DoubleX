@@ -7,6 +7,17 @@
 @section Styles{ }
 
 <h2>@(ViewData["Title"])</h2>
+<P>~： @(System.IO.Path.GetFullPath("~"))</P>
+<P>~/： @(System.IO.Path.GetFullPath("~/"))</P>
+<P>/： @(System.IO.Path.GetFullPath("/"))</P>
+<P>.： @(System.IO.Path.GetFullPath("."))</P>
+<P>./： @(System.IO.Path.GetFullPath("./"))</P>
+<P>..： @(System.IO.Path.GetFullPath(".."))</P>
+<P>../： @(System.IO.Path.GetFullPath("../"))</P>
+<P>D:\AAA： @(System.IO.Path.GetFullPath(@"D:\AAA"))</P>
+<P>\\192.168.50.250\vs2017 15.4： @(System.IO.Path.GetFullPath(@"\\192.168.50.250\vs2017 15.4"))</P>
+
+
 
 @section Scripts{
     <script type="text/javascript">

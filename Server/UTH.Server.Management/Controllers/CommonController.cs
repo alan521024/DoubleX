@@ -82,10 +82,9 @@ namespace UTH.Server.Management.Controllers
         /// <param name="files"></param>
         /// <returns></returns>
         [Produces("application/json")]
-        public JsonResult Upload(IFormCollection files)
+        public ResultModel<bool> Upload(IFormCollection files)
         {
-               var ddd = files;
-            return new JsonResult(new { code = 0 });
+            return $"/api/app/upload".GetResult<bool>(WebHelper.GetFileUploadModel(files));
         }
 
         /// <summary>

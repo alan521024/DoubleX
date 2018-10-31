@@ -242,7 +242,7 @@ namespace UTH.Infrastructure.Utility
         /// <summary>
         /// Post请求时要发送的字符串Post数据
         /// </summary>
-        public string PostData
+        public string PostString
         {
             get { return _postData; }
             set { _postData = value; }
@@ -251,12 +251,12 @@ namespace UTH.Infrastructure.Utility
         /// <summary>
         /// Post请求时要发送的Byte类型的Post数据
         /// </summary>
-        public byte[] PostDataByte
+        public byte[] PostBytes
         {
             get { return _postDataByte; }
             set { _postDataByte = value; }
         }
-
+        
         #endregion
 
         #region 代理设置

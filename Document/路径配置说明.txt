@@ -1,0 +1,43 @@
+//Path.GetFullPath          为命令dotnet run 运行目录 (eg: 项目目录, 非bin/debug/.../..)
+//AppContext.BaseDirectory  为程序运行目录            (eg: bin/debug/.../..)
+
+
+linux / windows 兼容写法：
+/ : 根目录(win为根盘，例：D:/,E:/, linux为根止录 /)
+. : 当前目录
+..: 上级目录
+注：使用 Directory.CreateDirectory(path)创建时，如最终(子)节点含 '/'（eg: ../）， windos平台无影响，
+   linux中则会出问题，会将‘\’字符作为文件夹名称的一部分
+
+
+可理解为：所有路径不以 '/' 开始，不以 '/'结尾 
+
+
+#region Linux 路径示例
+
+//  ~：                              /home/dotnet/meetingweb/~
+//  ~/：                             /home/dotnet/meetingweb/~/
+//  /：                              /
+//  .：                              /home/dotnet/meetingweb
+//  ./：                             /home/dotnet/meetingweb/
+//  ..：                             /home/dotnet
+//  ../：                            /home/dotnet/
+//  D:\AAA：                         /home/dotnet/meetingweb/D:\AAA
+//  \\192.168.50.250\vs2017 15.4：   /home/dotnet/meetingweb/\\192.168.50.250\vs2017 15.4
+
+#endregion
+
+#region windows 路径示例
+
+// ~：                              E:\Project\UTH\Application\Meeting\UTH.Meeting.Web\~
+// ~/：                             E:\Project\UTH\Application\Meeting\UTH.Meeting.Web\~\
+// /：                              E:\
+// .：                              E:\Project\UTH\Application\Meeting\UTH.Meeting.Web
+// ./：                             E:\Project\UTH\Application\Meeting\UTH.Meeting.Web\
+// ..：                             E:\Project\UTH\Application\Meeting
+// ../：                            E:\Project\UTH\Application\Meeting\
+// D:\AAA：                         D:\AAA
+// \\192.168.50.250\vs2017 15.4：   \\192.168.50.250\vs2017 15.4
+
+#endregion
+

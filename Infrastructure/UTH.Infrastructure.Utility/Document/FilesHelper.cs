@@ -11,6 +11,7 @@ using NPOI;
 using NPOI.XSSF.UserModel;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
+using System.Linq;
 
 namespace UTH.Infrastructure.Utility
 {
@@ -19,6 +20,285 @@ namespace UTH.Infrastructure.Utility
     /// </summary>
     public class FilesHelper
     {
+        #region 路径
+
+        /// <summary>
+        /// 获取文件路径($"{path}/{name}")
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static string GetFilePath(string path, string name)
+        {
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            return $"{path}/{name}";
+        }
+
+        /// <summary>
+        /// 获取MD5目录路径
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="md5"></param>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static string GetMd5DirPath(string root, string md5, string path = "")
+        {
+            md5.CheckEmpty();
+            if (md5.Length < 4)
+                throw new ArgumentException(nameof(md5));
+            var dir = $"{root}{path}/{md5.Substring(0, 1)}/{md5.Substring(1, 1)}/{md5.Substring(2, 2)}";
+            if (!Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
+
+            return dir;
+        }
+        #endregion
+
+        #region 目录/文件
+
+        /// <summary>
+        /// 获取目录信息(不存在返回null)
+        /// </summary>
+        /// <param name="path">路径</param>
+        /// <param name="isExistCreate">不存在是否创建</param>
+        /// <returns></returns>
+        public static DirectoryInfo GetDirectory(string path, bool isExistCreate = true)
+        {
+            var dir = new DirectoryInfo(path);
+            if (!dir.Exists && isExistCreate)
+            {
+                dir.Create();
+                dir = new DirectoryInfo(path);
+            }
+            return dir;
+        }
+
+        /// <summary>
+        /// 获取文件信息
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="name"></param>
+        /// <param name="isExistCreate"></param>
+        /// <returns></returns>
+        public static FileInfo GetFile(string path, string name, bool isExistCreate = true)
+        {
+            return GetFile(GetDirectory(path, isExistCreate: isExistCreate), name);
+        }
+
+        /// <summary>
+        /// 获取文件信息
+        /// </summary>
+        /// <param name="directory"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static FileInfo GetFile(DirectoryInfo directory, string name)
+        {
+            if (!directory.Exists)
+            {
+                throw new DirectoryNotFoundException();
+            }
+            name.CheckEmpty();
+            return new FileInfo($"{directory.FullName}/{name}");
+        }
+
+        /// <summary>
+        /// 获取文件信息
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static FileInfo GetFile(string filePath)
+        {
+            return new FileInfo(filePath);
+        }
+
+        #endregion
+
+        #region 保存
+
+        /// <summary>
+        /// 保存文件
+        /// </summary>
+        /// <param name="path">保存目录</param>
+        /// <param name="name">文件名</param>
+        /// <param name="content">内容 </param>
+        public static void SaveFile(string path, string name, string content)
+        {
+            FileStream fileStream = null;
+            StreamWriter writeStream = null;
+            try
+            {
+                CreateFold(path, isFilePath: false);
+                string filePath = GetPath(path, name);
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+                fileStream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+                writeStream = new StreamWriter(fileStream);
+                writeStream.WriteLine(content);
+                writeStream.Close();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (fileStream != null)
+                {
+                    fileStream.Close();
+                    fileStream.Dispose();
+                }
+                if (writeStream != null)
+                {
+                    writeStream.Close();
+                    writeStream.Dispose();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 保存文件(字节数组)
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="name"></param>
+        /// <param name="bytes"></param>
+        /// <param name="offset"></param>
+        /// <param name="isAppend"></param>
+        /// <param name="isExistDelete"></param>
+        /// <returns></returns>
+        public static FileInfo SaveFile(string path, string name, byte[] bytes, int offset = 0, bool isAppend = false, bool isExistDelete = true)
+        {
+            FileStream fileStream = null;
+            try
+            {
+                var file = GetFile(path, name);
+                if (file.Exists)
+                {
+                    if (isExistDelete)
+                    {
+                        file.Delete();
+                    }
+                    return file;
+                }
+
+                if (file.Exists && isAppend)
+                {
+                    fileStream = new FileStream(file.FullName, FileMode.Append, FileAccess.ReadWrite);
+                }
+                else
+                {
+                    fileStream = new FileStream(file.FullName, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+                }
+
+                fileStream.Write(bytes, offset, bytes.Length);
+                return file;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (fileStream != null)
+                {
+                    fileStream.Close();
+                    fileStream.Dispose();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 保存分片
+        /// </summary>
+        /// <param name="path">保存目录</param>
+        /// <param name="name">文件名称</param>
+        /// <param name="chunk">当前分片 从0开始，eg:如总6个，则当前值 0,1,2,3,4,5</param>
+        /// <param name="chunks">分片总数</param>
+        /// <param name="bytes">字节内容</param>
+        /// <param name="isExistDelete">存在是否删除</param>
+        /// <returns></returns>
+        public static FileInfo SaveChunks(string path, string name, long chunk, long chunks, byte[] bytes, bool isExistDelete = true)
+        {
+            FileStream chunkStream = null;
+            try
+            {
+                var chunkPath = GetFilePath(path, $"{Path.GetFileNameWithoutExtension(name)}_{chunk}");
+                if (File.Exists(chunkPath))
+                {
+                    if (!isExistDelete)
+                    {
+                        return GetFile(chunkPath);
+                    }
+                    File.Delete(chunkPath);
+                }
+                chunkStream = new FileStream(chunkPath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+                chunkStream.Write(bytes, 0, bytes.Length);
+                return GetFile(chunkPath);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (chunkStream != null)
+                {
+                    chunkStream.Close();
+                    chunkStream.Dispose();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 合并分片
+        /// </summary>
+        /// <returns></returns>
+        public static FileInfo MergeChunks(string path, string name, string chunksPath, bool isExistDelete = true)
+        {
+            FileStream fileStream = null;
+            try
+            {
+                var filePath = GetFilePath(path, name);
+                if (File.Exists(filePath))
+                {
+                    if (!isExistDelete)
+                    {
+                        return GetFile(filePath);
+                    }
+                    File.Delete(filePath);
+                }
+                fileStream = new FileStream(filePath, FileMode.Create);
+                var files = Directory.GetFiles(chunksPath).ToList().OrderBy(x => x.Length).OrderBy(x => x);
+                foreach (var part in files)
+                {
+                    var chunkBytes = File.ReadAllBytes(part);
+                    fileStream.Write(chunkBytes, 0, chunkBytes.Length);
+                    chunkBytes = null;
+                    File.Delete(part);
+                }
+                Directory.Delete(chunksPath);
+                return GetFile(filePath);
+            }
+            catch (Exception ex) { throw ex; }
+            finally
+            {
+                if (fileStream != null)
+                {
+                    fileStream.Close();
+                    fileStream.Dispose();
+                }
+            }
+        }
+
+        #endregion
+
+
         /// <summary>
         /// 获取路径
         /// 路径 以 '/' 分割 
@@ -34,8 +314,6 @@ namespace UTH.Infrastructure.Utility
         /// </summary>
         public static string GetPath(string path, string fileName, bool isAppWork = false)
         {
-            //Path.GetFullPath          为命令dotnet run 运行目录 (eg: 项目目录 非bin/debug/.../..)
-            //AppContext.BaseDirectory  为程序运行目录            (eg: bin/debug/.../..)
 
             if (!path.IsEmpty())
             {
@@ -116,46 +394,7 @@ namespace UTH.Infrastructure.Utility
             File.Copy(sourceFileName, destFileName, overwrite);
         }
 
-        /// <summary>
-        /// 保存文件
-        /// </summary>
-        /// <param name="path"></param>
-        /// <param name="content"></param>
-        public static void SaveFile(string destFilePath, string fileName, string content)
-        {
-            FileStream fileStream = null;
-            StreamWriter writeStream = null;
-            try
-            {
-                CreateFold(destFilePath, isFilePath: false);
-                string filePath = GetPath(destFilePath, fileName);
-                if (File.Exists(filePath))
-                {
-                    File.Delete(filePath);
-                }
-                fileStream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
-                writeStream = new StreamWriter(fileStream);
-                writeStream.WriteLine(content);
-                writeStream.Close();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                if (fileStream != null)
-                {
-                    fileStream.Close();
-                    fileStream.Dispose();
-                }
-                if (writeStream != null)
-                {
-                    writeStream.Close();
-                    writeStream.Dispose();
-                }
-            }
-        }
+
 
         /// <summary>
         /// 删除文件
@@ -202,7 +441,11 @@ namespace UTH.Infrastructure.Utility
         /// <summary>
         /// 读取一个文件(大小限制)
         /// </summary>
-        /// <param name="path"></param>
+        /// <param name="path">文件路径</param>
+        /// <param name="begin">开始位置 0:从头开始</param>
+        /// <param name="end">结束位置   0:读取到结束</param>
+        /// <param name="chunk">分块读取 0:文件大小 超出int32 exception</param>
+        /// <param name="size">文件大小</param>
         /// <returns></returns>
         public static byte[] ReadFile(string path, long begin, long end, int chunk, out long size)
         {
@@ -237,14 +480,12 @@ namespace UTH.Infrastructure.Utility
             {
                 throw new FileLoadException(nameof(chunk));
             }
-
             FileStream fs = null;
             try
             {
                 using (fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
                     begin = begin > end ? end : begin;
-
                     end = end == 0 && chunk > 0 ? begin + chunk : end;
                     end = end == 0 || end > fs.Length ? fs.Length : end;
 
@@ -310,6 +551,7 @@ namespace UTH.Infrastructure.Utility
             }
         }
 
+
         /// <summary>
         /// 客户端HTTP异步方式下载
         /// </summary>
@@ -322,7 +564,6 @@ namespace UTH.Infrastructure.Utility
         {
             url.CheckEmpty();
             savePath.CheckEmpty();
-
             await Task.Run(async () =>
             {
                 using (HttpClient http = new HttpClient())
@@ -371,6 +612,47 @@ namespace UTH.Infrastructure.Utility
                     }
                 }
             });
+        }
+
+        /// <summary>
+        /// 导入Excel文件
+        /// </summary>
+        public static void ImportExcel(string filePath, Func<int, int, int, IRow, bool> func)
+        {
+            if (string.IsNullOrWhiteSpace(filePath))
+                return;
+            FileStream fs = null;
+            using (fs = File.OpenRead(filePath))
+            {
+                IWorkbook workbook = null;
+
+                if (filePath.IndexOf(".xlsx") > 0)
+                    workbook = new XSSFWorkbook(fs); //2007
+                else if (filePath.IndexOf(".xls") > 0)
+                    workbook = new HSSFWorkbook(fs); //2003
+
+                if (workbook == null)
+                    return;
+
+                for (var i = 0; i < workbook.NumberOfSheets; i++)
+                {
+                    ISheet sheet = workbook.GetSheetAt(i);
+                    if (sheet != null)
+                    {
+                        var rowTotal = sheet.PhysicalNumberOfRows; // sheet.LastRowNum;
+
+                        for (int j = 0; j < rowTotal; j++)
+                        {
+                            //假始返回tag 为 false，则跳出操作
+                            var tag = func(i, j, rowTotal, sheet.GetRow(j));
+                            if (!tag)
+                            {
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         #region 其它方式下载参考
@@ -672,49 +954,6 @@ namespace UTH.Infrastructure.Utility
         //        }
         //    }
 
-
         #endregion
-
-
-        /// <summary>
-        /// 导入Excel文件
-        /// </summary>
-        public static void ImportExcel(string filePath, Func<int, int, int, IRow, bool> func)
-        {
-            if (string.IsNullOrWhiteSpace(filePath))
-                return;
-            FileStream fs = null;
-            using (fs = File.OpenRead(filePath))
-            {
-                IWorkbook workbook = null;
-
-                if (filePath.IndexOf(".xlsx") > 0)
-                    workbook = new XSSFWorkbook(fs); //2007
-                else if (filePath.IndexOf(".xls") > 0)
-                    workbook = new HSSFWorkbook(fs); //2003
-
-                if (workbook == null)
-                    return;
-
-                for (var i = 0; i < workbook.NumberOfSheets; i++)
-                {
-                    ISheet sheet = workbook.GetSheetAt(i);
-                    if (sheet != null)
-                    {
-                        var rowTotal = sheet.PhysicalNumberOfRows; // sheet.LastRowNum;
-
-                        for (int j = 0; j < rowTotal; j++)
-                        {
-                            //假始返回tag 为 false，则跳出操作
-                            var tag = func(i, j, rowTotal, sheet.GetRow(j));
-                            if (!tag)
-                            {
-                                return;
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 }

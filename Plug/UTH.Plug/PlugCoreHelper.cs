@@ -226,6 +226,56 @@
         public static ResultModel<TModel> GetResult<TModel>(this string url, string post = "", string contentType = "application/json",
             string culture = null, string appCode = null, string clientIp = null, string token = null)
         {
+            if (!url.IsEmpty() && url.ToLower().IndexOf("://") == -1)
+            {
+                url = string.Format("{0}{1}", ApiUrl.Root, url);
+            }
+
+            var result = HttpHelper.Request<ResultModel<TModel>>(url, post: post, contentType: contentType, action: (option) =>
+            {
+                SetApiOptions(option, culture, appCode, clientIp, token);
+            });
+
+            return ToApiResult(result, url, token, contentType);
+        }
+
+        /// <summary>
+        /// Post上传文件
+        /// </summary>
+        /// <typeparam name="TModel"></typeparam>
+        /// <param name="url"></param>
+        /// <param name="model"></param>
+        /// <param name="culture"></param>
+        /// <param name="appCode"></param>
+        /// <param name="clientIp"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public static ResultModel<TModel> GetResult<TModel>(this string url, FileUploadModel model, string culture = null, string appCode = null, string clientIp = null, string token = null)
+        {
+            if (!url.IsEmpty() && url.ToLower().IndexOf("://") == -1)
+            {
+                url = string.Format("{0}{1}", ApiUrl.Root, url);
+            }
+            var result = HttpHelper.Request<ResultModel<TModel>>(url, model, action: (option) =>
+            {
+                SetApiOptions(option, culture, appCode, clientIp, token);
+            });
+            return ToApiResult(result, url, token);
+        }
+
+
+        /// <summary>
+        /// 设置请求配置
+        /// </summary>
+        /// <param name="option"></param>
+        /// <param name="culture"></param>
+        /// <param name="appCode"></param>
+        /// <param name="clientIp"></param>
+        /// <param name="token"></param>
+        private static void SetApiOptions(HttpClientOptions option, string culture = null, string appCode = null, string clientIp = null, string token = null)
+        {
+            option.CheckNull();
+
             var session = EngineHelper.Resolve<IApplicationSession>();
             if (!session.IsNull())
             {
@@ -235,22 +285,32 @@
                 token = token.IsEmpty() && !session.Accessor.Token.IsEmpty() ? session.Accessor.Token : token;
             }
 
-            if (!url.IsEmpty() && url.ToLower().IndexOf("://") == -1)
-            {
-                url = string.Format("{0}{1}", ApiUrl.Root, url);
-            }
-
-            var result = HttpHelper.Request<ResultModel<TModel>>(url, post: post, contentType: contentType, action: (option) =>
+            if (option.Header == null || (option.Header != null && option.Header.Count == 0))
             {
                 option.Header = new WebHeaderCollection();
-                option.Header.Add("Culture", culture);
-                option.Header.Add("AppCode", appCode);
-                option.Header.Add("ClientIp", clientIp);
-                if (!token.IsEmpty())
-                {
-                    option.Header.Add("Authorization", string.Format("Bearer {0}", token));
-                }
-            });
+            }
+
+            option.Header.Add("Culture", culture);
+            option.Header.Add("AppCode", appCode);
+            option.Header.Add("ClientIp", clientIp);
+            if (!token.IsEmpty())
+            {
+                option.Header.Add("Authorization", string.Format("Bearer {0}", token));
+            }
+        }
+
+        /// <summary>
+        /// 请求结果处理
+        /// </summary>
+        /// <typeparam name="TModel"></typeparam>
+        /// <param name="result"></param>
+        /// <param name="url"></param>
+        /// <param name="token"></param>
+        /// <param name="contentType"></param>
+        /// <returns></returns>
+        private static ResultModel<TModel> ToApiResult<TModel>(ResultModel<TModel> result, string url, string token, string contentType = "application/json")
+        {
+            result.CheckNull();
 
             //TODO: 接口结果 认证出错处理  权限/授权出错处理 其它错误处理
             switch (result.Code)
@@ -262,7 +322,7 @@
                     if (!ApiServerAuthExpire.IsNull() && url.ToLower().IndexOf(ApiUrl.User.Refresh.ToLower()) == -1)
                     {
                         var newToken = string.Empty;
-                        var tokenResult = GetResult<string>(ApiUrl.User.Refresh, post: JsonHelper.Serialize(new { Token = token }), contentType: contentType);
+                        var tokenResult = GetResult<string>(ApiUrl.User.Refresh, post: JsonHelper.Serialize(new { Token = token }) , contentType: contentType);
                         if (tokenResult.Code == EnumCode.成功)
                         {
                             newToken = tokenResult.Obj;

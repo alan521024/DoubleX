@@ -30,12 +30,10 @@ namespace UTH.Infrastructure.Utility
         /// </summary>
         public override HttpClientResult Request(HttpClientOptions options)
         {
-            //结果返回对象
             HttpClientResult result = new HttpClientResult();
             try
             {
-                //设置请求参数
-                SetClientConfiguration(options);
+                ConfigRequest(options);
             }
             catch (Exception ex)
             {
@@ -46,15 +44,13 @@ namespace UTH.Infrastructure.Utility
                 result.Content = ex.Message;
                 return result;
             }
-
             try
             {
                 var rep = request.GetResponse();
                 //请求数据
                 using (response = (HttpWebResponse)rep)
                 {
-                    SetResultBase(response, result);
-                    SetResultContent(options, result);
+                    ConfigResponse(options, response, result);
                 }
             }
             catch (WebException ex)
@@ -63,8 +59,7 @@ namespace UTH.Infrastructure.Utility
                 {
                     using (response = (HttpWebResponse)ex.Response)
                     {
-                        SetResultBase(response, result);
-                        SetResultContent(options, result);
+                        ConfigResponse(options, response, result);
                         result.Content = ExceptionHelper.GetMessage(ex);
                     }
                 }
@@ -80,7 +75,6 @@ namespace UTH.Infrastructure.Utility
                 result.StatusCode = HttpStatusCode.BadRequest;
                 result.Content = ExceptionHelper.GetMessage(ex);
             }
-
             return result;
         }
 
@@ -89,7 +83,7 @@ namespace UTH.Infrastructure.Utility
         /// <summary>
         /// 设置请求对象参数信息
         /// </summary>
-        private void SetClientConfiguration(HttpClientOptions item)
+        private void ConfigRequest(HttpClientOptions item)
         {
             //初始化对像，并设置请求的URL地址/方式 Get或者Post
             request = (HttpWebRequest)WebRequest.Create(item.URL);
@@ -97,9 +91,6 @@ namespace UTH.Infrastructure.Utility
 
             //设置HTTP相关基础信息
             SetHttpBase(item);
-
-            //设置头部信息
-            SetHeader(item);
 
             //设置请求Cookie
             SetCookie(item);
@@ -117,6 +108,8 @@ namespace UTH.Infrastructure.Utility
             request.Referer = item.Referer;
             request.AllowAutoRedirect = item.Allowautoredirect;
 
+            //设置头部信息
+            SetHeader(item);
         }
 
         /// <summary>
@@ -156,10 +149,13 @@ namespace UTH.Infrastructure.Utility
                     request.Headers.Add(key, item.Header[key]);
                 }
             }
+
             //Accept
             request.Accept = item.Accept;
+
             //ContentType返回类型
             request.ContentType = item.ContentType;
+
             //UserAgent客户端的访问类型，包括浏览器版本和操作系统信息
             request.UserAgent = item.UserAgent;
             request.KeepAlive = item.KeepAlive;
@@ -175,23 +171,24 @@ namespace UTH.Infrastructure.Utility
             {
                 byte[] buffer = null;
 
-                //写入Byte类型
-                if (item.PostDataType == EnumHttpData.Byte && item.PostDataByte != null && item.PostDataByte.Length > 0)
+                if (item.PostDataType == EnumHttpData.Byte && item.PostBytes != null && item.PostBytes.Length > 0)
                 {
-                    //验证在得到结果时是否有传入数据
-                    buffer = item.PostDataByte;
+                    //写入Byte字节流类型
+                    buffer = item.PostBytes;
                 }
-                else if (item.PostDataType == EnumHttpData.File && !string.IsNullOrWhiteSpace(item.PostData))
+                else if (item.PostDataType == EnumHttpData.File && item.PostBytes != null && item.PostBytes.Length > 0)
                 {
                     //写入文件
-                    StreamReader r = new StreamReader(item.PostData, item.PostEncoding);
-                    buffer = item.PostEncoding.GetBytes(r.ReadToEnd());
-                    r.Close();
+                    item.Accept = "*/*";
+                    item.Method = "POST";
+                    item.ContentType = "multipart/form-data; boundary=" + FileUploadData.Boundary;
+                    buffer = item.PostBytes;
+                    string str = item.PostEncoding.GetString(buffer);
                 }
-                else if (!string.IsNullOrWhiteSpace(item.PostData))
+                else if (!string.IsNullOrWhiteSpace(item.PostString))
                 {
                     //写入字符串
-                    buffer = item.PostEncoding.GetBytes(item.PostData);
+                    buffer = item.PostEncoding.GetBytes(item.PostString);
                 }
 
                 if (buffer != null)
@@ -200,15 +197,6 @@ namespace UTH.Infrastructure.Utility
                     request.GetRequestStream().Write(buffer, 0, buffer.Length);
                 }
             }
-        }
-
-        /// <summary>
-        /// 设置文件数据
-        /// </summary>
-        /// <param name="item"></param>
-        private void SetFileData(HttpClientOptions item)
-        {
-
         }
 
         /// <summary>
@@ -313,6 +301,12 @@ namespace UTH.Infrastructure.Utility
         #endregion
 
         #region 辅助操作方法
+
+        private void ConfigResponse(HttpClientOptions options, HttpWebResponse response, HttpClientResult result)
+        {
+            SetResultBase(response, result);
+            SetResultContent(options, result);
+        }
 
         private void SetResultBase(HttpWebResponse response, HttpClientResult result)
         {
@@ -563,5 +557,90 @@ namespace UTH.Infrastructure.Utility
         //}
 
         #endregion
+
+
+
+        public class MsMultiPartFormData
+        {
+            private List<byte> formData;
+            public String Boundary = "---------------" + DateTime.Now.Ticks.ToString("x");
+            private String fieldName = "Content-Disposition: form-data; name=\"{0}\"";
+            private String fileContentType = "Content-Type: {0}";
+            private String fileField = "Content-Disposition: form-data; name=\"{0}\"; filename=\"{1}\"";
+            private Encoding encode = Encoding.GetEncoding("UTF-8");
+
+            public MsMultiPartFormData()
+            {
+                formData = new List<byte>();
+            }
+            public void AddFormField(String FieldName, String FieldValue)
+            {
+                String newFieldName = fieldName;
+                newFieldName = string.Format(newFieldName, FieldName);
+                formData.AddRange(encode.GetBytes("--" + Boundary + "\r\n"));
+                formData.AddRange(encode.GetBytes(newFieldName + "\r\n\r\n"));
+                formData.AddRange(encode.GetBytes(FieldValue + "\r\n"));
+            }
+            public void AddFile(String FieldName, String FileName, byte[] FileContent, String ContentType)
+            {
+                String newFileField = fileField;
+                String newFileContentType = fileContentType;
+                newFileField = string.Format(newFileField, FieldName, FileName);
+                newFileContentType = string.Format(newFileContentType, ContentType);
+                formData.AddRange(encode.GetBytes("--" + Boundary + "\r\n"));
+                formData.AddRange(encode.GetBytes(newFileField + "\r\n"));
+                formData.AddRange(encode.GetBytes(newFileContentType + "\r\n\r\n"));
+                formData.AddRange(FileContent);
+                formData.AddRange(encode.GetBytes("\r\n"));
+            }
+
+            public void AddStreamFile(String FieldName, String FileName, byte[] FileContent)
+            {
+                AddFile(FieldName, FileName, FileContent, "application/octet-stream");
+            }
+
+            public void PrepareFormData()
+            {
+                formData.AddRange(encode.GetBytes("--" + Boundary + "--"));
+            }
+
+            public List<byte> GetFormData()
+            {
+                return formData;
+            }
+        }
+
+        public static class PostDataServer
+        {
+            public static string HttpPostData(string url, MsMultiPartFormData form, string filePath, string fileKeyName = "file", int timeOut = 360000)
+            {
+                string result = "";
+                WebRequest request = WebRequest.Create(url);
+                request.Timeout = timeOut;
+                FileStream file = new FileStream(filePath, FileMode.Open);
+                byte[] bb = new byte[file.Length];
+                file.Read(bb, 0, (int)file.Length);
+                file.Close();
+
+                string fileName = Path.GetFileName(filePath);
+
+                form.AddStreamFile(fileKeyName, fileName, bb);
+                form.PrepareFormData();
+                request.ContentType = "multipart/form-data; boundary=" + form.Boundary;
+                request.Method = "POST";
+                Stream stream = request.GetRequestStream();
+                foreach (var b in form.GetFormData())
+                {
+                    stream.WriteByte(b);
+                }
+                stream.Close();
+                WebResponse response = request.GetResponse();
+                using (var httpStreamReader = new StreamReader(response.GetResponseStream(), Encoding.GetEncoding("utf-8")))
+                {
+                    result = httpStreamReader.ReadToEnd();
+                }
+                response.Close(); request.Abort(); return result;
+            }
+        }
     }
 }

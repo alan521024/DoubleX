@@ -133,7 +133,7 @@ namespace UTH.Infrastructure.Utility
                 {
                     option.Method = "POST";
                     option.PostDataType = EnumHttpData.String;
-                    option.PostData = post;
+                    option.PostString = post;
                 }
                 if (!method.IsEmpty())
                 {
@@ -160,7 +160,6 @@ namespace UTH.Infrastructure.Utility
             return model;
         }
 
-
         /// <summary>
         /// 获取请求结果对象
         /// </summary>
@@ -180,7 +179,7 @@ namespace UTH.Infrastructure.Utility
                 {
                     option.Method = "POST";
                     option.PostDataType = EnumHttpData.String;
-                    option.PostData = post;
+                    option.PostString = post;
                 }
                 if (!method.IsEmpty())
                 {
@@ -191,6 +190,79 @@ namespace UTH.Infrastructure.Utility
             return Request(callback);
         }
 
+
+        /// <summary>
+        /// 上传文件
+        /// </summary>
+        /// <typeparam name="TModel"></typeparam>
+        /// <param name="url"></param>
+        /// <param name="file"></param>
+        /// <param name="action"></param>
+        /// <returns></returns>
+        public static TModel Request<TModel>(string url, FileUploadModel file, Action<HttpClientOptions> action)
+        {
+            var model = default(TModel);
+            var result = Request(url, file, action);
+            if (result != null && !result.Content.IsEmpty())
+            {
+                model = JsonHelper.Deserialize<TModel>(result.Content);
+            }
+            return model;
+        }
+
+        /// <summary>
+        /// 上传文件
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="file"></param>
+        /// <param name="action"></param>
+        /// <returns></returns>
+        public static HttpClientResult Request(string url, FileUploadModel file, Action<HttpClientOptions> action)
+        {
+            #region demo
+
+            //FileUploadModel model = new FileUploadModel();
+            //model.Id = StringHelper.Get(files["id"]);
+            //model.Name = StringHelper.Get(files["name"]);
+            //model.Type = StringHelper.Get(files["type"]);
+            //model.Size = LongHelper.Get(files["size"]);
+            //model.Chunk = LongHelper.Get(files["chunk"]);
+            //model.Chunks = LongHelper.Get(files["chunks"]);
+            //model.LastModifiedDate = DateTimeHelper.Get(files["lastModifiedDate"]);
+
+            //IFormFile file = files.Files.FirstOrDefault();
+            //using (Stream stream = file.OpenReadStream())
+            //{
+            //    model.Bytes = new byte[stream.Length];
+            //    stream.Read(model.Bytes, 0, (int)stream.Length);
+            //    stream.Close();
+            //}
+
+            //HttpHelper.PostFile("http://localhost:50768/common/Upload2", model);
+
+            #endregion
+
+            Action<HttpClientOptions> callback = (option) =>
+            {
+                action?.Invoke(option);
+
+                FileUploadData data = new FileUploadData();
+                foreach (var key in file.Items.Keys)
+                {
+                    data.AddField(StringHelper.Get(key), StringHelper.Get(file.Items[key]));
+                }
+                data.AddFile("file", file.Name, file.Bytes);
+                data.PrepareFormData();
+
+                option.URL = url;
+                option.Method = "POST";
+                option.PostDataType = EnumHttpData.File;
+                option.PostBytes = data.GetFormData().ToArray();
+            };
+            return Request(callback);
+        }
+
+
         /// <summary>
         /// 获取请求结果对象
         /// </summary>
@@ -199,11 +271,11 @@ namespace UTH.Infrastructure.Utility
         public static HttpClientResult Request(Action<HttpClientOptions> action)
         {
             action.CheckNull();
-
             HttpClientOptions option = new HttpClientOptions();
             action(option);
-
             var response = new HttpWebClientUtility().Request(option);
+
+            #region check request & response 
 
             if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
@@ -225,7 +297,10 @@ namespace UTH.Infrastructure.Utility
                 throw new NetworkException(string.Format("[{0}]{1}", HttpStatusCode.NotFound, response.Content));
             }
 
+            #endregion
+
             return response;
         }
+
     }
 }

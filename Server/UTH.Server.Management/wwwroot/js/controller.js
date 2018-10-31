@@ -422,9 +422,10 @@
             pick: "#" + selectId,
             resize: false,
             duplicate: true,
+            threads: 3,
             chunked: true,
             chunkSize: 5242880,  //5M
-            chunkRetry: 5
+            chunkRetry: 5,
         });
 
         that.uploader.on('beforeFileQueued', function (file) {
@@ -435,36 +436,46 @@
         });
 
         that.uploader.on('fileQueued', function (file) {
-
-            var _html = "";
-            _html += "<div class='assets-up-file' data-id='" + file.id + "' data-name='" + file.name + "' data-size='" + file.size + "'>";
-            _html += "  <span>" + file.name + "</span>";
-            _html += "  <span class='info'><em class='status'>0%</em><em class='close'>x</em></span>";
-            _html += "</div>";
-
-            console.log(_html);
-            console.log(that.container);
-            console.log(that.container.find(".assets-items"));
-            that.container.find(".assets-items").append(_html);
-            syncFiles();
+            that.uploader.md5File(file).progress(function (percentage) {
+                //console.log('Percentage:', percentage);
+            }).then(function (val) {
+                var _html = "";
+                _html += "<div class='assets-up-file' data-id='" + file.id + "' data-name='" + file.name + "' data-size='" + file.size + "' data-md5='" + val + "'>";
+                _html += "  <span>" + file.name + "</span>";
+                _html += "  <span class='info'><em class='status'>0%</em><em class='close'>x</em></span>";
+                _html += "</div>";
+                that.container.find(".assets-items").append(_html);
+                syncFiles();
+            });
         });
 
+        that.uploader.on('uploadBeforeSend', function (obj, data, headers) {
+            var md5 = that.container.find(".assets-up-file[data-id='" + data['id'] + "']").attr("data-md5");
+            data["md5"] = md5 || "";
+            data["autoMerge"] = false;
+        })
+
         that.uploader.on('uploadProgress', function (file, percentage) {
-            console.log(percentage);
+            that.container.find(".assets-up-file[data-id='" + file['id'] + "']").find(".status").html(percentage);
         });
 
         that.uploader.on('uploadSuccess', function (file, response) {
-            console.log("uploadSuccess:", file, response);
+            var md5 = (that.container.find(".assets-up-file[data-id='" + file['id'] + "']").attr("data-md5")) || "";
+            var action = encodeURIComponent("/app/merge?md5=" + md5 + "&name=" + file.name);
+            app.request("/common/do?action=" + action, { }, function (data) {
+
+            }, function (err) {
+
+            })
         });
 
         that.uploader.on('uploadError', function (file, reason) {
-            console.log("uploadError:", file, reason);
+            ///console.log("uploadError:", file, reason);
         });
 
         that.uploader.on('error', function (type) {
-            console.log(type);
+            //console.log(type);
         });
-
 
         that.container.on("click", "em.close", function () {
             var _id = $(this).parents(".assets-up-file").data("id");
@@ -477,8 +488,7 @@
             that.uploader.upload();
         });
 
-
-        (function syncFiles() {
+        function syncFiles() {
             var uploadBtn = that.container.find(".btn-upload");
             var files = that.uploader.getFiles();
             uploadBtn.addClass("layui-btn-disabled");
@@ -486,11 +496,10 @@
                 uploadBtn.removeClass("layui-btn-disabled");
             }
             console.log(files);
-        })();
+        }
+        syncFiles();
     }
-
-
-
+    
     var control = {
         list: function (opt) { return new listObj(opt); },
         paging: function (opt) { return new pagingObj(opt); },

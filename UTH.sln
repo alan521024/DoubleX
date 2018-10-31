@@ -58,7 +58,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UTH.Plug.Multimedia", "Plug
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UTH.Plug", "Plug\UTH.Plug\UTH.Plug.csproj", "{44BE3BE1-0807-41DE-84DD-90E18DF8A409}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UTH.Server.Management", "Server\UTH.Server.Management\UTH.Server.Management.csproj", "{3D14658F-6B2E-4A22-908B-4C68D0A4A54D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UTH.Server.Management", "Server\UTH.Server.Management\UTH.Server.Management.csproj", "{3D14658F-6B2E-4A22-908B-4C68D0A4A54D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Document", "Document", "{3BC01E5B-27DC-4423-A63B-E3764921079A}"
+	ProjectSection(SolutionItems) = preProject
+		Document\路径配置说明.txt = Document\路径配置说明.txt
+		Document\身份认证结构说明.png = Document\身份认证结构说明.png
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

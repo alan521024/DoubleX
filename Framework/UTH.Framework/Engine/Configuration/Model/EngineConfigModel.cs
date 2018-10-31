@@ -73,6 +73,11 @@
         public EngineStoreConfigModel Store { get; set; } = new EngineStoreConfigModel();
 
         /// <summary>
+        /// 文件服务
+        /// </summary>
+        public EngineFileServerModel FileServer { get; set; } = new EngineFileServerModel();
+
+        /// <summary>
         /// 认证授权
         /// </summary>
         public AuthenticationConfigModel Authentication { get; set; } = new AuthenticationConfigModel();
@@ -99,6 +104,27 @@
         /// 默认缓存
         /// </summary>
         public ConnectionModel Caching { get; set; }
+    }
+
+    /// <summary>
+    /// 文件服务配置
+    /// </summary>
+    public class EngineFileServerModel
+    {
+        /// <summary>
+        /// 服务名称(默认本地)
+        /// </summary>
+        public string Name { get; set; } = "Local";
+
+        /// <summary>
+        /// 上传路径
+        /// </summary>
+        public string Upload { get; set; } = "Upload";
+
+        /// <summary>
+        /// 下载路径
+        /// </summary>
+        public string Download { get; set; }
     }
 
     /// <summary>

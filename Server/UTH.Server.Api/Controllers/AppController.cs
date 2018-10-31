@@ -26,7 +26,7 @@ namespace UTH.Server.Api.Controllers
             {
                 return true;
             }
-            
+
             return true;
         }
 
@@ -54,6 +54,38 @@ namespace UTH.Server.Api.Controllers
             response.Headers.Add("Content-Range", "bytes " + begin + "-" + (datas == null ? 0 : datas.Length) + "/" + length);
 
             return File(datas, "application/octet-stream", name);
+        }
+
+        public virtual JsonResult Upload(IFormCollection files)
+        {
+            var model = WebHelper.GetFileUploadModel(files);
+            var rootPath = EngineHelper.Configuration.FileServer.Upload;
+            var fileName = $"{model.Md5}{Path.GetExtension(model.Name)}";
+            var fileDir = FilesHelper.GetMd5DirPath(rootPath, model.Md5);
+            var chunkDir = FilesHelper.GetMd5DirPath(rootPath, model.Md5, "/temp");
+            if (model.Chunks <= 1)
+            {
+                FilesHelper.SaveFile(fileDir, fileName, model.Bytes);
+            }
+            else
+            {
+                FilesHelper.SaveChunks(chunkDir, fileName, model.Chunk, model.Chunks, model.Bytes);
+                if (model.AutoMerge && model.Chunk == model.Chunks - 1)
+                {
+                    FilesHelper.MergeChunks(fileDir, fileName, chunkDir);
+                }
+            }
+            return new JsonResult(true);
+        }
+
+        public virtual JsonResult Merge(string md5, string name)
+        {
+            var rootPath = EngineHelper.Configuration.FileServer.Upload;
+            var fileName = $"{md5}{Path.GetExtension(name)}";
+            var fileDir = FilesHelper.GetMd5DirPath(rootPath, md5);
+            var chunkDir = FilesHelper.GetMd5DirPath(rootPath, md5, "/temp");
+            FilesHelper.MergeChunks(fileDir, fileName, chunkDir);
+            return new JsonResult(true);
         }
     }
 }

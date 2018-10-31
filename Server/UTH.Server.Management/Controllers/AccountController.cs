@@ -29,6 +29,7 @@ namespace UTH.Server.Management.Controllers
         /// <returns></returns>
         public IActionResult Login()
         {
+            string currentPath = AppContext.BaseDirectory;
             return View();
         }
 

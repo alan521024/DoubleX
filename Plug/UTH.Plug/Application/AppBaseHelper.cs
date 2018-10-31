@@ -142,6 +142,22 @@
         #endregion
 
         /// <summary>
+        /// 获取目录相对路径
+        /// </summary>
+        /// <param name="md5"></param>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static string GetDirectoryPath(string md5, string path = "temp")
+        {
+            md5.CheckEmpty();
+
+            if (md5.Length < 4)
+                throw new ArgumentException(nameof(md5));
+
+            return $"{EngineHelper.Configuration.FileServer.Upload}/{path}/{md5.Substring(0, 1)}/{md5.Substring(1, 1)}/{md5.Substring(2, 2)}";
+        }
+
+        /// <summary>
         /// 根据MD5获取路径
         /// </summary>
         /// <param name="md5"></param>
