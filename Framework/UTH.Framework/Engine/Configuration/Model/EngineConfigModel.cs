@@ -122,9 +122,9 @@
         public string Upload { get; set; } = "Upload";
 
         /// <summary>
-        /// 下载路径
+        /// 下载地址
         /// </summary>
-        public string Download { get; set; }
+        public string DownUrl { get; set; }
     }
 
     /// <summary>

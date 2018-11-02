@@ -133,6 +133,15 @@ namespace UTH.Infrastructure.Resource.Culture {
         }
         
         /// <summary>
+        ///   查找类似 应用配置 的本地化字符串。
+        /// </summary>
+        public static string basYingYongPeiZhi {
+            get {
+                return ResourceManager.GetString("basYingYongPeiZhi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Product name 的本地化字符串。
         /// </summary>
         public static string busChanPingMingCheng {

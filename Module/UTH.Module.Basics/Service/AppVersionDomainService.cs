@@ -41,14 +41,11 @@
                 {
                     continue;
                 }
-                
                 entity.AppId = input.AppId;
                 entity.No = input.No;
                 entity.Descript = input.Descript;
                 entity.UpdateType = input.UpdateType;
                 entity.ReleaseDt = input.ReleaseDt;
-                entity.FileSize = input.FileSize;
-                entity.FileAddress = input.FileAddress;
                 entity.FileMd5 = input.FileMd5;
                 entity.FileName = input.FileName;
             }

@@ -702,4 +702,7 @@
   <data name="sysMiaoShu" xml:space="preserve">
     <value>描述</value>
   </data>
+  <data name="basYingYongPeiZhi" xml:space="preserve">
+    <value>应用配置</value>
+  </data>
 </root>

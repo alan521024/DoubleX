@@ -60,7 +60,7 @@
             });
         };
         pageView.getCaptcha = function () {
-            app.request("/common/verify?category=login&mode=image", { type: "GET" }, function (data) {
+            common.request("/common/verify?category=login&mode=image", { type: "GET" }, function (data) {
                 console.log(data);
                 $("#img-captcha").attr("src", "data:image/png;base64," + data.code);
                 $("#imgCodeKey").attr("value", data.key);

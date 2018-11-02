@@ -52,7 +52,7 @@ namespace UTH.Infrastructure.Utility
                 //jsetting.TypeNameHandling = TypeNameHandling.Auto;
 
                 //空值忽略
-                //jsetting.NullValueHandling = NullValueHandling.Ignore;
+                jsetting.NullValueHandling = NullValueHandling.Ignore;
 
                 return jsetting;
             }

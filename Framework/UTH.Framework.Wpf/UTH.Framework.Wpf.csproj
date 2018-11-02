@@ -3,9 +3,6 @@
   <PropertyGroup>
     <TargetFramework>net47</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <ApplicationIcon />
-    <OutputType>Library</OutputType>
-    <StartupObject />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net47|AnyCPU'">
     <DefineConstants>DEBUG;NET47;NET4_5;NETFRAMEWORK;NET47</DefineConstants>
@@ -17,6 +14,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\..\Build</OutputPath>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Assets\Style\Theme.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\Style\Theme.xaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   
   <ItemGroup>
     <PackageReference Include="ControlzEx" Version="3.0.2.4" />
@@ -25,6 +30,10 @@
     <PackageReference Include="MvvmLight" Version="5.4.1" />
     <PackageReference Include="NHotkey.Wpf" Version="1.2.1" />
     <PackageReference Include="WpfAnalyzers" Version="2.1.6" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Page Include="Assets\Style\Theme.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -45,6 +54,10 @@
   
   <ItemGroup>
     <Compile DependentUpon="%(Filename)" SubType="Code" Update="$(MSBuildProjectDirectory)\obj\**\*.g$(_SdkLanguageExtension)" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Model\" />
   </ItemGroup>
   
   

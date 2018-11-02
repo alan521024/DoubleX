@@ -21,10 +21,10 @@
             <div class="form-line">
                 <label>@(Lang.basYingYongChengXu)：</label>
                 <div class="item">
-                    <select id="dll-app" @(!Model.Detail.AppId.IsEmpty() ? "disabled" : "")>
+                    <select id="dll-app" @(!Model.Detail.AppId.IsEmpty() ? "disabled" : "" )>
                         @foreach (var item in Model.Apps)
                         {
-                            if (item.Id == Model.Detail.Id)
+                            if (item.Id == Model.Detail.AppId)
                             {
                                 <option value="@(item.Id)" selected="selected">@(item.Name)</option>
                             }
@@ -80,23 +80,38 @@
     </div>
 </div>
 
-
-
 @section Scripts{
     <script type="text/javascript">
-        var pageView = {};
+        var pageView = {}, verFiles, verUpload;
         var id = "@(Model.Detail.Id)";
         var callback = "@(WebHelper.GetQueryValue(this.Context, "callback"))";
+        var fileMd5 = "@(Model.Detail.FileMd5)", fileName = "@(Model.Detail.FileName)";
         $(document).ready(function () { pageView.init(); pageView.event(); });
     </script>
     <script type="text/javascript">
 
         pageView.init = function () {
+            verFiles = control.items({
+                id: "#version-file",
+                multiple: false,
+                items: [],
+                field: { text: "name", value: "md5" },
+                select: function () {
+                    verUpload.open();
+                }
+            });
+            verFiles.set(fileName, fileMd5);
+
+            verUpload = control.upload({
+                confirm: function (files, all, obj) {
+                    verFiles.add(files);
+                }
+            });
+
             layui.laydate.render({
                 elem: '#txt-releasedt',
                 format: 'yyyy-MM-dd HH:mm:ss'
             });
-            control.file({ id: "#version-file" });
         };
 
         pageView.event = function () {
@@ -104,23 +119,25 @@
         };
 
         pageView.save = function () {
+            var file = verFiles.get() || {};
             var model = {
                 id: id,
                 appId: $("#dll-app").val(),
                 no: $("#txt-no").val(),
                 updateType: $("#ddl-updatetype").val(),
                 releaseDt: $("#txt-releasedt").val(),
-                descript: $("#txt-descript").val()
+                descript: $("#txt-descript").val(),
+                fileMd5: file["value"] || "",
+                fileName: file["text"] || "",
             };
-
             var url = "/common/do?action=/basics/appversion/insert";
-            if (!app.isEmpty(id)) {
+            if (!common.isEmpty(id)) {
                 url = "/common/do?action=/basics/appversion/update";
             }
-            app.request(url, { data: model }, function (result) {
-                app.message(__language.sysBaoCunChengGong, function () {
-                    if (!app.isEmpty(callback)) {
-                        app.parentFunc(callback);
+            common.request(url, { data: model }, function (result) {
+                common.message(__language.sysBaoCunChengGong, function () {
+                    if (!common.isEmpty(callback)) {
+                        common.parentFunc(callback);
                     }
                 });
             });

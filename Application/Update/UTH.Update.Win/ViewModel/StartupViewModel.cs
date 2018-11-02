@@ -31,14 +31,8 @@ namespace UTH.Update.Win.ViewModel
     {
         public StartupViewModel() : base(culture.Lang.winQiDongQi, "")
         {
-            Initialize();
+            AppHelper.MainApp = AppHelper.GetApp(AppHelper.MainAppCode);
         }
-
-        #region 私有变量
-
-        #endregion
-
-        #region 公共属性
 
         /// <summary>
         /// 启动进度
@@ -49,17 +43,6 @@ namespace UTH.Update.Win.ViewModel
             set { _progressValue = value; RaisePropertyChanged(() => ProgressValue); }
         }
         private double _progressValue = 0;
-
-        #endregion
-
-        #region 辅助操作
-
-        private void Initialize()
-        {
-
-        }
-
-        #endregion
 
         /// <summary>
         /// 授权信息校验

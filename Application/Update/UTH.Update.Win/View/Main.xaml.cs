@@ -45,39 +45,7 @@ namespace UTH.Update.Win.View
         {
             viewModel = DataContext as MainViewModel;
             viewModel.CheckNull();
-        }
-
-        private void btnUpdate_Click(object sender, RoutedEventArgs e)
-        {
-            //杀掉进程
-            var killIds = StringHelper.GetToArray(AppHelper.ExecuteAppProcessIds, separator: new string[] { "|" })
-                .Select(x => IntHelper.Get(x)).ToArray();
-            if (killIds.Length > 0)
-            {
-                ProcessHelper.Kill(killIds);
-            }
-
-            //执行更新
-            viewModel.UpdateApp(AppHelper.Current.Versions, (version, filePath) =>
-            {
-                var runFile = viewModel.UpdateFile(version, filePath);
-                if (!runFile.IsEmpty())
-                {
-                    //启动文件
-                    ProcessHelper.Start(runFile, args: "", style: ProcessWindowStyle.Normal);
-
-                    //关闭更新应用程序
-                    WpfHelper.ExcuteUI(() =>
-                    {
-                        Thread.Sleep(1500);
-                        this.Close();
-                    });
-                }
-                else
-                {
-                    throw new DbxException(EnumCode.提示消息, "更新错误");
-                }
-            });
+            viewModel.Configuration(this);
         }
     }
 }

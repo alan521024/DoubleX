@@ -19,7 +19,7 @@
         /// <summary>
         /// 键值
         /// </summary>
-        public  Hashtable Items = new Hashtable();
+        public Hashtable Items = new Hashtable();
 
         /// <summary>
         /// 添加数据
@@ -31,6 +31,10 @@
             Items.Add(key, value);
         }
 
+        /// <summary>
+        /// 资源类型
+        /// </summary>
+        public EnumAssetsType AssetsType { get { return EnumsHelper.Get<EnumAssetsType>(IntHelper.Get("assetsType")); } }
 
         /// <summary>
         /// 文件标识

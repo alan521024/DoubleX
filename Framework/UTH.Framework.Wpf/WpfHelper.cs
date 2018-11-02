@@ -486,23 +486,23 @@ namespace UTH.Framework.Wpf
             Error(string.Format("System Error: {0} {1}", Environment.NewLine, msg), action: action);
         }
 
-        /// <summary>
-        /// 启动更新程序
-        /// </summary>
-        /// <param name="version">当前版本</param>
-        /// <param name="model">最新版本</param>
-        /// <param name="appPath">应用程序目录</param>
-        /// <param name="toolPath">更新工具目录</param>
-        /// <param name="processIds">要删除的进程Id</param>
-        public static Process AppUpdate(Version version, ApplicationModel model, string appPath, string toolPath, params int[] processIds)
-        {
-            version.CheckNull();
-            model.CheckNull();
-            processIds.CheckEmpty();
+        ///// <summary>
+        ///// 启动更新程序
+        ///// </summary>
+        ///// <param name="version">当前版本</param>
+        ///// <param name="model">最新版本</param>
+        ///// <param name="appPath">应用程序目录</param>
+        ///// <param name="toolPath">更新工具目录</param>
+        ///// <param name="processIds">要删除的进程Id</param>
+        //public static Process AppUpdate(Version version, ApplicationModel model, string appPath, string toolPath, params int[] processIds)
+        //{
+        //    version.CheckNull();
+        //    model.CheckNull();
+        //    processIds.CheckEmpty();
             
-            string updateArgs = $"{model.Code} {version.ToString()} {StringHelper.Get(processIds, "|")} {CodingHelper.UrlEncoding(appPath)}";
-            return ProcessHelper.Start(toolPath, args: updateArgs, style: ProcessWindowStyle.Normal);
-        }
+        //    string updateArgs = $"{model.Code} {version.ToString()} {StringHelper.Get(processIds, "|")} {CodingHelper.UrlEncoding(appPath)}";
+        //    return ProcessHelper.Start(toolPath, args: updateArgs, style: ProcessWindowStyle.Normal);
+        //}
 
         #endregion
 

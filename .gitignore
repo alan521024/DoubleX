@@ -23,6 +23,7 @@ _[Bb]in/
 [Oo]bj/
 [Ll]og/
 Build/
+Upload/
 
 # Visual Studio 2015 cache/options directory
 .vs/

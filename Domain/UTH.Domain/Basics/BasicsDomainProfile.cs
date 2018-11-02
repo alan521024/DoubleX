@@ -14,8 +14,14 @@ using UTH.Framework;
 
 namespace UTH.Domain
 {
+    /// <summary>
+    /// 基础模块领域配置
+    /// </summary>
     public class BasicsDomainProfile : IDomainProfile
     {
+        /// <summary>
+        /// 领域配置
+        /// </summary>
         public void Configuration()
         {
             EngineHelper.RegisterType(typeof(IValidator<AppEditInput>), typeof(AppEditInputValidator));
@@ -29,17 +35,20 @@ namespace UTH.Domain
             EngineHelper.RegisterType(typeof(IValidator<NavigationEditInput>), typeof(NavigationEditInputValidator));
         }
 
+        /// <summary>
+        /// 对象映射
+        /// </summary>
         public void Mapper(IMapperConfigurationExpression config)
         {
             config.CreateMap<AppEntity, AppDTO>();
             config.CreateMap<AppDTO, AppEntity>();
             config.CreateMap<AppEditInput, AppEntity>();
-            config.CreateMap<AppDTO, ApplicationModel>();
+            config.CreateMap<AppDTO, AppOld>();
 
             config.CreateMap<AppVersionEntity, AppVersionDTO>();
             config.CreateMap<AppVersionDTO, AppVersionEntity>();
             config.CreateMap<AppVersionEditInput, AppVersionEntity>();
-            config.CreateMap<AppVersionDTO, ApplicationVersion>();
+            config.CreateMap<AppVersionDTO, AppVersionOld>();
 
             config.CreateMap<DictionaryEntity, DictionaryDTO>();
             config.CreateMap<DictionaryDTO, DictionaryEntity>();

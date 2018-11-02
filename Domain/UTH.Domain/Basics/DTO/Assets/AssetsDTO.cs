@@ -42,5 +42,20 @@
         /// 资源描述
         /// </summary>
         public string MD5 { get; set; }
+
+        /// <summary>
+        /// 资源大下
+        /// </summary>
+        public long Size { get; set; }
+
+        /// <summary>
+        /// 操作账号
+        /// </summary>
+        public Guid AccountId { get; set; }
+
+        /// <summary>
+        /// 来源应用
+        /// </summary>
+        public string AppCode { get; set; }
     }
 }

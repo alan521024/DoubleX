@@ -46,11 +46,28 @@
         #endregion
 
         /// <summary>
-        /// 获取应用信息
+        /// 应用程序详细信息
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        public AppDetail Detail(string code)
+        {
+            var detail = new AppDetail();
+            detail.Application = EngineHelper.Map<AppDTO>(service.Find(where: x => x.Code == code).FirstOrDefault());
+            detail.Versions = EngineHelper.Map<AppVersionDTO>(versionService.Find(where: x => x.AppId == detail.Application.Id).OrderBy(x=>x.No).Last());
+            detail.DownloadUrl = $"{EngineHelper.Configuration.FileServer.DownUrl}/api/assets/download";
+            return detail;
+        }
+
+        #region 过时方法
+
+        /// <summary>
+        /// 获取应用信息(旧版)
         /// </summary>
         /// <param name="appCode"></param>
         /// <returns></returns>
-        public ApplicationModel GetModel(string appCode)
+        [Obsolete("This function is obsolete")]
+        public AppOld GetModel(string appCode)
         {
             var app = service.Find(where: x => x.Code == appCode).FirstOrDefault();
             if (app.IsNull())
@@ -66,10 +83,12 @@
 
             var currentVersion = appVersions.OrderByDescending(x => x.No).FirstOrDefault();
 
-            var model = EngineHelper.Map<ApplicationModel>(app);
-            model.Versions = EngineHelper.Map<ApplicationVersion>(currentVersion);
+            var model = EngineHelper.Map<AppOld>(app);
+            model.Versions = EngineHelper.Map<AppVersionOld>(currentVersion);
             model.Versions.No = new Version(currentVersion.No);
             return model;
         }
+
+        #endregion
     }
 }

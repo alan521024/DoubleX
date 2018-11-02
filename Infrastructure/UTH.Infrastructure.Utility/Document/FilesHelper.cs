@@ -23,18 +23,19 @@ namespace UTH.Infrastructure.Utility
         #region 路径
 
         /// <summary>
-        /// 获取文件路径($"{path}/{name}")
+        /// 获取文件路径($"{dir}/{name}")
         /// </summary>
-        /// <param name="path"></param>
+        /// <param name="dir"></param>
         /// <param name="name"></param>
+        /// <param name="isCreateDir"></param>
         /// <returns></returns>
-        public static string GetFilePath(string path, string name)
+        public static string GetFilePath(string dir, string name, bool isCreateDir = true)
         {
-            if (!Directory.Exists(path))
+            if (!Directory.Exists(dir) && isCreateDir)
             {
-                Directory.CreateDirectory(path);
+                Directory.CreateDirectory(dir);
             }
-            return $"{path}/{name}";
+            return $"{dir}/{name}";
         }
 
         /// <summary>
@@ -49,14 +50,21 @@ namespace UTH.Infrastructure.Utility
             md5.CheckEmpty();
             if (md5.Length < 4)
                 throw new ArgumentException(nameof(md5));
-            var dir = $"{root}{path}/{md5.Substring(0, 1)}/{md5.Substring(1, 1)}/{md5.Substring(2, 2)}";
-            if (!Directory.Exists(dir))
-            {
-                Directory.CreateDirectory(dir);
-            }
 
-            return dir;
+            return $"{root}{path}/{md5.Substring(0, 1)}/{md5.Substring(1, 1)}/{md5.Substring(2, 2)}";
         }
+
+        /// <summary>
+        /// 获取MD5文件名
+        /// </summary>
+        /// <param name="md5"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static string GetMd5FileName(string md5, string name)
+        {
+            return $"{md5}{Path.GetExtension(name)}";
+        }
+
         #endregion
 
         #region 目录/文件
@@ -165,39 +173,39 @@ namespace UTH.Infrastructure.Utility
         /// <summary>
         /// 保存文件(字节数组)
         /// </summary>
-        /// <param name="path"></param>
+        /// <param name="dir"></param>
         /// <param name="name"></param>
         /// <param name="bytes"></param>
         /// <param name="offset"></param>
         /// <param name="isAppend"></param>
         /// <param name="isExistDelete"></param>
         /// <returns></returns>
-        public static FileInfo SaveFile(string path, string name, byte[] bytes, int offset = 0, bool isAppend = false, bool isExistDelete = true)
+        public static FileInfo SaveFile(string dir, string name, byte[] bytes, int offset = 0, bool isAppend = false, bool isExistDelete = true)
         {
             FileStream fileStream = null;
             try
             {
-                var file = GetFile(path, name);
-                if (file.Exists)
+                var filePath = GetFilePath(dir, name);
+                if (File.Exists(filePath))
                 {
-                    if (isExistDelete)
+                    if (!isExistDelete)
                     {
-                        file.Delete();
+                        return GetFile(filePath);
                     }
-                    return file;
+                    File.Delete(filePath);
                 }
 
-                if (file.Exists && isAppend)
+                if (isAppend)
                 {
-                    fileStream = new FileStream(file.FullName, FileMode.Append, FileAccess.ReadWrite);
+                    fileStream = new FileStream(filePath, FileMode.Append, FileAccess.ReadWrite);
                 }
                 else
                 {
-                    fileStream = new FileStream(file.FullName, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+                    fileStream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
                 }
 
                 fileStream.Write(bytes, offset, bytes.Length);
-                return file;
+                return GetFile(filePath);
             }
             catch (Exception ex)
             {
@@ -216,19 +224,19 @@ namespace UTH.Infrastructure.Utility
         /// <summary>
         /// 保存分片
         /// </summary>
-        /// <param name="path">保存目录</param>
+        /// <param name="dir">保存目录</param>
         /// <param name="name">文件名称</param>
         /// <param name="chunk">当前分片 从0开始，eg:如总6个，则当前值 0,1,2,3,4,5</param>
         /// <param name="chunks">分片总数</param>
         /// <param name="bytes">字节内容</param>
         /// <param name="isExistDelete">存在是否删除</param>
         /// <returns></returns>
-        public static FileInfo SaveChunks(string path, string name, long chunk, long chunks, byte[] bytes, bool isExistDelete = true)
+        public static FileInfo SaveChunks(string dir, string name, long chunk, long chunks, byte[] bytes, bool isExistDelete = true)
         {
             FileStream chunkStream = null;
             try
             {
-                var chunkPath = GetFilePath(path, $"{Path.GetFileNameWithoutExtension(name)}_{chunk}");
+                var chunkPath = GetFilePath(dir, $"{Path.GetFileNameWithoutExtension(name)}_{chunk}");
                 if (File.Exists(chunkPath))
                 {
                     if (!isExistDelete)
@@ -236,6 +244,11 @@ namespace UTH.Infrastructure.Utility
                         return GetFile(chunkPath);
                     }
                     File.Delete(chunkPath);
+                }
+
+                if (!Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
                 }
                 chunkStream = new FileStream(chunkPath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
                 chunkStream.Write(bytes, 0, bytes.Length);
@@ -258,13 +271,24 @@ namespace UTH.Infrastructure.Utility
         /// <summary>
         /// 合并分片
         /// </summary>
+        /// <param name="chunkDir"></param>
+        /// <param name="dir"></param>
+        /// <param name="name"></param>
+        /// <param name="isExistDelete"></param>
         /// <returns></returns>
-        public static FileInfo MergeChunks(string path, string name, string chunksPath, bool isExistDelete = true)
+        public static FileInfo MergeChunks(string chunkDir, string dir, string name, bool isExistDelete = true)
         {
             FileStream fileStream = null;
             try
             {
-                var filePath = GetFilePath(path, name);
+                var filePath = GetFilePath(dir, name);
+
+                var chunks = Directory.GetFiles(chunkDir).ToList().OrderBy(x => x.Length).OrderBy(x => x);
+                if (chunks.Count() == 0)
+                {
+                    return GetFile(filePath);
+                }
+
                 if (File.Exists(filePath))
                 {
                     if (!isExistDelete)
@@ -273,16 +297,20 @@ namespace UTH.Infrastructure.Utility
                     }
                     File.Delete(filePath);
                 }
-                fileStream = new FileStream(filePath, FileMode.Create);
-                var files = Directory.GetFiles(chunksPath).ToList().OrderBy(x => x.Length).OrderBy(x => x);
-                foreach (var part in files)
+
+                if (!Directory.Exists(dir))
+                {
+                    Directory.CreateDirectory(dir);
+                }
+                fileStream = new FileStream(filePath, FileMode.Create, FileAccess.ReadWrite);
+                foreach (var part in chunks)
                 {
                     var chunkBytes = File.ReadAllBytes(part);
                     fileStream.Write(chunkBytes, 0, chunkBytes.Length);
                     chunkBytes = null;
                     File.Delete(part);
                 }
-                Directory.Delete(chunksPath);
+                Directory.Delete(chunkDir);
                 return GetFile(filePath);
             }
             catch (Exception ex) { throw ex; }
@@ -298,6 +326,69 @@ namespace UTH.Infrastructure.Utility
 
         #endregion
 
+        #region 文件下载
+
+        /// <summary>
+        /// 客户端HTTP异步方式下载
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="post"></param>
+        /// <param name="head"></param>
+        /// <param name="path"></param>
+        /// <param name="action"></param>
+        public static async void DownloadByHttpAsync(string url, string post, string head, string path, Action<long, int> action)
+        {
+            await Task.Run(async () =>
+            {
+                using (HttpClient http = new HttpClient())
+                {
+                    long downSize = 0;  //已经下载大小
+                    long downSpeed = 0; //下载速度
+
+                    var response = await http.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
+                    var repLength = response.Content.Headers.ContentLength;
+                    using (var stream = await response.Content.ReadAsStreamAsync())
+                    {
+                        var size = 1024000;                                             //1000K
+                        byte[] bytes = new byte[size];
+
+                        int writes;
+                        var beginSecond = DateTime.Now.Second;                          //当前时间秒
+
+                        while ((writes = stream.Read(bytes, 0, size)) > 0)
+                        {
+                            //使用追加方式打开一个文件流
+                            using (FileStream fs = new FileStream(path, FileMode.Append, FileAccess.Write))
+                            {
+                                fs.Write(bytes, 0, writes);
+                            }
+
+                            downSize += writes;
+                            downSpeed += writes;
+
+                            //计算下载速度kb/s,当前进度
+                            var endSecond = DateTime.Now.Second;
+
+                            if (beginSecond != endSecond)//计算速度
+                            {
+                                downSpeed = downSpeed / (endSecond - beginSecond);
+                                //"下载速度" + downloadSpeed / 1024 + "KB/S";
+                            }
+
+                            action?.Invoke((downSpeed / 1024), downSize >= repLength ? 100 : Math.Max((int)(downSize * 100 / repLength), 1));
+
+                            if (beginSecond != endSecond)
+                            {
+                                beginSecond = DateTime.Now.Second;      //重置
+                                downSpeed = 0;                      //清空
+                            }
+                        };
+                    }
+                }
+            });
+        }
+
+        #endregion
 
         /// <summary>
         /// 获取路径
@@ -549,69 +640,6 @@ namespace UTH.Infrastructure.Utility
                 fs?.Close();
                 fs?.Dispose();
             }
-        }
-
-
-        /// <summary>
-        /// 客户端HTTP异步方式下载
-        /// </summary>
-        /// <param name="url"></param>
-        /// <param name="post"></param>
-        /// <param name="head"></param>
-        /// <param name="savePath"></param>
-        /// <param name="action"></param>
-        public static async void ClientHttpAsyncDownloadFile(string url, string post, string head, string savePath, Action<long, int> action)
-        {
-            url.CheckEmpty();
-            savePath.CheckEmpty();
-            await Task.Run(async () =>
-            {
-                using (HttpClient http = new HttpClient())
-                {
-                    long downloadSize = 0;  //已经下载大小
-                    long downloadSpeed = 0; //下载速度
-
-                    var httpResponseMessage = await http.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
-                    var contentLength = httpResponseMessage.Content.Headers.ContentLength;
-                    using (var stream = await httpResponseMessage.Content.ReadAsStreamAsync())
-                    {
-                        var size = 1024000;                                             //1000K
-                        byte[] bytes = new byte[size];
-
-                        int writes;
-                        var beginSecond = DateTime.Now.Second;                          //当前时间秒
-
-                        while ((writes = stream.Read(bytes, 0, size)) > 0)
-                        {
-                            //使用追加方式打开一个文件流
-                            using (FileStream fs = new FileStream(savePath, FileMode.Append, FileAccess.Write))
-                            {
-                                fs.Write(bytes, 0, writes);
-                            }
-
-                            downloadSize += writes;
-                            downloadSpeed += writes;
-
-                            //计算下载速度kb/s,当前进度
-                            var endSecond = DateTime.Now.Second;
-
-                            if (beginSecond != endSecond)//计算速度
-                            {
-                                downloadSpeed = downloadSpeed / (endSecond - beginSecond);
-                                //"下载速度" + downloadSpeed / 1024 + "KB/S";
-                            }
-
-                            action?.Invoke((downloadSpeed / 1024), downloadSize >= contentLength ? 100 : Math.Max((int)(downloadSize * 100 / contentLength), 1));
-
-                            if (beginSecond != endSecond)
-                            {
-                                beginSecond = DateTime.Now.Second;      //重置
-                                downloadSpeed = 0;                      //清空
-                            }
-                        };
-                    }
-                }
-            });
         }
 
         /// <summary>

@@ -37,41 +37,29 @@ namespace UTH.Update.Win
         #region 全局信息
 
         /// <summary>
-        /// 应用程序信息
+        /// 执行程序信息
         /// </summary>
-        public static ApplicationModel Current
-        {
-            get
-            {
-                ExecuteAppCode.CheckEmpty();
-                if (_current == null)
-                {
-                    _current = GetApplication(ExecuteAppCode);
-                }
-                return _current;
-            }
-        }
-        private static ApplicationModel _current;
+        public static AppDetail MainApp { get; set; }
 
         /// <summary>
         /// 执行程序程序Id
         /// </summary>
-        public static string ExecuteAppCode { get; set; }
+        public static string MainAppCode { get; set; }
 
         /// <summary>
         /// 执行程序版本
         /// </summary>
-        public static string ExecuteAppVersion { get; set; }
+        public static string MainAppVersion { get; set; }
 
         /// <summary>
         /// 执行程序路径
         /// </summary>
-        public static string ExecuteAppPath { get; set; }
+        public static string MainAppPath { get; set; }
 
         /// <summary>
         /// 执行程序进程(需杀掉的)
         /// </summary>
-        public static string ExecuteAppProcessIds { get; set; }
+        public static string MainAppProcessIds { get; set; }
 
         #endregion
 

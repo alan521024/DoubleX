@@ -43,16 +43,6 @@
         public string Descript { get; set; }
 
         /// <summary>
-        /// 版本大小(KB)
-        /// </summary>
-        public long FileSize { get; set; }
-
-        /// <summary>
-        /// 文件地址
-        /// </summary>
-        public string FileAddress { get; set; }
-
-        /// <summary>
         /// 文件MD5(用于校验)
         /// </summary>
         public string FileMd5 { get; set; }

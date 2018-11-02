@@ -23,21 +23,18 @@ namespace UTH.Update.Win
             {
                 args[3] = CodingHelper.UrlDecode(args[3]);
             }
-
-            WpfHelper.SystemLog("UTH.UPDATE.INIT", string.Format("CONFIG_DEBUG: {0} CONFIG_RES:{1}",
-                FilesHelper.GetPath("Engine.config", isAppWork: true),
-                FilesHelper.GetPath("../Engine.config", isAppWork: true)));
-
-            WpfHelper.SystemLog("UTH.UPDATE.ARGS {0}", string.Join("|", args));
+            
+            WpfHelper.SystemLog("UTH.UPDATE.Config", $"{ FilesHelper.GetFilePath(".", "Engine.config") }  //  { FilesHelper.GetFilePath("../", "Engine.config") }");
+            WpfHelper.SystemLog("UTH.UPDATE.ARGS", string.Join("|", args));
 
             //无参退出
             if (args.IsEmpty() || (!args.IsEmpty() && args.Length != 4))
             {
-                EngineHelper.GlobalPath = FilesHelper.GetPath("Engine.config", isAppWork: true);
+                EngineHelper.GlobalPath = FilesHelper.GetFilePath(".", "Engine.config");
                 if (EngineHelper.Configuration.IsDebugger)
                 {
                     //调试使用会议系统Code获取应用信息
-                    args = new string[] { "100100", "1.0.0.0", "0", System.Windows.Forms.Application.ExecutablePath };
+                    args = new string[] { "900102", "1.0.0.0", "0", System.Windows.Forms.Application.ExecutablePath };
                 }
                 else
                 {
@@ -46,14 +43,13 @@ namespace UTH.Update.Win
             }
             else
             {
-                EngineHelper.GlobalPath = FilesHelper.GetPath("../Engine.config", isAppWork: true);
+                EngineHelper.GlobalPath = FilesHelper.GetFilePath("../", "Engine.config");
             }
-
-
-            AppHelper.ExecuteAppCode = args[0];
-            AppHelper.ExecuteAppVersion = args[1];
-            AppHelper.ExecuteAppProcessIds = args[2];
-            AppHelper.ExecuteAppPath = args[3];
+            
+            AppHelper.MainAppCode = args[0];
+            AppHelper.MainAppVersion = args[1];
+            AppHelper.MainAppProcessIds = args[2];
+            AppHelper.MainAppPath = args[3];
 
             UTH.Update.Win.App app = new UTH.Update.Win.App();
             app.InitializeComponent();

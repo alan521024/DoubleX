@@ -69,7 +69,6 @@
         var id = "@(GuidHelper.Get(WebHelper.GetQueryValue(this.Context,"id")))";
         var callback = "@(WebHelper.GetQueryValue(this.Context, "callback"))";
         $(document).ready(function () { pageView.init(); pageView.event(); });
-
     </script>
     <script type="text/javascript">
 
@@ -91,13 +90,13 @@
                 Secret: $("#txt-secret").val()
             };
             var url = "/common/do?action=/basics/app/insert";
-            if (!app.isEmpty(id)) {
+            if (!common.isEmpty(id)) {
                 url = "/common/do?action=/basics/app/update";
             }
-            app.request(url, { data: model }, function (result) {
-                app.message(__language.sysBaoCunChengGong, function () {
-                    if (!app.isEmpty(callback)) {
-                        app.parentFunc(callback);
+            common.request(url, { data: model }, function (result) {
+                common.message(__language.sysBaoCunChengGong, function () {
+                    if (!common.isEmpty(callback)) {
+                        common.parentFunc(callback);
                     }
                 });
             });
