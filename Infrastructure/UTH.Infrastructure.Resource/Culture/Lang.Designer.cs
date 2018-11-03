@@ -47,7 +47,7 @@ namespace UTH.Infrastructure.Resource.Culture {
         }
         
         /// <summary>
-        ///   使用此强类型资源类，为所有资源查找
+        ///   重写当前线程的 CurrentUICulture 属性
         ///   重写当前线程的 CurrentUICulture 属性。
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
@@ -79,6 +79,15 @@ namespace UTH.Infrastructure.Resource.Culture {
         }
         
         /// <summary>
+        ///   查找类似 地区数据 的本地化字符串。
+        /// </summary>
+        public static string basDiQuShuJu {
+            get {
+                return ResourceManager.GetString("basDiQuShuJu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Category name 的本地化字符串。
         /// </summary>
         public static string basFenLeiMingCheng {
@@ -93,6 +102,33 @@ namespace UTH.Infrastructure.Resource.Culture {
         public static string basGengXinLeiXing {
             get {
                 return ResourceManager.GetString("basGengXinLeiXing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 过虑内容 的本地化字符串。
+        /// </summary>
+        public static string basGuoLvNeiRong {
+            get {
+                return ResourceManager.GetString("basGuoLvNeiRong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 行业数据 的本地化字符串。
+        /// </summary>
+        public static string basHangYeShuJu {
+            get {
+                return ResourceManager.GetString("basHangYeShuJu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 IP地址库 的本地化字符串。
+        /// </summary>
+        public static string basIPDiZhiKu {
+            get {
+                return ResourceManager.GetString("basIPDiZhiKu", resourceCulture);
             }
         }
         
@@ -120,6 +156,24 @@ namespace UTH.Infrastructure.Resource.Culture {
         public static string basQuanXianLuJing {
             get {
                 return ResourceManager.GetString("basQuanXianLuJing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 日志记录 的本地化字符串。
+        /// </summary>
+        public static string basRiZhiJiLu {
+            get {
+                return ResourceManager.GetString("basRiZhiJiLu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 数据字典 的本地化字符串。
+        /// </summary>
+        public static string basShuJuZiDian {
+            get {
+                return ResourceManager.GetString("basShuJuZiDian", resourceCulture);
             }
         }
         
@@ -655,6 +709,33 @@ namespace UTH.Infrastructure.Resource.Culture {
         }
         
         /// <summary>
+        ///   查找类似 功能权限 的本地化字符串。
+        /// </summary>
+        public static string sysGongNengQuanXian {
+            get {
+                return ResourceManager.GetString("sysGongNengQuanXian", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 工作台 的本地化字符串。
+        /// </summary>
+        public static string sysGongZuoTai {
+            get {
+                return ResourceManager.GetString("sysGongZuoTai", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 管理工具 的本地化字符串。
+        /// </summary>
+        public static string sysGuanLiGongJu {
+            get {
+                return ResourceManager.GetString("sysGuanLiGongJu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 关于 的本地化字符串。
         /// </summary>
         public static string sysGuanYu {
@@ -1155,6 +1236,24 @@ namespace UTH.Infrastructure.Resource.Culture {
         public static string sysXinXiBiaoTi {
             get {
                 return ResourceManager.GetString("sysXinXiBiaoTi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 系统管理 的本地化字符串。
+        /// </summary>
+        public static string sysXiTongGuanLi {
+            get {
+                return ResourceManager.GetString("sysXiTongGuanLi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 系统配置 的本地化字符串。
+        /// </summary>
+        public static string sysXiTongPeiZhi {
+            get {
+                return ResourceManager.GetString("sysXiTongPeiZhi", resourceCulture);
             }
         }
         

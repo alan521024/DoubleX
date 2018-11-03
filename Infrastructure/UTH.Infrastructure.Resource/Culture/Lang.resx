@@ -714,4 +714,37 @@
   <data name="basYingYongPeiZhi" xml:space="preserve">
     <value>应用配置</value>
   </data>
+  <data name="basDiQuShuJu" xml:space="preserve">
+    <value>地区数据</value>
+  </data>
+  <data name="basGuoLvNeiRong" xml:space="preserve">
+    <value>过虑内容</value>
+  </data>
+  <data name="basHangYeShuJu" xml:space="preserve">
+    <value>行业数据</value>
+  </data>
+  <data name="basIPDiZhiKu" xml:space="preserve">
+    <value>IP地址库</value>
+  </data>
+  <data name="basRiZhiJiLu" xml:space="preserve">
+    <value>日志记录</value>
+  </data>
+  <data name="basShuJuZiDian" xml:space="preserve">
+    <value>数据字典</value>
+  </data>
+  <data name="sysGongNengQuanXian" xml:space="preserve">
+    <value>功能权限</value>
+  </data>
+  <data name="sysGongZuoTai" xml:space="preserve">
+    <value>工作台</value>
+  </data>
+  <data name="sysGuanLiGongJu" xml:space="preserve">
+    <value>管理工具</value>
+  </data>
+  <data name="sysXiTongGuanLi" xml:space="preserve">
+    <value>系统管理</value>
+  </data>
+  <data name="sysXiTongPeiZhi" xml:space="preserve">
+    <value>系统配置</value>
+  </data>
 </root>

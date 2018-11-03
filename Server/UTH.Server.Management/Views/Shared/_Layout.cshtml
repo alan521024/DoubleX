@@ -22,7 +22,6 @@
         <link type="text/css" rel="stylesheet" href="~/lib/layui/css/layui.css" asp-append-version="true" />
     </environment>
     @RenderSection("Styles", required: false)
-    
 </head>
 <body>
     <div class="dxm-body">
@@ -33,19 +32,17 @@
             <div class="dxm-nav">
                 <ul class="dxm-nav-inner">
                     <li>
-                        <a href="~/" class="active"><i class="iconfont icon-shouye2"></i></a>
+                        <a href="~/" class="@((new string[] { "/","/home","/home/index"}).ToList().Contains(this.Context.Request.Path.ToString())?"active":"")" title="@(Lang.sysGongZuoTai)"><i class="iconfont icon-shouye2"></i></a>
                     </li>
                     <li>
                         <a href="~/home/list"><i class="iconfont icon-bangong3"></i></a>
                     </li>
                     <li>
-                        <a href="~/home/form"><i class="iconfont icon-shangye2"></i></a>
+                        <a href="~/home/form" title="@(Lang.userYongHuGuanLi)"><i class="iconfont icon-shangye2"></i></a>
                     </li>
-
                     <li>
-                        <a href="~/basics/app"><i class="iconfont icon-xitong1"></i></a>
+                        <a href="~/basics/setting" class="@(this.Context.Request.Path.ToString().Contains("/basics",StringComparison.OrdinalIgnoreCase)?"active":"")" title="@(Lang.sysXiTongGuanLi)"><i class="iconfont icon-xitong1"></i></a>
                     </li>
-                    
                 </ul>
             </div>
         </div>
