@@ -52,7 +52,14 @@
         /// <returns></returns>
         public AppSettingDTO GetByApp(Guid appId)
         {
-            return MapperToDto(service.Get(x => x.AppId == appId));
+            var entity = service.Get(x => x.AppId == appId);
+            if (entity.IsNull())
+            {
+                entity = new AppSettingEntity();
+                entity.UserJson = JsonHelper.Serialize(new UserSetting());
+                entity = service.Insert(entity);
+            }
+            return MapperToDto(entity);
         }
     }
 }

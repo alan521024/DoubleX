@@ -15,6 +15,6 @@
     {
         public AppDTO App { get; set; }=new AppDTO();
 
-        public AppVersionDTO Detail { get; set; } = new AppVersionDTO() { UpdateType = EnumUpdateType.Incremental, ReleaseDt = DateTime.Now };
+        public AppSettingDTO Detail { get; set; } = new AppSettingDTO() { };
     }
 }

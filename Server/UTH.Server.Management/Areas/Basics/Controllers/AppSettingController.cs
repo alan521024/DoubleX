@@ -27,19 +27,16 @@ namespace UTH.Server.Management.Areas.Basics.Controllers
         public IActionResult Index(Guid app)
         {
             var model = new AppSettingEdit();
-
             var appResult = PlugCoreHelper.ApiUrl.Basics.AppGetId.GetResult<AppDTO, AppEditInput>(new AppEditInput() { Id = app });
             if (appResult.Code == EnumCode.成功)
             {
                 model.App = appResult.Obj;
             }
-
-            //var result = PlugCoreHelper.ApiUrl.Basics.AppSettingGetByApp.GetResult<AppSettingDTO, AppSettingEditInput>(new AppSettingEditInput { AppId = app });
-            //if (result.Code == EnumCode.成功)
-            //{
-            //    model.App = result.Obj;
-            //}
-
+            var result = PlugCoreHelper.ApiUrl.Basics.AppSettingGetByApp.GetResult<AppSettingDTO, AppSettingEditInput>(new AppSettingEditInput { AppId = app });
+            if (result.Code == EnumCode.成功)
+            {
+                model.Detail = result.Obj;
+            }
             return View(model);
         }
 

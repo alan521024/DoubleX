@@ -51,6 +51,10 @@ namespace UTH.Domain
             config.CreateMap<AppVersionEditInput, AppVersionEntity>();
             config.CreateMap<AppVersionDTO, AppVersionOld>();
 
+
+            config.CreateMap<AppSettingEntity, AppSettingDTO>();
+            config.CreateMap<AppSettingEditInput, AppSettingEntity>();
+
             config.CreateMap<DictionaryEntity, DictionaryDTO>();
             config.CreateMap<DictionaryDTO, DictionaryEntity>();
             config.CreateMap<DictionaryEditInput, DictionaryEntity>();
