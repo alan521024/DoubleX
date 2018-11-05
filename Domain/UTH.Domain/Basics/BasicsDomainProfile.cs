@@ -26,6 +26,7 @@ namespace UTH.Domain
         {
             EngineHelper.RegisterType(typeof(IValidator<AppEditInput>), typeof(AppEditInputValidator));
             EngineHelper.RegisterType(typeof(IValidator<AppVersionEditInput>), typeof(AppVersionEditInputValidator));
+            EngineHelper.RegisterType(typeof(IValidator<AppSettingEditInput>), typeof(AppSettingEditInputValidator));
 
             EngineHelper.RegisterType(typeof(IValidator<AssetsEditInput>), typeof(AssetsEditInputValidator));
 

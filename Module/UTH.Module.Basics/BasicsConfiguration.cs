@@ -63,7 +63,11 @@
             EngineHelper.RegisterType<IAppVersionRepository, AppVersionRepository>(DomainConfiguration.Options.IocRepositoryOption);
             EngineHelper.RegisterType<IAppVersionDomainService, AppVersionDomainService>(DomainConfiguration.Options.IocServiceOption);
             EngineHelper.RegisterType<IAppVersionApplication, AppVersionApplication>(DomainConfiguration.Options.IocServiceOption);
-            
+
+            EngineHelper.RegisterType<IAppSettingRepository, AppSettingRepository>(DomainConfiguration.Options.IocRepositoryOption);
+            EngineHelper.RegisterType<IAppSettingDomainService, AppSettingDomainService>(DomainConfiguration.Options.IocServiceOption);
+            EngineHelper.RegisterType<IAppSettingApplication, AppSettingApplication>(DomainConfiguration.Options.IocServiceOption);
+
             //dictionary
             EngineHelper.RegisterType<IDictionaryApplication, DictionaryApplication>(DomainConfiguration.Options.IocServiceOption);
 

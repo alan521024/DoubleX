@@ -119,6 +119,19 @@
         public string AppVersionPaging { get; set; } = "/api/basics/appversion/paging";
 
         #endregion
+
+        #region setting
+
+        public string AppSettingGetByApp { get; set; } = "/api/basics/appsetting/getbyapp";
+
+        public string AppSettingGetId { get; set; } = "/api/basics/appsetting/get";
+        public string AppSettingInsert { get; set; } = "/api/basics/appsetting/insert";
+        public string AppSettingUpdate { get; set; } = "/api/basics/appsetting/update";
+        public string AppSettingDelete { get; set; } = "/api/basics/appsetting/delete";
+        public string AppSettingQuery { get; set; } = "/api/basics/appsetting/query";
+        public string AppSettingPaging { get; set; } = "/api/basics/appsetting/paging";
+
+        #endregion
     }
 
     /// <summary>

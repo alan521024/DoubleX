@@ -338,10 +338,11 @@ a { color: #333; line-height: 12px; font-size: 12px; background: transparent; te
 
 .dxm-page-content.left { width: 220px; }
 .dxm-page-content.right { left: 275px; }
+.dxm-page-content.no-header { top:15px;}
 
 .dxm-page .dxm-page-content .box-title { padding: 15px 0px; border-bottom: 1px solid #009191; background: #f2f2f2; }
-    .dxm-page .dxm-page-content .box-title span { font-weight: 700; padding: 0px 10px; border-right: 3px solid #009191; }
-    .dxm-page .dxm-page-content .box-title .right { padding-right: 15px; }
+    .dxm-page .dxm-page-content .box-title span { font-weight: 700; padding: 0px 10px; margin-left:10px; border-left: 3px solid #009191; }
+    .dxm-page .dxm-page-content .box-title .right {margin-right: 10px; }
 
 
 
