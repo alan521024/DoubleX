@@ -211,6 +211,7 @@ a { color: #333; line-height: 12px; font-size: 12px; background: transparent; te
 .list-group-item { background-color: inherit; border: 1px solid #e7eaec; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-color: rgb(231, 234, 236); border-right-color: rgb(231, 234, 236); border-bottom-color: rgb(231, 234, 236); border-left-color: rgb(231, 234, 236); display: block; margin-bottom: -1px; padding: 10px 15px; position: relative; }
 
 
+/*assets*/
 .assets { display: flex; width: 100%; height: 100%; flex-direction: column; background: #fff; overflow: hidden; }
 .assets-navs { display: flex; height: 30px; font-size: 0; border-bottom: 1px solid #e6e6e6; margin: 5px; }
 .assets-main { flex-grow: 1; display: flex; margin: 0px 5px; }
@@ -236,17 +237,17 @@ a { color: #333; line-height: 12px; font-size: 12px; background: transparent; te
 .assets .webuploader-pick { padding: 8px 15px; color: #666; background: none; }
     .assets .webuploader-pick:hover, .assets .webuploader-pick-hover { color: #fa7200; }
 
-/*items-box*/
+/*items*/
 .items-box { display: flex; }
     .items-box > .list { flex-grow: 1; }
         .items-box > .list > span { padding: 3px 6px; margin-right: 5px; border-radius: 2px; background: #eee; color: #666; cursor: pointer; }
             .items-box > .list > span .close { font-size: 10px; padding-left: 5px; }
             .items-box > .list > span:hover { background: #009191; color: #fff; }
-                .items-box > .list > span:hover .close { color:#fff;}
+                .items-box > .list > span:hover .close { color: #fff; }
     .items-box > .select { padding: 0px 15px; }
 
 
-/*control*/
+/*controls*/
 
 .dxm-log { height: 55px; padding-top: 15px; text-align: center; background: url(../images/dxm-header-bg.png) -80px 4px no-repeat }
 
@@ -274,11 +275,9 @@ a { color: #333; line-height: 12px; font-size: 12px; background: transparent; te
 .dxm-split { width: 1px; height: 100%; border-left: 1px dotted #ccc; }
 
 .dxm-table { margin: 0px; }
-
     .dxm-table th.txt-center, .dxm-table td.txt-center { text-align: center; }
     .dxm-table th.txt-left, .dxm-table td.txt-left { text-align: left; }
     .dxm-table th.txt-right, .dxm-table td.txt-right { text-align: right; }
-
     .dxm-table .dxm-table-actions a { padding: 0px 5px; }
         .dxm-table .dxm-table-actions a:first-child { padding-left: 0; }
         .dxm-table .dxm-table-actions a:last-child { padding-right: 0; }
@@ -303,8 +302,7 @@ a { color: #333; line-height: 12px; font-size: 12px; background: transparent; te
 .dxm-page-title { line-height: 35px; padding: 0px 5px; border-bottom: 1px solid #009191; }
     .dxm-page-title h3 { display: inline; font-size: 14px; font-weight: 700; border-left: 3px solid #009191; padding-left: 15px; }
 
-/*bg-color  #f3f3f4,#2f4050, */
-/*font-color #999c9e,*/
+/*layout*/
 .dxm-body { width: 100%; height: 100%; background: #f3f3f4; }
 
 .dxm-left { position: absolute; height: 100%; width: 68px; top: 0px; left: 0px; background: #2f4050; overflow: hidden; }
@@ -318,6 +316,8 @@ a { color: #333; line-height: 12px; font-size: 12px; background: transparent; te
     .dxm-list-pos .dxm-list-head { position: absolute; top: 0px; left: 0px; right: 0px; overflow: hidden; }
     .dxm-list-pos .dxm-list-content { position: absolute; top: 75px; left: 15px; right: 15px; bottom: 15px; margin: 0px; }
 
+
+/*page*/
 .dxm-page { }
     .dxm-page .dxm-page-head { height: 30px; line-height: 30px; padding: 15px 25px; border-bottom: 1px solid #e7eaec; }
     .dxm-page .dxm-page-content { position: relative; margin: 15px; padding: 20px 15px; border-radius: 2px; background-color: #fff; box-shadow: 0 1px 2px 0 rgba(0,0,0,.05); }
@@ -325,6 +325,7 @@ a { color: #333; line-height: 12px; font-size: 12px; background: transparent; te
     .dxm-page .dxm-page-foot { height: 30px; line-height: 30px; padding: 15px 25px; border-top: 1px solid #e7eaec; }
 
     .dxm-page .dxm-option { }
+
     .dxm-page .dxm-action { display: none; }
     .dxm-page .dxm-action-show { display: block; }
 
@@ -333,31 +334,17 @@ a { color: #333; line-height: 12px; font-size: 12px; background: transparent; te
     .dxm-page-pos .dxm-page-content { position: absolute; top: 75px; left: 15px; right: 15px; bottom: 75px; margin: 0px; }
     .dxm-page-pos .dxm-page-foot { position: absolute; bottom: 0px; left: 0px; right: 0px; overflow: hidden; }
 
-.dxm-page-pos-no-head .dxm-page-content { top: 15px; }
-.dxm-page-pos-no-foot .dxm-page-content { bottom: 15px; }
+    .dxm-page-pos .dxm-page-content.left { width: 220px; }
+    .dxm-page-pos .dxm-page-content.right { left: 275px; }
 
-.dxm-page-content.left { width: 220px; }
-.dxm-page-content.right { left: 275px; }
-.dxm-page-content.no-header { top:15px;}
+    .dxm-page-pos.pos-no-head .dxm-page-content { top: 15px; }
+    .dxm-page-pos.pos-no-foot .dxm-page-content { bottom: 15px; }
+
 
 .dxm-page .dxm-page-content .box-title { padding: 15px 0px; border-bottom: 1px solid #009191; background: #f2f2f2; }
-    .dxm-page .dxm-page-content .box-title span { font-weight: 700; padding: 0px 10px; margin-left:10px; border-left: 3px solid #009191; }
-    .dxm-page .dxm-page-content .box-title .right {margin-right: 10px; }
-
-
-
-/*.dxm-edit { }
-    .dxm-edit .dxm-edit-head { height: 60px; padding: 15px 25px; border-bottom: 1px solid #e7eaec; }
-    .dxm-edit .dxm-option { }
-    .dxm-edit .title { line-height: 30px; padding: 0px 5px; border-left: 3px solid #009191; font-size: 14px; font-weight: 700; }
-    .dxm-edit .dxm-edit-content { position: absolute; top: 15px; left: 15px; right: 15px; bottom: 84px; padding: 25px 15px; border: 1px solid #e7eaec; background: #fff; }
-        .dxm-edit .dxm-edit-content .inner { position: relative; width: 100%; height: 100%; overflow-y: auto; }
-        .dxm-edit .dxm-edit-content > .layui-row { height: 100%; overflow: hidden; }
-            .dxm-edit .dxm-edit-content > .layui-row > div { height: 100%; overflow: hidden; }
-                .dxm-edit .dxm-edit-content > .layui-row > div > .dxm-edit-split { position: absolute; top: 40px; bottom: 40px; width: 1px; left: 50%; margin-left: -2px; border-left: 1px dotted #ccc; }
-
-    .dxm-edit .dxm-edit-foot { position: absolute; left: 15px; right: 15px; bottom: 15px; height: 38px; line-height: 38px; padding: 15px 15px 15px 125px; border: 1px solid #e7eaec; border-top: 0px; }*/
-
+    .dxm-page .dxm-page-content .box-title span { font-weight: 700; padding: 0px 10px; margin-left: 10px; border-left: 3px solid #009191; }
+    .dxm-page .dxm-page-content .box-title .right { margin-right: 10px; }
+.dxm-page .dxm-page-content .box-inner { margin: 0px 10px; }
 
 /*login*/
 .dxm-login-form { width: 400px; position: absolute; left: 50%; margin-left: -200px; margin-top: 200px; }

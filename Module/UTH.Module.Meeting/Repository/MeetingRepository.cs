@@ -20,8 +20,8 @@
     /// </summary>
     public class MeetingRepository : SqlSugarRepository<MeetingEntity>, IMeetingRepository
     {
-        public MeetingRepository(ConnectionModel model = null, SqlSugarClient client = null, IApplicationSession session = null) :
-            base(model, client, session)
+        public MeetingRepository(SqlSugarClient context = null, ConnectionModel model = null, IApplicationSession session = null) :
+            base(context, model, session)
         {
 
         }
@@ -33,8 +33,8 @@
         /// <returns></returns>
         public MeetingSyncOutput FindSyncQuery(MeetingSyncInput input)
         {
-            var recordRep = EngineHelper.Resolve<IRepository<MeetingRecordEntity>>(new KeyValueModel<string, object>("connectionClient", client));
-            var translationRep = EngineHelper.Resolve<IRepository<MeetingTranslationEntity>>(new KeyValueModel<string, object>("connectionClient", client));
+            var recordRep = EngineHelper.Resolve<IRepository<MeetingRecordEntity>>(new KeyValueModel<string, object>("connectionClient", context));
+            var translationRep = EngineHelper.Resolve<IRepository<MeetingTranslationEntity>>(new KeyValueModel<string, object>("connectionClient", context));
 
             MeetingSyncOutput output = new MeetingSyncOutput();
             output.Records = new List<MeetingSyncModel>();

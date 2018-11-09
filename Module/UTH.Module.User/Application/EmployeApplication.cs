@@ -108,7 +108,7 @@
 
                     var mebInput = new MemberEntity();
                     mebInput.Id = input.Id;
-                    mebInput.Nickname = input.Name;
+                    mebInput.Name = input.Name;
                     mebInput.Gender = EnumGender.男;
 
                     output = Insert(input);
@@ -129,9 +129,8 @@
 
                     var mebInput = new MemberEntity();
                     mebInput.Id = input.Id;
-                    mebInput.Nickname = input.Name;
+                    mebInput.Name = input.Name;
                     mebInput.Gender = EnumGender.男;
-
 
                     var output = Insert(input);
                     accountService.Create(account);

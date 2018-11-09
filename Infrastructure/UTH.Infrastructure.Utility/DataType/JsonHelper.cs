@@ -51,8 +51,8 @@ namespace UTH.Infrastructure.Utility
                 //接口或继承类ref:http://www.cnblogs.com/OpenCoder/p/4524786.html
                 //jsetting.TypeNameHandling = TypeNameHandling.Auto;
 
-                //空值忽略
-                jsetting.NullValueHandling = NullValueHandling.Ignore;
+                //空值忽略(默认不忽略,eg: 返回的code msg  obj，期中obj为空，返回的json中就只会含code,msg了)
+                //jsetting.NullValueHandling = NullValueHandling.Ignore;
 
                 return jsetting;
             }

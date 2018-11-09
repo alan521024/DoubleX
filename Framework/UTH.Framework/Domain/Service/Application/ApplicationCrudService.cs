@@ -18,7 +18,9 @@
         where DTO : IKeys
         where TEditInput : IKeys
     {
-        public ApplicationCrudService(IDomainDefaultService<TEntity> _service, IApplicationSession session, ICachingService caching) : base(_service, session, caching)
+
+        public ApplicationCrudService(IDomainDefaultService<TEntity> _service, IApplicationSession session, ICachingService caching) :
+            base(_service, session, caching)
         {
         }
     }
@@ -61,11 +63,13 @@
         where TDeleteInput : IKeys
         where TQueryInput : IKeys
     {
+        protected readonly IUnitOfWorkManager CurrentUnitOfWorkManager;
         protected readonly TService service;
 
         public ApplicationCrudService(TService _service, IApplicationSession session, ICachingService caching) : base(session, caching)
         {
             service = _service;
+            CurrentUnitOfWorkManager = EngineHelper.Resolve<IUnitOfWorkManager>();
         }
 
         public virtual DTO Get(TGetInput input)
@@ -95,14 +99,16 @@
 
         public virtual int Delete(TDeleteInput input)
         {
+            int rows = 0;
             if (!input.Ids.IsEmpty())
             {
-                return service.Delete(input.Ids);
+                rows += service.Delete(input.Ids);
             }
-            else
+            if (!input.Id.IsEmpty())
             {
-                return service.Delete(input.Id);
+                rows += service.Delete(input.Id);
             }
+            return rows;
         }
 
         public virtual List<DTO> Query(QueryInput<TQueryInput> input)

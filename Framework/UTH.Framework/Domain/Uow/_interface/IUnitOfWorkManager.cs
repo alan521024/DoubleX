@@ -16,6 +16,10 @@
     /// </summary>
     public interface IUnitOfWorkManager
     {
-        IUnitOfWork Begin();
+        /// <summary>
+        /// 开始单元
+        /// </summary>
+        /// <returns></returns>
+        IUnitOfWorkCompleteHandle Begin(UnitOfWorkOptions options = null);
     }
 }

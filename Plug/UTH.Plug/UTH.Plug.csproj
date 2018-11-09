@@ -5,10 +5,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\..\Build</OutputPath>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>..\..\Build\netstandard2.0\UTH.Plug.xml</DocumentationFile>
     <OutputPath>..\..\Build</OutputPath>
   </PropertyGroup>
 

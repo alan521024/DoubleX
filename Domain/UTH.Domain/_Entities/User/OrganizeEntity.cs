@@ -15,21 +15,42 @@
     /// 组织信息(代理员/个体工商/公司企业/团队组织)
     /// </summary>
     [SugarTable("UC_Organize")]
-    public class OrganizeEntity : BaseFullEntity
+    public class OrganizeEntity : UserAccountExtendEntity
     {
         /// <summary>
-        /// 组织编号
+        /// 编号
         /// </summary>
-        public string No { get; set; }
+        public string Code { get; set; }
 
         /// <summary>
-        /// 组织名称
+        /// 名称
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// 织组电话
+        /// 电话
         /// </summary>
         public string Phone { get; set; }
+
+        /// <summary>
+        /// 传真
+        /// </summary>
+        public string Fax { get; set; }
+
+        /// <summary>
+        /// 地区
+        /// </summary>
+        public string AreaCode { get; set; }
+
+        /// <summary>
+        /// 地址
+        /// </summary>
+        public string Address { get; set; }
+
+        /// <summary>
+        /// 账号编号
+        /// </summary>
+        [SugarColumn(IsIgnore = true)]
+        public string No { get; set; }
     }
 }

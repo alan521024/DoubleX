@@ -15,7 +15,7 @@
 
     public class OpenApiBaseModel<T>
     {
-        // <summary>
+        /// <summary>
         /// 返回结果代码
         /// </summary>
         public int Code { get; set; }

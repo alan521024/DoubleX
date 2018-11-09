@@ -11,11 +11,11 @@
 @if (!AppHelper.IsMaster)
 {
     @section Menus{
-        @Html.Partial("~/Areas/Basics/Views/_Menus.cshtml")
+        @await Html.PartialAsync("~/Areas/Basics/Views/_Menus.cshtml")
     }
 }
 
-<div class="dxm-page dxm-page-pos dxm-page-pos-no-head layui-form">
+<div class="dxm-page dxm-page-pos pos-no-head layui-form">
     <div class="dxm-page-content bg-white">
         <div class="dxm-page-content-inner">
             <div class="m-t"></div>

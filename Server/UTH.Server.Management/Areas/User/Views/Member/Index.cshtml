@@ -1,0 +1,188 @@
+﻿@{
+    ViewData["Title"] = Lang.userGeRenYongHu;
+    Layout = string.Format("~/Views/Shared/{0}.cshtml", AppHelper.IsMaster ? "_Master" : "_Layout");
+}
+
+@section Heads{ }
+
+@section Styles{ }
+
+@section Menus{
+    @await Html.PartialAsync("~/Areas/User/Views/_Menus.cshtml")
+}
+
+<div class="dxm-page dxm-page-pos pos-no-foot layui-form">
+    <div class="dxm-page-head bg-white">
+        <div id="data-list-option" class="dxm-option clearfix">
+            <div class="left">
+                <a id="btn-add" href="javascript:;" class="layui-btn layui-btn-sm"><i class="iconfont icon-tool1"></i>@(Lang.sysTianJia)</a>
+            </div>
+            <div class="right">
+                <div class="dxm-input-search layui-inline">
+                    <input id="txt-search" type="text" placeholder="@(Lang.sysQingShuRuGuanJianZi)" autocomplete="off" class="layui-input">
+                    <a><i class="iconfont icon-tool15"></i></a>
+                </div>
+                <div class="layui-inline">
+                    <a id="btn-search" class="layui-btn layui-btn-sm"><i class="iconfont icon-tool1"></i>@(Lang.sysSouSuo)</a>
+                </div>
+            </div>
+        </div>
+        <div id="data-list-action" class="dxm-action layui-anim layui-anim-upbit" data-anim="layui-anim-upbit">
+            <span class="statices">@(new HtmlString(Lang.sysYiXuanZeXiang))</span>
+            <a id="btn-update" href="javascript:;"><i class="iconfont icon-tool2"></i>@(Lang.sysXiuGai)</a>
+            <a id="btn-delete" href="javascript:;"><i class="iconfont icon-tool3"></i>@(Lang.sysShanChu)</a>
+            <a href="javascript:;" class="close" id="data-list-action-close"><i class="iconfont icon-tool4"></i></a>
+        </div>
+    </div>
+    <div class="dxm-page-content  bg-white">
+        <div class="dxm-page-content-inner">
+            <div id="data-list"></div>
+            <div id="data-paging" class="dx-list-paging"></div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        var title = __language.userGeRenYongHu;
+        var pageView = {};
+        var list;
+        var columns = [[
+            { field: 'id', type: 'checkbox' },
+            { field: 'no', title: __language.sysBianHao, width: 100  },
+            { field: 'account', title: __language.userZhangHao, template: function (row) { return "<a href=''>" + row["account"] + "</a>"; } },
+            { field: 'name', title: __language.sysMingCheng },
+            { field: 'genderText', title: __language.userXingBie },
+            { field: 'birthdate', title: __language.userChuShengRiQi, template: function (row) { return row["birthdate"].date("yyyy-MM-dd"); }  },
+            { title: __language.sysCaoZuo, width: 80, align: 'center', template: function (row) { return common.tableEditTemplate(row["id"]); } }
+        ]];
+        $(document).ready(function () { pageView.init(); pageView.event(); });
+    </script>
+    <script type="text/javascript">
+
+        pageView.init = function () {
+            list = control.list({
+                id: '#data-list',
+                columns: columns,
+                url: "/common/do?action=/user/member/paging",
+                param: { page: 1, size: 10 },
+                success: function (data) {
+                    return data.rows;
+                },
+                checkAllCallback: pageView.status,
+                checkItemCallback: pageView.status,
+                resultCallback: function (result, par) {
+                    control.paging({
+                        elem: 'data-paging',
+                        count: result.total,
+                        curr: par.page,
+                        limit: par.size,
+                        jump: function (obj, first) {
+                            if (!first) {
+                                pageView.query(obj.curr, obj.limit);
+                            }
+                        }
+                    });
+                    pageView.clear();
+                }
+            });
+            pageView.query();
+        };
+
+        pageView.event = function () {
+            $("#data-list-action-close").on("click", pageView.clear);
+
+            $("#btn-add").on("click", pageView.add);
+            $("#btn-update").on("click", function () {
+                var ids = pageView.getCheckedIds();
+                pageView.update(ids.length === 1 ? ids[0] : "");
+            });
+            $("#btn-delete").on("click", function () {
+                var ids = pageView.getCheckedIds();
+                pageView.delete(ids);
+            });
+            $("#btn-search").on("click", function () { list.query(); });
+            $("#data-list").on("click", ".dxm-table-item-update", function () {
+                pageView.update($(this).parent("span").attr("data-id"));
+            });
+            $("#data-list").on("click", ".dxm-table-item-delete", function () {
+                pageView.delete([$(this).parent("span").attr("data-id")]);
+            });
+        };
+
+        pageView.query = function (page, size) {
+            if (!list)
+                return;
+            page = page || 1;
+            size = size || 10;
+            list.query({
+                param: function () {
+                    return {
+                        page: page,
+                        size: size,
+                        query: { search: ($("#txt-search").val() || "") },
+                        sorting: [{ key: "no", value: "asc" }]
+                    };
+                }
+            });
+        };
+
+        pageView.add = function () {
+            common.open("/user/member/edit?callback=list.query", { title: title });
+        };
+
+        pageView.update = function (id) {
+            id = id || "";
+            if (common.isEmpty(id)) {
+                common.message(__language.sysQingXuanZeXiuGaiShuJu);
+                return;
+            }
+            common.open("/user/member/edit?callback=list.query&id=" + id, { title: title });
+        };
+
+        pageView.delete = function (ids) {
+            ids = ids || [];
+            if (ids.length === 0) {
+                common.message(__language.sysQingXuanZeShanChuShuJu);
+                return;
+            }
+            common.confirm(__language.sysShiFouShanChuShuJu, function () {
+                common.request("/common/do?action=/user/member/delete", { data: { ids: ids } }, function (result) {
+                    list.query();
+                });
+            });
+        };
+
+        pageView.clear = function () {
+            list.checked();
+            pageView.status();
+        };
+
+        pageView.status = function () {
+            var items = $("input[name='list-chk-item']");
+            var chks = $("input[name='list-chk-item']:checked");
+
+            var $opt = $("#data-list-option"), $action = $("#data-list-action");
+            if (chks && chks.length > 0) {
+                $opt.hide();
+                $action.show();
+            }
+            else {
+                $opt.show();
+                $action.hide();
+            }
+            $action.find(".statices > em").html(chks.length);
+        };
+
+        pageView.getCheckedIds = function () {
+            var chks = $("input[name='list-chk-item']:checked");
+            var ids = [];
+            $(chks).each(function (i, v) {
+                ids.push($(v).val());
+            });
+            return ids;
+        };
+
+    </script>
+}
+

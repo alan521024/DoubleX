@@ -12,8 +12,6 @@
     using UTH.Infrastructure.Utility;
     using UTH.Framework;
     using UTH.Domain;
-    using UTH.Plug;
-    using UTH.Plug.Notification;
 
     /// <summary>
     /// 通知领域服务

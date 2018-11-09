@@ -14,7 +14,7 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 会员输入
+    /// 个人用户输入
     /// </summary>
     public class MemberEditInput : MemberDTO, IInput
     {
@@ -22,10 +22,13 @@
     }
 
     /// <summary>
-    /// 会员输入校验
+    /// 个人用户输入校验
     /// </summary>
     public class MemberEditInputValidator : MemberValidator<MemberEditInput>, IValidator<MemberEditInput>
     {
+        /// <summary>
+        /// ctor
+        /// </summary>
         public MemberEditInputValidator()
         {
             //rule...

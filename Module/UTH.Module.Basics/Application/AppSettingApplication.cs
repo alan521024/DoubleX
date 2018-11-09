@@ -12,7 +12,6 @@
     using UTH.Infrastructure.Utility;
     using UTH.Framework;
     using UTH.Domain;
-    using UTH.Plug;
 
     /// <summary>
     /// 会议信息应用服务
@@ -56,6 +55,7 @@
             if (entity.IsNull())
             {
                 entity = new AppSettingEntity();
+                entity.AppId = appId;
                 entity.UserJson = JsonHelper.Serialize(new UserSetting());
                 entity = service.Insert(entity);
             }

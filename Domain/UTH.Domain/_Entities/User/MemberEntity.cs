@@ -12,15 +12,15 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 会员信息
+    /// 个人用户信息
     /// </summary>
     [SugarTable("UC_Member")]
-    public class MemberEntity : BaseFullEntity
+    public class MemberEntity : UserAccountExtendEntity
     {
         /// <summary>
-        /// 昵称
+        /// 名称
         /// </summary>
-        public string Nickname { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// 性别(EnumGender)
@@ -31,5 +31,11 @@
         /// 出生日期
         /// </summary>
         public DateTime Birthdate { get; set; }
+
+        /// <summary>
+        /// 账号编号
+        /// </summary>
+        [SugarColumn(IsIgnore = true)]
+        public string No { get; set; }
     }
 }

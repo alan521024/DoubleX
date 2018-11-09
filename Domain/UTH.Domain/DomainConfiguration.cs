@@ -73,7 +73,8 @@
             });
 
             //unitofwork
-            EngineHelper.RegisterType<IUnitOfWork, UnitOfWorkSqlSugar>();
+            EngineHelper.RegisterType<IUnitOfWork, SqlSugarUnitOfWork>();
+            EngineHelper.RegisterType<IUnitOfWorkProvider, AsyncUnitOfWorkProvider>(new IocRegisterOptions() { SingleInstance = true });
             EngineHelper.RegisterType<IUnitOfWorkManager, UnitOfWorkManager>();
 
             //domain repository

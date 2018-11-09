@@ -8,10 +8,10 @@
 @section Styles{ }
 
 @section Menus{
-    @Html.Partial("~/Areas/Basics/Views/_Menus.cshtml")
+    @await Html.PartialAsync("~/Areas/Basics/Views/_Menus.cshtml")
 }
 
-<div class="dxm-page dxm-page-pos dxm-page-pos-no-foot layui-form">
+<div class="dxm-page dxm-page-pos pos-no-foot layui-form">
     <div class="dxm-page-head bg-white">
         <div id="data-list-option" class="dxm-option clearfix">
             <div class="left">

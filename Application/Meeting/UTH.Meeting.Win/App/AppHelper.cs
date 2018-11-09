@@ -214,11 +214,6 @@
         }
 
         /// <summary>
-        /// 应用程序信息
-        /// </summary>
-        public static ApplicationModel Current { get { return GetApplication(); } }
-
-        /// <summary>
         /// 授权文件信息
         /// </summary>
         public static LicenseModel Licenses { get { return GetLicenseModel(); } }
@@ -267,11 +262,24 @@
         /// <summary>
         /// 应用程序更新
         /// </summary>
-        public static void AppUpdate(bool isCloseAll = false)
+        public static void AppUpdate(bool isCloseAll = false, bool isOnlyForced = false)
         {
-            var currentVersion = VersionHelper.Get();
+            var cur = VersionHelper.Get();
+            var last = new Version(CurrentApp.Versions.No);
+            var updateType = WpfHelper.GetAppUpdateType(cur, last);
+            if (CurrentApp.Versions.UpdateType == EnumUpdateType.Forced)
+            {
+                updateType = EnumUpdateType.Forced;
+            }
+
+            if (isOnlyForced && updateType != EnumUpdateType.Forced)
+            {
+                //仅强制更新的时候操作,非强制更新，跳出
+                return;
+            }
+
             var currentIds = GetAppProcessIds();
-            var upProcess = WpfHelper.AppUpdate(currentVersion, Current, ApplicationPath, UpdateToolPath, currentIds.ToArray());
+            var upProcess = WpfHelper.AppUpdate(cur, CurrentApp.Application.Code, ApplicationPath, UpdateToolPath, currentIds.ToArray());
             if (isCloseAll)
             {
                 Thread.Sleep(800);
@@ -280,6 +288,7 @@
                 ProcessHelper.Kill(Process.GetCurrentProcess().Id);
             }
         }
+
         #endregion
 
         #region 会议业务资料

@@ -12,7 +12,7 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 组织应用服务接口
+    /// 组织用户应用服务接口
     /// </summary>
     public interface IOrganizeApplication :
         IApplicationCrudService<OrganizeDTO,OrganizeEditInput>, 

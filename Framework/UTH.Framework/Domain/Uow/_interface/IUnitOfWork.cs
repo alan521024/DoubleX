@@ -14,12 +14,27 @@
     /// <summary>
     /// 工作单元接口
     /// </summary>
-    public interface IUnitOfWork : IDependency, IDisposable
+    public interface IUnitOfWork : IUnitOfWorkActive, IUnitOfWorkCompleteHandle, IDependency, IDisposable
     {
-        bool IsDisposed { get; }
+        /// <summary>
+        /// Unique id of this UOW.
+        /// </summary>
+        string Id { get; }
 
-        void Begin();
-
-        void SaveChanges();
+        /// <summary>
+        /// 开始事务
+        /// </summary>
+        void Begin(UnitOfWorkOptions options);
+        
+        /// <summary>
+        /// 获取外部引用
+        /// </summary>
+        /// <returns></returns>
+        IUnitOfWork GetOuter();
+        /// <summary>
+        /// 设置外部引用
+        /// </summary>
+        /// <param name=""></param>
+        void SetOuter(IUnitOfWork outer);
     }
 }

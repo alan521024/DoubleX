@@ -16,31 +16,36 @@
     /// 组织信息(DTO)
     /// </summary>
     [Serializable]
-    public class OrganizeDTO : IKeys, IOutput
+    public class OrganizeDTO : AccountDTO, IKeys, IOutput
     {
         /// <summary>
-        /// Id
+        /// 编号
         /// </summary>
-        public Guid Id { get; set; }
+        public string Code { get; set; }
 
         /// <summary>
-        /// Ids
-        /// </summary>
-        public List<Guid> Ids { get; set; }
-
-        /// <summary>
-        /// 组织编号
-        /// </summary>
-        public string No { get; set; }
-
-        /// <summary>
-        /// 组织名称
+        /// 名称
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// 织组电话
+        /// 电话
         /// </summary>
         public string Phone { get; set; }
+
+        /// <summary>
+        /// 传真
+        /// </summary>
+        public string Fax { get; set; }
+
+        /// <summary>
+        /// 地区
+        /// </summary>
+        public string AreaCode { get; set; }
+
+        /// <summary>
+        /// 地址
+        /// </summary>
+        public string Address { get; set; }
     }
 }

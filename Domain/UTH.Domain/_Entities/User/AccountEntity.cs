@@ -17,6 +17,9 @@
     [SugarTable("UC_Account")]
     public class AccountEntity : BaseFullEntity
     {
+        /// <summary>
+        /// ctor
+        /// </summary>
         public AccountEntity()
         {
         }
@@ -152,12 +155,12 @@
         /// 公司编号
         /// </summary>
         [SugarColumn(IsIgnore = true)]
-        public string OrganizeNo { get; set; }
+        public string OrganizeCode { get; set; }
 
         /// <summary>
         /// 员工编号
         /// </summary>
         [SugarColumn(IsIgnore = true)]
-        public string EmployeNo { get; set; }
+        public string EmployeCode { get; set; }
     }
 }

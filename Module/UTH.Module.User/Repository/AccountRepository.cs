@@ -20,8 +20,8 @@
     /// </summary>
     public class AccountRepository : SqlSugarRepository<AccountEntity>, IAccountRepository
     {
-        public AccountRepository(ConnectionModel model = null, SqlSugarClient client = null, IApplicationSession session = null) :
-            base(model, client, session)
+        public AccountRepository(SqlSugarClient context = null, ConnectionModel model = null, IApplicationSession session = null) :
+            base(context, model, session)
         {
 
         }
@@ -30,10 +30,10 @@
 
         protected override ISugarQueryable<AccountEntity> GetQueryable(ISugarQueryable<AccountEntity> query = null, Expression<Func<AccountEntity, bool>> where = null, List<KeyValueModel> sorting = null)
         {
-            var source = client.Queryable<AccountEntity, OrganizeEntity, EmployeEntity>((st, sc, sc2) => new object[] {
+            var source = context.Queryable<AccountEntity, OrganizeEntity, EmployeEntity>((st, sc, sc2) => new object[] {
                 JoinType.Left,st.Id==sc.Id,
                 JoinType.Left, st.Id == sc2.Id})
-                .Select((st, sc, sc2) => new AccountEntity() { Id = SqlFunc.GetSelfAndAutoFill(st.Id), OrganizeNo = sc.No, EmployeNo = sc2.No });
+                .Select((st, sc, sc2) => new AccountEntity() { Id = SqlFunc.GetSelfAndAutoFill(st.Id), OrganizeCode = sc.Code, EmployeCode = sc2.No });
 
             source = source.MergeTable();
 

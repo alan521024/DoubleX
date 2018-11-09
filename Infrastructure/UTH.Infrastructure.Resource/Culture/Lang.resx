@@ -747,4 +747,100 @@
   <data name="sysXiTongPeiZhi" xml:space="preserve">
     <value>系统配置</value>
   </data>
+  <data name="basChengYuanShuLiang" xml:space="preserve">
+    <value>成员数量</value>
+  </data>
+  <data name="basDangQianZuZhiDeZiZhangHaoShuLiang" xml:space="preserve">
+    <value>当前组织(企业/团队/……)的子账号数量</value>
+  </data>
+  <data name="basYingYongXinXi" xml:space="preserve">
+    <value>应用信息</value>
+  </data>
+  <data name="basYongHuPeiZhi" xml:space="preserve">
+    <value>用户配置</value>
+  </data>
+  <data name="basYunXuDengLu" xml:space="preserve">
+    <value>允许登录</value>
+  </data>
+  <data name="basYunXuZhuCe" xml:space="preserve">
+    <value>允许注册</value>
+  </data>
+  <data name="sysJingZhi" xml:space="preserve">
+    <value>禁止</value>
+  </data>
+  <data name="sysQuanBu" xml:space="preserve">
+    <value>全部</value>
+  </data>
+  <data name="sysYunXu" xml:space="preserve">
+    <value>允许</value>
+  </data>
+  <data name="userChuShengRiQi" xml:space="preserve">
+    <value>出生日期</value>
+  </data>
+  <data name="userLianXiDiZhi" xml:space="preserve">
+    <value>联系地址</value>
+  </data>
+  <data name="userXingBie" xml:space="preserve">
+    <value>性别</value>
+  </data>
+  <data name="sysShouJiHaoMa" xml:space="preserve">
+    <value>手机号码</value>
+  </data>
+  <data name="sysYouXiangDiZhi" xml:space="preserve">
+    <value>邮箱地址</value>
+  </data>
+  <data name="userChongZhiMiMa" xml:space="preserve">
+    <value>重置密码</value>
+  </data>
+  <data name="userShouJiReng" xml:space="preserve">
+    <value>手机认证</value>
+  </data>
+  <data name="userYouXiangRenZheng" xml:space="preserve">
+    <value>邮箱认证</value>
+  </data>
+  <data name="userZhengJianRenZheng" xml:space="preserve">
+    <value>证件认证</value>
+  </data>
+  <data name="userZuiHouDengLu" xml:space="preserve">
+    <value>最后登录</value>
+  </data>
+  <data name="sysBianHao" xml:space="preserve">
+    <value>编号</value>
+  </data>
+  <data name="userGeRenYongHu" xml:space="preserve">
+    <value>个人用户</value>
+  </data>
+  <data name="userGuanLiYuan" xml:space="preserve">
+    <value>管理员</value>
+  </data>
+  <data name="userNiCheng" xml:space="preserve">
+    <value>昵称</value>
+  </data>
+  <data name="userYongHuDaoRu" xml:space="preserve">
+    <value>用户导入</value>
+  </data>
+  <data name="userYongHuRiZhi" xml:space="preserve">
+    <value>用户日志</value>
+  </data>
+  <data name="userZuZhiChengYuan" xml:space="preserve">
+    <value>组织成员</value>
+  </data>
+  <data name="userZuZhiYongHu" xml:space="preserve">
+    <value>组织用户</value>
+  </data>
+  <data name="userChaoJiGuanLiYuanBuYunXuCaoZuo" xml:space="preserve">
+    <value>超级管理员不允许操作</value>
+  </data>
+  <data name="sysDianHua" xml:space="preserve">
+    <value>电话</value>
+  </data>
+  <data name="sysDiZhi" xml:space="preserve">
+    <value>地址</value>
+  </data>
+  <data name="sysBiaoHaoYiCunZai" xml:space="preserve">
+    <value>编号已存在</value>
+  </data>
+  <data name="sysChuanZheng" xml:space="preserve">
+    <value>传真</value>
+  </data>
 </root>

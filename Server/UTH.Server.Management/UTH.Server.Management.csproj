@@ -29,7 +29,7 @@
     <ProjectReference Include="..\..\Infrastructure\UTH.Infrastructure.Utility\UTH.Infrastructure.Utility.csproj" />
     <ProjectReference Include="..\..\Module\UTH.Module.Basics\UTH.Module.Basics.csproj" />
     <ProjectReference Include="..\..\Module\UTH.Module.Core\UTH.Module.Core.csproj" />
-    <ProjectReference Include="..\..\Plug\UTH.Plug\UTH.Plug.csproj" />
+    <ProjectReference Include="..\..\Plug\UTH.Plug.Notification\UTH.Plug.Notification.csproj" />
   </ItemGroup>
 
   <ItemGroup>

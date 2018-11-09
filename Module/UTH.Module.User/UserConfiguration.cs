@@ -61,13 +61,16 @@
             EngineHelper.RegisterType<IAccountApplication, AccountApplication>(DomainConfiguration.Options.IocServiceOption);
 
             //member
+            EngineHelper.RegisterType<IMemberRepository, MemberRepository>(DomainConfiguration.Options.IocServiceOption);
+            EngineHelper.RegisterType<IMemberDomainService, MemberDomainService>(DomainConfiguration.Options.IocServiceOption);
             EngineHelper.RegisterType<IMemberApplication, MemberApplication>(DomainConfiguration.Options.IocServiceOption);
 
             //organize
+            EngineHelper.RegisterType<IOrganizeRepository, OrganizeRepository>(DomainConfiguration.Options.IocServiceOption);
+            EngineHelper.RegisterType<IOrganizeDomainService, OrganizeDomainService>(DomainConfiguration.Options.IocServiceOption);
             EngineHelper.RegisterType<IOrganizeApplication, OrganizeApplication>(DomainConfiguration.Options.IocServiceOption);
 
-            //organize
-
+            //employe
             EngineHelper.RegisterType<IEmployeRepository, EmployeRepository>(DomainConfiguration.Options.IocRepositoryOption);
             EngineHelper.RegisterType<IEmployeDomainService, EmployeDomainService>(DomainConfiguration.Options.IocServiceOption);
             EngineHelper.RegisterType<IEmployeApplication, EmployeApplication>(DomainConfiguration.Options.IocServiceOption);

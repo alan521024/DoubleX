@@ -19,9 +19,9 @@
     /// </summary>
     public class SqlSugarRepository : IRepository
     {
-        public SqlSugarRepository(SqlSugarClient client = null, ConnectionModel connection = null, IApplicationSession session = null)
+        public SqlSugarRepository(SqlSugarClient context = null, ConnectionModel connection = null, IApplicationSession session = null)
         {
-            this.client = client;
+            this.context = context;
             this.session = session;
 
             if (connection.IsNull())
@@ -29,13 +29,13 @@
                 connection = EngineHelper.Configuration.Store.Database;
             }
 
-            if (this.client.IsNull())
+            if (this.context.IsNull())
             {
                 connection.CheckNull();
-                this.client = CreateDb(connection);
+                this.context = CreateContext(connection);
             }
 
-            if (this.client.IsNull())
+            if (this.context.IsNull())
             {
                 throw new Exception("SqlSugarRepository Params is null");
             }
@@ -44,12 +44,21 @@
         /// <summary>
         /// 数据对象
         /// </summary>
-        protected SqlSugarClient client;
+        protected SqlSugarClient context;
 
         /// <summary>
         /// 会话信息
         /// </summary>
         protected IApplicationSession session;
+
+        /// <summary>
+        /// 获取Context
+        /// </summary>
+        /// <returns></returns>
+        public object GetContext()
+        {
+            return this.context;
+        }
 
         /// <summary>
         /// 脚本执行
@@ -61,7 +70,7 @@
         {
             try
             {
-                return client.Ado.ExecuteCommand(sql, parameters);
+                return context.Ado.ExecuteCommand(sql, parameters);
             }
             catch (Exception ex)
             {
@@ -79,7 +88,7 @@
         {
             try
             {
-                return client.Ado.SqlQueryDynamic(sql, parameters);
+                return context.Ado.SqlQueryDynamic(sql, parameters);
             }
             catch (Exception ex)
             {
@@ -96,19 +105,19 @@
         {
             if (iso.IsNull() && transactionName.IsEmpty())
             {
-                client.Ado.BeginTran();
+                context.Ado.BeginTran();
                 return;
             }
 
             if (!iso.IsNull())
             {
-                client.Ado.BeginTran(iso.Value);
+                context.Ado.BeginTran(iso.Value);
                 return;
             }
 
             if (!transactionName.IsEmpty())
             {
-                client.Ado.BeginTran(transactionName);
+                context.Ado.BeginTran(transactionName);
                 return;
             }
         }
@@ -118,7 +127,7 @@
         /// </summary>
         public virtual void RollbackTran()
         {
-            client.Ado.RollbackTran();
+            context.Ado.RollbackTran();
         }
 
         /// <summary>
@@ -126,7 +135,7 @@
         /// </summary>
         public virtual void CommitTran()
         {
-            client.Ado.CommitTran();
+            context.Ado.CommitTran();
         }
 
         /// <summary>
@@ -136,7 +145,7 @@
         /// <returns></returns>
         public virtual bool UseTransaction(Action<IRepository> action)
         {
-            var result = client.Ado.UseTran(() =>
+            var result = context.Ado.UseTran(() =>
              {
                  action?.Invoke(this);
              });
@@ -145,7 +154,7 @@
         }
 
 
-        protected SqlSugarClient CreateDb(ConnectionModel connection)
+        protected SqlSugarClient CreateContext(ConnectionModel connection)
         {
             var config = new ConnectionConfig()
             {
@@ -215,7 +224,6 @@
                     return EnumDbType.SqlServer;
             }
         }
-
     }
 
     /// <summary>
@@ -223,8 +231,8 @@
     /// </summary>
     public class SqlSugarRepository<TEntity, TKey> : SqlSugarRepository, IRepository<TEntity, TKey> where TEntity : class, IEntity<TKey>, new()
     {
-        public SqlSugarRepository(SqlSugarClient client = null, ConnectionModel connection = null, IApplicationSession session = null) :
-            base(client, connection, session)
+        public SqlSugarRepository(SqlSugarClient context = null, ConnectionModel connection = null, IApplicationSession session = null) :
+            base(context, connection, session)
         {
             this.SetQueryFilter();
         }
@@ -237,10 +245,10 @@
         {
             if (EngineHelper.Configuration.IsDebugger)
             {
-                client.Ado.IsEnableLogEvent = true;
-                client.Ado.LogEventStarting = (sql, pars) =>
+                context.Ado.IsEnableLogEvent = true;
+                context.Ado.LogEventStarting = (sql, pars) =>
                 {
-                    Console.WriteLine(sql + "\r\n" + client.Utilities.SerializeObject(pars.ToDictionary(s => s.ParameterName, s => s.Value)));
+                    Console.WriteLine(sql + "\r\n" + context.Utilities.SerializeObject(pars.ToDictionary(s => s.ParameterName, s => s.Value)));
                     Console.WriteLine();
                 };
             }
@@ -250,18 +258,18 @@
             //过滤器-软删除
             if (typeof(TEntity).IsBaseFrom<ISoftDeleteEntity>())
             {
-                if (client.QueryFilter.GeFilterList.Where(x => x.FilterName == "Audit.IsDelete").Count() == 0)
+                if (context.QueryFilter.GeFilterList.Where(x => x.FilterName == "Audit.IsDelete").Count() == 0)
                 {
-                    client.QueryFilter.Add(new SqlFilterItem()
+                    context.QueryFilter.Add(new SqlFilterItem()
                     {
                         FilterName = "Audit.IsDelete",
                         FilterValue = filterDb => { return new SqlFilterResult() { Sql = " IsDelete=0 " }; },
                         IsJoinQuery = false
                     });
                 }
-                if (client.QueryFilter.GeFilterList.Where(x => x.FilterName == "Audit.IsDelete.F").Count() == 0)
+                if (context.QueryFilter.GeFilterList.Where(x => x.FilterName == "Audit.IsDelete.F").Count() == 0)
                 {
-                    client.QueryFilter.Add(new SqlFilterItem()
+                    context.QueryFilter.Add(new SqlFilterItem()
                     {
                         FilterName = "Audit.IsDelete.F",
                         FilterValue = filterDb => { return new SqlFilterResult() { Sql = " f.IsDelete=0 " }; },
@@ -340,7 +348,7 @@
 
         private ISugarQueryable<TEntity> GetSource()
         {
-            var query = client.Queryable<TEntity>();
+            var query = context.Queryable<TEntity>();
             if (isDataCache)
             {
                 query = query.WithCache();
@@ -350,7 +358,7 @@
 
         private IInsertable<TEntity> GetInsertable(TEntity entity)
         {
-            var query = client.Insertable<TEntity>(entity);
+            var query = context.Insertable<TEntity>(entity);
             if (isDataCache)
             {
                 query = query.RemoveDataCache();
@@ -359,7 +367,7 @@
         }
         private IInsertable<TEntity> GetInsertable(List<TEntity> list)
         {
-            var query = client.Insertable<TEntity>(list);
+            var query = context.Insertable<TEntity>(list);
             if (isDataCache)
             {
                 query = query.RemoveDataCache();
@@ -370,7 +378,7 @@
 
         private IUpdateable<TEntity> GetUpdateable(TEntity entity = null)
         {
-            var query = client.Updateable<TEntity>(entity);
+            var query = context.Updateable<TEntity>(entity);
             if (isDataCache)
             {
                 query = query.RemoveDataCache();
@@ -379,7 +387,7 @@
         }
         private IUpdateable<TEntity> GetUpdateable(List<TEntity> list)
         {
-            var query = client.Updateable<TEntity>(list);
+            var query = context.Updateable<TEntity>(list);
             if (isDataCache)
             {
                 query = query.RemoveDataCache();
@@ -393,11 +401,11 @@
             IDeleteable<TEntity> query = null;
             if (entity == null)
             {
-                query = client.Deleteable<TEntity>();
+                query = context.Deleteable<TEntity>();
             }
             else
             {
-                query = client.Deleteable<TEntity>(entity);
+                query = context.Deleteable<TEntity>(entity);
             }
             if (isDataCache)
             {
@@ -407,7 +415,7 @@
         }
         private IDeleteable<TEntity> GetDeleteable(List<TEntity> list)
         {
-            var query = client.Deleteable<TEntity>(list);
+            var query = context.Deleteable<TEntity>(list);
             if (isDataCache)
             {
                 query = query.RemoveDataCache();
@@ -419,7 +427,7 @@
         {
             if (query.IsNull())
             {
-                query = client.Queryable<TEntity>();
+                query = context.Queryable<TEntity>();
             }
 
             if (isDataCache)
@@ -1290,8 +1298,8 @@
     /// </summary>
     public class SqlSugarRepository<TEntity> : SqlSugarRepository<TEntity, Guid>, IRepository<TEntity> where TEntity : class, IEntity, new()
     {
-        public SqlSugarRepository(ConnectionModel connection = null, SqlSugarClient client = null, IApplicationSession session = null) :
-            base(client, connection, session)
+        public SqlSugarRepository(SqlSugarClient context = null, ConnectionModel connection = null, IApplicationSession session = null) :
+            base(context, connection, session)
         {
 
         }

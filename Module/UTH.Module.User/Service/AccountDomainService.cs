@@ -24,6 +24,20 @@
         {
         }
 
+        #region override
+        
+        protected override void DeleteBefore(List<Guid> ids)
+        {
+            //操作管理员不允许删除
+            if (ids.Contains(GuidHelper.Get("79e775ec-c1f2-4865-883f-82d8ee777468")))
+            {
+                throw new DbxException(EnumCode.提示消息, Lang.userChaoJiGuanLiYuanBuYunXuCaoZuo);
+            }
+            base.DeleteBefore(ids);
+        }
+
+        #endregion
+
         /// <summary>
         /// 获取账户
         /// </summary>
@@ -87,7 +101,7 @@
                 Mobile = mobile,
                 Email = email,
                 Password = password,
-                OrganizeNo = organize
+                OrganizeCode = organize
             });
         }
 
@@ -107,7 +121,7 @@
 
             account.Id = !account.Id.IsEmpty() ? account.Id : Guid.NewGuid();
             account.Type = account.Type == EnumAccountType.Default ? EnumAccountType.个人 : account.Type;
-            if (!account.OrganizeNo.IsEmpty())
+            if (!account.OrganizeCode.IsEmpty())
             {
                 account.Type = EnumAccountType.组织;
             }

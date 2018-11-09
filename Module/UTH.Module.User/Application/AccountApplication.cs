@@ -24,15 +24,13 @@
         IDomainDefaultService<MemberEntity> memberService;
         IDomainDefaultService<OrganizeEntity> organizeService;
         ITokenService tokenService;
-        IUnitOfWorkManager unitMgr;
 
-        public AccountApplication(IAccountDomainService _service, IDomainDefaultService<MemberEntity> _memberService, IDomainDefaultService<OrganizeEntity> _organizeService, ITokenService _tokenService, IApplicationSession session, ICachingService caching, IUnitOfWorkManager _unitMgr) :
+        public AccountApplication(IAccountDomainService _service, IDomainDefaultService<MemberEntity> _memberService, IDomainDefaultService<OrganizeEntity> _organizeService, ITokenService _tokenService, IApplicationSession session, ICachingService caching) :
             base(_service, session, caching)
         {
             memberService = _memberService;
             organizeService = _organizeService;
             tokenService = _tokenService;
-            unitMgr = _unitMgr;
         }
 
         /// <summary>
@@ -56,21 +54,32 @@
             input.CheckNull();
             TrimRegistInputSpace(input);
 
-            using (var unit = unitMgr.Begin())
+            using (var unit = CurrentUnitOfWorkManager.Begin())
             {
-                var account = service.Create(Guid.Empty, input.Account, input.Mobile, input.Email, null, input.Password, input.Organize);
-
-                memberService.Insert(new MemberEntity() { Id = account.Id, Nickname = account.Account });
-
-                if (!account.OrganizeNo.IsEmpty())
-                {
-                    organizeService.Insert(new OrganizeEntity() { Id = account.Id, No = account.OrganizeNo, Name = "" });
-                }
-
-                unit.SaveChanges();
-
-                return EngineHelper.Map<RegistOutput>(account);
+                unit.Complete();
             }
+
+            //using (var unit = unitMgr.Begin())
+            //{
+            //    var account = service.Create(Guid.Empty, input.Account, input.Mobile, input.Email, null, input.Password, input.Organize);
+
+            //    var name = input.Account ?? input.Mobile ?? input.Email;
+
+            //    //注册默认个人用户
+            //    if (account.OrganizeCode.IsEmpty())
+            //    {
+            //        memberService.Insert(new MemberEntity() { Id = account.Id, Name = name });
+            //    }
+            //    else
+            //    {
+            //        organizeService.Insert(new OrganizeEntity() { Id = account.Id, Code = account.OrganizeCode, Name = name });
+            //    }
+
+            //    unit.SaveChanges();
+
+            //    return EngineHelper.Map<RegistOutput>(account);
+            //}
+            return null;
         }
 
         /// <summary>
@@ -84,7 +93,7 @@
             var account = service.Login(input.Account, input.Mobile, input.Email, input.UserName, input.Password, null);
 
             var result = EngineHelper.Map<SignInOutput>(account);
-            result.Token = tokenService.Generate(Session.Accessor.AppCode, account.Id, account.Account, account.Mobile, account.Email, account.RealName, "", account.OrganizeNo, account.EmployeNo, account.Type, account.Status);
+            result.Token = tokenService.Generate(Session.Accessor.AppCode, account.Id, account.Account, account.Mobile, account.Email, account.RealName, "", account.OrganizeCode, account.EmployeCode, account.Type, account.Status);
             return result;
         }
 

@@ -38,7 +38,7 @@ namespace UTH.Server.Management.Controllers
 
             return $"/api{actionUrl}".GetResult<object>(requestBody);
         }
-        
+
         /// <summary>
         /// 文件上传
         /// </summary>

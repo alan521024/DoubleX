@@ -16,20 +16,52 @@
     /// </summary>
     public class UnitOfWorkManager : IUnitOfWorkManager
     {
-        IUnitOfWork current;
+        private readonly IUnitOfWorkProvider _currentUnitOfWorkProvider;
 
-        public UnitOfWorkManager(IUnitOfWork _uow)
+        public UnitOfWorkManager(IUnitOfWorkProvider _provider)
         {
-            current = _uow;
+            _currentUnitOfWorkProvider = _provider;
         }
 
-        public IUnitOfWork Begin()
+        public IUnitOfWorkActive Current
         {
-            current.CheckNull();
+            get { return _currentUnitOfWorkProvider.Current; }
+        }
 
-            current.Begin();
+        public IUnitOfWorkCompleteHandle Begin(UnitOfWorkOptions options = null)
+        {
+            options = options ?? new UnitOfWorkOptions();
 
-            return current;
+            var outerUow = _currentUnitOfWorkProvider.Current;
+
+            var uow = EngineHelper.Resolve<IUnitOfWork>();
+
+            uow.Completed += (sender, args) =>
+            {
+                _currentUnitOfWorkProvider.Current = null;
+            };
+
+            uow.Failed += (sender, args) =>
+            {
+                _currentUnitOfWorkProvider.Current = null;
+            };
+
+            uow.Disposed += (sender, args) =>
+            {
+                //_iocResolver.Release(uow);
+                _currentUnitOfWorkProvider.Current = null;
+            };
+
+            if (outerUow != null)
+            {
+                //options.FillOuterUowFiltersForNonProvidedOptions(outerUow.Filters.ToList());
+            }
+
+            uow.Begin(options);
+
+            _currentUnitOfWorkProvider.Current = uow;
+
+            return uow;
         }
     }
 }

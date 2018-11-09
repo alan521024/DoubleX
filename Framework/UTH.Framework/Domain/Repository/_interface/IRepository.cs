@@ -19,6 +19,12 @@
     public interface IRepository : IDependency
     {
         /// <summary>
+        /// 获取Context
+        /// </summary>
+        /// <returns></returns>
+        object GetContext();
+
+        /// <summary>
         /// 脚本执行
         /// </summary>
         /// <param name="sql"></param>

@@ -43,7 +43,7 @@ namespace UTH.Server.Management.Controllers
         /// <param name="input"></param>
         /// <returns></returns>
         [HttpPost]
-        public virtual async Task<ActionResult> Login([FromForm]SignInInput input)
+        public virtual ActionResult Login([FromForm]SignInInput input)
         {
             input.CheckNull();
 

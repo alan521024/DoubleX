@@ -14,7 +14,7 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 会员校验
+    /// 个人用户校验
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class MemberValidator<T> : AbstractValidator<T>

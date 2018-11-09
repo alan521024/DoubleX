@@ -12,7 +12,6 @@
     using UTH.Infrastructure.Utility;
     using UTH.Framework;
     using UTH.Domain;
-    using UTH.Plug;
 
     /// <summary>
     /// 数据字典应用服务

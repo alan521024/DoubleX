@@ -75,7 +75,7 @@
         /// 授权文件信息
         /// </summary>
         /// <param name="licenseFile"></param>
-        /// <param name="publicFiles"></param>
+        /// <param name="publicFile"></param>
         /// <returns></returns>
         public static LicenseModel GetLicenseModel(string licenseFile = null, string publicFile = null)
         {

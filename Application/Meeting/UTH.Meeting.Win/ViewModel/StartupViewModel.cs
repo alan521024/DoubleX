@@ -118,13 +118,7 @@ namespace UTH.Meeting.Win.ViewModel
         public void UpdateVersion()
         {
             ProgressValue = 45;
-
-            var currentVersion = VersionHelper.Get();
-            var status = AppHelper.VersionUpdate(VersionHelper.Get(), AppHelper.Current);
-            if (status == EnumUpdateType.Forced)
-            {
-                AppHelper.AppUpdate(isCloseAll: true);
-            }
+            AppHelper.AppUpdate(isCloseAll: true, isOnlyForced: true);
             ProgressValue = 80;
         }
 

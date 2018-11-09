@@ -143,7 +143,6 @@ namespace UTH.Meeting.Win.ViewModel
             {
                 MessageAlert(culture.Lang.userQingShuRuYouXiaoDeShouJiHao);
             }
-
             var accountCheckName = PlugCoreHelper.ApiUrl.User.CheckName.GetResult<bool, AccountEditInput>(new AccountEditInput()
             {
                 Mobile = Mobile
@@ -158,7 +157,6 @@ namespace UTH.Meeting.Win.ViewModel
                 MessageAlert(culture.Lang.userZhangHuYiCunZai);
                 return;
             }
-
             var captchSend = PlugCoreHelper.ApiUrl.Core.CaptchaSend.GetResult<CaptchaOutput, CaptchaInput>(new CaptchaInput()
             {
                 Category = EnumCaptchaCategory.Regist,

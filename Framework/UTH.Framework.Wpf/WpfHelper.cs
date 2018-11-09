@@ -422,6 +422,16 @@ namespace UTH.Framework.Wpf
 
         #region 应用程序
 
+        #region 版本号格式
+        //major.minor[.build[.修订]]
+        //组件使用约定，如下所示︰
+        //主要(major)   ︰ 具有相同名称但不同主要版本的程序集不能互换。 更高版本的版本号可能表示无法假定向后兼容性的其中一个产品的主要重写。
+        //次要(minor)   ︰ 如果的名称和在两个程序集上的主版本号相同，但的次版本号是不同，这指示目的是要向后兼容性的显著增强。 产品的点版本或产品的完全向后兼容新版本，则可能表示此更高的次版本号。
+        //生成(build)   ︰ 生成号的不同表示同一源的重新编译。 处理器、 平台或编译器更改时，可能会使用不同的生成号。
+        //修订(Revision)︰ 具有相同名称、 主要和次要版本但不同修订号的程序集旨在是完全可互换。 在修复的以前发布的程序集的安全漏洞的版本中可能会使用更高版本的修订号。
+        //                 只有内部版本号或修订号不同的后续版本的程序集视为可对先前版本的修补程序更新。
+        #endregion
+
         /// <summary>
         /// 应用程序(当前运行)仅能运行一个进程
         /// </summary>
@@ -486,23 +496,45 @@ namespace UTH.Framework.Wpf
             Error(string.Format("System Error: {0} {1}", Environment.NewLine, msg), action: action);
         }
 
-        ///// <summary>
-        ///// 启动更新程序
-        ///// </summary>
-        ///// <param name="version">当前版本</param>
-        ///// <param name="model">最新版本</param>
-        ///// <param name="appPath">应用程序目录</param>
-        ///// <param name="toolPath">更新工具目录</param>
-        ///// <param name="processIds">要删除的进程Id</param>
-        //public static Process AppUpdate(Version version, ApplicationModel model, string appPath, string toolPath, params int[] processIds)
-        //{
-        //    version.CheckNull();
-        //    model.CheckNull();
-        //    processIds.CheckEmpty();
-            
-        //    string updateArgs = $"{model.Code} {version.ToString()} {StringHelper.Get(processIds, "|")} {CodingHelper.UrlEncoding(appPath)}";
-        //    return ProcessHelper.Start(toolPath, args: updateArgs, style: ProcessWindowStyle.Normal);
-        //}
+        /// <summary>
+        /// 启动更新程序
+        /// </summary>
+        /// <param name="version">当前版本</param>
+        /// <param name="code">应用程序Code</param>
+        /// <param name="appPath">应用程序目录</param>
+        /// <param name="toolPath">更新工具目录</param>
+        /// <param name="processIds">要删除的进程Id</param>
+        public static Process AppUpdate(Version version, string code, string appPath, string toolPath, params int[] processIds)
+        {
+            version.CheckNull();
+            processIds.CheckEmpty();
+
+            string updateArgs = $"{code} {version} {StringHelper.Get(processIds, "|")} {CodingHelper.UrlEncoding(appPath)}";
+            return ProcessHelper.Start(toolPath, args: updateArgs, style: ProcessWindowStyle.Normal);
+        }
+
+        /// <summary>
+        /// 获取更新类型
+        /// </summary>
+        /// <returns></returns>
+        public static EnumUpdateType GetAppUpdateType(Version cur, Version last)
+        {
+            if (cur == last)
+            {
+                return EnumUpdateType.Default;
+            }
+
+            if (cur.Major != last.Major || cur.Minor != last.Minor)
+            {
+                return EnumUpdateType.Forced;
+            }
+
+            if (cur.Build != last.Build || cur.Revision != last.Revision)
+            {
+                return EnumUpdateType.Incremental;
+            }
+            return EnumUpdateType.Default;
+        }
 
         #endregion
 

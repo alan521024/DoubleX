@@ -13,34 +13,29 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 会员信息(DTO)
+    /// 个人用户信息(DTO)
     /// </summary>
     [Serializable]
-    public class MemberDTO : IKeys, IOutput
+    public class MemberDTO : AccountDTO, IKeys, IOutput
     {
         /// <summary>
-        /// Id
-        /// </summary>
-        public Guid Id { get; set; }
-
-        /// <summary>
-        /// Ids
-        /// </summary>
-        public List<Guid> Ids { get; set; }
-
-        /// <summary>
-        /// 会员编号
-        /// </summary>
-        public string No { get; set; }
-
-        /// <summary>
-        /// 会员名称
+        /// 名称
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// 织组电话
+        /// 性别(EnumGender)
         /// </summary>
-        public string Phone { get; set; }
+        public EnumGender Gender { get; set; }
+
+        /// <summary>
+        /// 出生日期
+        /// </summary>
+        public DateTime Birthdate { get; set; }
+
+        /// <summary>
+        /// 性别
+        /// </summary>
+        public string GenderText { get { return Gender.GetName(); } }
     }
 }

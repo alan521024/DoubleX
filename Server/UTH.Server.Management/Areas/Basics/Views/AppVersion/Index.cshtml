@@ -12,7 +12,7 @@
     @await Html.PartialAsync("~/Areas/Basics/Views/_Menus.cshtml")
 }
 
-<div class="dxm-page dxm-page-pos dxm-page-pos-no-foot layui-form">
+<div class="dxm-page dxm-page-pos pos-no-foot layui-form">
     <div class="dxm-page-head bg-white">
         <div id="data-list-option" class="dxm-option clearfix">
             <div class="left">
@@ -40,9 +40,9 @@
         <div class="dxm-page-content bg-white left">
             <div class="dxm-page-content-inner">
                 <div class="box-title">
-                    <span>应用信息</span>
+                    <span>@(Lang.basYingYongXinXi)</span>
                     <div class="right">
-                        <a href="/basics/appversion">查看全部</a>
+                        <a href="/basics/appversion">@(Lang.sysQuanBu)</a>
                     </div>
                 </div>
                 <div class="m-t"></div>

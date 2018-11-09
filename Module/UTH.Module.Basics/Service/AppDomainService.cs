@@ -12,7 +12,6 @@
     using UTH.Infrastructure.Utility;
     using UTH.Framework;
     using UTH.Domain;
-    using UTH.Plug;
 
     /// <summary>
     /// 应用程序领域服务
@@ -26,37 +25,37 @@
 
         #region override
 
-        protected override List<AppEntity> InsertBefore(List<AppEntity> list)
+        protected override List<AppEntity> InsertBefore(List<AppEntity> inputs)
         {
-            if (list.IsEmpty())
-                return list;
+            if (inputs.IsEmpty())
+                return inputs;
 
-            var names = list.Select(x => x.Name).ToList();
-            var codes = list.Select(x => x.Code).ToList();
+            var names = inputs.Select(x => x.Name).ToList();
+            var codes = inputs.Select(x => x.Code).ToList();
 
             var isExist = Any(x => names.Contains(x.Name) || codes.Contains(x.Code));
             if (isExist)
             {
-                throw new DbxException(EnumCode.提示消息, Lang.sysMingChengHuoBianMaYiCunZai);
+                throw new DbxException(EnumCode.提示消息, Lang.sysBiaoHaoYiCunZai);
             }
-            return list;
+            return inputs;
         }
 
-        protected override List<AppEntity> UpdateBefore(List<AppEntity> list)
+        protected override List<AppEntity> UpdateBefore(List<AppEntity> inputs)
         {
-            if (list.IsEmpty())
-                return list;
+            if (inputs.IsEmpty())
+                return inputs;
 
-            var ids = list.Select(x => x.Id).ToList();
-            var names = list.Select(x => x.Name).ToList();
-            var codes = list.Select(x => x.Code).ToList();
+            var ids = inputs.Select(x => x.Id).ToList();
+            var names = inputs.Select(x => x.Name).ToList();
+            var codes = inputs.Select(x => x.Code).ToList();
 
             var entitys = Find(where: x => ids.Contains(x.Id));
             var exists = Find(where: x => names.Contains(x.Name) || codes.Contains(x.Code));
 
             foreach (var entity in entitys)
             {
-                var input = list.Where(x => x.Id == entity.Id).FirstOrDefault();
+                var input = inputs.Where(x => x.Id == entity.Id).FirstOrDefault();
                 if (input.IsNull())
                 {
                     continue;

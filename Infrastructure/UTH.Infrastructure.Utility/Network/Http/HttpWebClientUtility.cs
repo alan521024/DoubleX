@@ -89,8 +89,19 @@ namespace UTH.Infrastructure.Utility
             request = (HttpWebRequest)WebRequest.Create(item.URL);
             request.Method = item.Method;
 
+            //文件上传特殊处理
+            if (item.PostDataType == EnumHttpData.File && item.PostBytes != null && item.PostBytes.Length > 0)
+            {
+                item.Accept = "*/*";
+                item.Method = "POST";
+                item.ContentType = "multipart/form-data; boundary=" + FileUploadData.Boundary;
+            }
+
             //设置HTTP相关基础信息
             SetHttpBase(item);
+
+            //设置头部信息
+            SetHeader(item);
 
             //设置请求Cookie
             SetCookie(item);
@@ -108,8 +119,6 @@ namespace UTH.Infrastructure.Utility
             request.Referer = item.Referer;
             request.AllowAutoRedirect = item.Allowautoredirect;
 
-            //设置头部信息
-            SetHeader(item);
         }
 
         /// <summary>
@@ -179,16 +188,12 @@ namespace UTH.Infrastructure.Utility
                 else if (item.PostDataType == EnumHttpData.File && item.PostBytes != null && item.PostBytes.Length > 0)
                 {
                     //写入文件
-                    item.Accept = "*/*";
-                    item.Method = "POST";
-                    item.ContentType = "multipart/form-data; boundary=" + FileUploadData.Boundary;
                     buffer = item.PostBytes;
-                    string str = item.PostEncoding.GetString(buffer);
                 }
                 else if (!string.IsNullOrWhiteSpace(item.PostString))
                 {
-                    //写入字符串
                     buffer = item.PostEncoding.GetBytes(item.PostString);
+                    //string str = item.PostEncoding.GetString(buffer);
                 }
 
                 if (buffer != null)

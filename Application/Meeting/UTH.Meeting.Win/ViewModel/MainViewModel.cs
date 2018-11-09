@@ -166,7 +166,7 @@ namespace UTH.Meeting.Win.ViewModel
                 currentVersion,
                 BoolHelper.Get(AppHelper.Licenses.IsTrial) ? culture.Lang.sysShiYongBan : culture.Lang.sysZhengShiBan);
 
-            IsUpdate = currentVersion != AppHelper.Current.Versions.No ? Visibility.Visible : Visibility.Collapsed;
+            IsUpdate = currentVersion.ToString() != AppHelper.CurrentApp.Versions.No ? Visibility.Visible : Visibility.Collapsed;
         }
 
     }

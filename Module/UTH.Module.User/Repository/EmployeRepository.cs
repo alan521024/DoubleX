@@ -20,15 +20,15 @@
     /// </summary>
     public class EmployeRepository : SqlSugarRepository<EmployeEntity>, IEmployeRepository, IRepository<EmployeEntity>
     {
-        public EmployeRepository(ConnectionModel model = null, SqlSugarClient client = null, IApplicationSession session = null) :
-            base(model, client, session)
+        public EmployeRepository(SqlSugarClient context = null, ConnectionModel model = null, IApplicationSession session = null) :
+            base(context, model, session)
         {
 
         }
 
         protected override ISugarQueryable<EmployeEntity> GetQueryable(ISugarQueryable<EmployeEntity> query = null, Expression<Func<EmployeEntity, bool>> where = null, List<KeyValueModel> sorting = null)
         {
-            var source = client.Queryable<EmployeEntity, AccountEntity>((st, sc) => new object[] {
+            var source = context.Queryable<EmployeEntity, AccountEntity>((st, sc) => new object[] {
                 JoinType.Left,st.Id==sc.Id})
                 .Select((st, sc) => new EmployeEntity()
                 {

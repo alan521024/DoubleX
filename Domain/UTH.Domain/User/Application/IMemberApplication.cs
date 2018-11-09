@@ -12,7 +12,7 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 会员应用服务接口
+    /// 个人用户应用服务接口
     /// </summary>
     public interface IMemberApplication :
         IApplicationCrudService<MemberDTO, MemberEditInput>,

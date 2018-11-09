@@ -12,7 +12,6 @@
     using UTH.Infrastructure.Utility;
     using UTH.Framework;
     using UTH.Domain;
-    using UTH.Plug;
 
     /// <summary>
     /// 应用版本领域服务
@@ -26,17 +25,17 @@
 
         #region override
         
-        protected override List<AppVersionEntity> UpdateBefore(List<AppVersionEntity> list)
+        protected override List<AppVersionEntity> UpdateBefore(List<AppVersionEntity> inputs)
         {
-            if (list.IsEmpty())
-                return list;
+            if (inputs.IsEmpty())
+                return inputs;
 
-            var ids = list.Select(x => x.Id).ToList();
+            var ids = inputs.Select(x => x.Id).ToList();
             var entitys = Find(where: x => ids.Contains(x.Id));
 
             foreach (var entity in entitys)
             {
-                var input = list.Where(x => x.Id == entity.Id).FirstOrDefault();
+                var input = inputs.Where(x => x.Id == entity.Id).FirstOrDefault();
                 if (input.IsNull())
                 {
                     continue;

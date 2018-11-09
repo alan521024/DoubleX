@@ -26,13 +26,7 @@
         /// 用户设置(JSON)
         /// </summary>
         public string UserJson { get; set; }
-
-        /// <summary>
-        /// 用户设置信息
-        /// </summary>
-        [SugarColumn(IsIgnore = true)]
-        public UserSetting User { get; set; }
-
+        
         /// <summary>
         /// 应用程序名称
         /// </summary>

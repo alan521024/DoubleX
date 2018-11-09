@@ -32,7 +32,7 @@ namespace UTH.Server.Management.Areas.Basics.Controllers
             {
                 model.App = appResult.Obj;
             }
-            var result = PlugCoreHelper.ApiUrl.Basics.AppSettingGetByApp.GetResult<AppSettingDTO, AppSettingEditInput>(new AppSettingEditInput { AppId = app });
+            var result = $"{PlugCoreHelper.ApiUrl.Basics.AppSettingGetByApp}?appId={app}".GetResult<AppSettingDTO>();
             if (result.Code == EnumCode.成功)
             {
                 model.Detail = result.Obj;

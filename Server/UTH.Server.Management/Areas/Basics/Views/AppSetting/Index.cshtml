@@ -12,13 +12,13 @@
     @await Html.PartialAsync("~/Areas/Basics/Views/_Menus.cshtml")
 }
 
-<div class="dxm-page dxm-page-pos dxm-page-pos-no-foot layui-form">
-    <div class="dxm-page-content no-header bg-white left">
+<div class="dxm-page dxm-page-pos pos-no-head layui-form">
+    <div class="dxm-page-content bg-white left">
         <div class="dxm-page-content-inner">
             <div class="box-title">
-                <span>应用信息</span>
+                <span>@(Lang.basYingYongXinXi)</span>
                 <div class="right">
-                    <a href="/basics/app">应用管理</a>
+                    <a href="/basics/app">@(Lang.sysQuanBu)</a>
                 </div>
             </div>
             <div class="m-t"></div>
@@ -54,10 +54,90 @@
             </div>
         </div>
     </div>
-    <div class="dxm-page-content no-header bg-white right">
+    <div class="dxm-page-content bg-white right">
         <div class="dxm-page-content-inner">
-            <div id="data-list"></div>
-            <div id="data-paging" class="dx-list-paging"></div>
+            <div class="box-title">
+                <span>@(Lang.basYongHuPeiZhi)</span>
+            </div>
+            <div class="m-t"></div>
+            <div class="box-inner">
+                <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                    <ul class="layui-tab-title">
+                        <li class="layui-this">@EnumAccountType.个人</li>
+                        <li class="">@EnumAccountType.组织</li>
+                        <li class="">@EnumAccountType.人员</li>
+                    </ul>
+                    <div class="layui-tab-content">
+                        <div class="flex-form layui-tab-item layui-show">
+                            <div class="form-line">
+                                <label>@(Lang.basYunXuDengLu)：</label>
+                                <div class="item">
+                                    <input type="checkbox" name="chk-meb-login" lay-skin="switch" lay-text="@(Lang.sysYunXu)|@(Lang.sysJingZhi)" @(Model.Detail.User.Member.AllowLogin ? "checked" : "")>
+                                </div>
+                            </div>
+                            <div class="form-line">
+                                <label>@(Lang.basYunXuZhuCe)：</label>
+                                <div class="item">
+                                    <input type="checkbox" name="chk-meb-regist" lay-skin="switch" lay-text="@(Lang.sysYunXu)|@(Lang.sysJingZhi)" @(Model.Detail.User.Member.AllowRegist ? "checked" : "")>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex-form layui-tab-item">
+                            <div class="form-line">
+                                <label>@(Lang.basYunXuDengLu)：</label>
+                                <div class="item">
+                                    <input type="checkbox" name="chk-org-login" lay-skin="switch" lay-text="@(Lang.sysYunXu)|@(Lang.sysJingZhi)" @(Model.Detail.User.Origin.AllowLogin ? "checked" : "")>
+                                </div>
+                            </div>
+                            <div class="form-line">
+                                <label>@(Lang.basYunXuZhuCe)：</label>
+                                <div class="item">
+                                    <input type="checkbox" name="chk-org-regist" lay-skin="switch" lay-text="@(Lang.sysYunXu)|@(Lang.sysJingZhi)" @(Model.Detail.User.Origin.AllowRegist ? "checked" : "")>
+                                </div>
+                            </div>
+                            <div class="form-line">
+                                <label>@(Lang.basChengYuanShuLiang)：</label>
+                                <div class="group">
+                                    <div class="group-item">
+                                        <input id="txt-org-employe-limit" autocomplete="off" class="layui-input" type="text" value="@(Model.Detail.User.Origin.EmployeLimit)" />
+                                    </div>
+                                    <div class="group-item"><span>*@(Lang.basDangQianZuZhiDeZiZhangHaoShuLiang)</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex-form layui-tab-item">
+                            <div class="form-line">
+                                <label>@(Lang.basYunXuDengLu)：</label>
+                                <div class="item">
+                                    <input type="checkbox" name="chk-emp-login" lay-skin="switch" lay-text="@(Lang.sysYunXu)|@(Lang.sysJingZhi)" @(Model.Detail.User.Employe.AllowLogin ? "checked" : "")>
+                                </div>
+                            </div>
+                            <div class="form-line">
+                                <label>@(Lang.basYunXuZhuCe)：</label>
+                                <div class="item">
+                                    <input type="checkbox" name="chk-emp-login" lay-skin="switch" lay-text="@(Lang.sysYunXu)|@(Lang.sysJingZhi)" @(Model.Detail.User.Employe.AllowLogin ? "checked" : "")>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="m-t"></div>
+            @*<div class="box-title">
+                    <span>用户配置2</span>
+                </div>
+                <div class="m-t"></div>
+                <div class="box-inner">
+                    2
+                </div>
+                <div class="m-t"></div>*@
+        </div>
+    </div>
+    <div class="dxm-page-foot clearfix bg-white">
+        <div class="left">
+        </div>
+        <div class="right">
+            <button id="btn-save" class="layui-btn">@(Lang.sysBaoCun)</button>
         </div>
     </div>
 </div>
@@ -65,6 +145,8 @@
 @section Scripts{
     <script type="text/javascript">
         var pageView = {};
+        var id = "@(Model.Detail.Id)", appId = "@(Model.App.Id)";
+        var callback = "@(WebHelper.GetQueryValue(this.Context, "callback"))";
         $(document).ready(function () { pageView.init(); pageView.event(); });
     </script>
     <script type="text/javascript">
@@ -73,8 +155,34 @@
         };
 
         pageView.event = function () {
-            
+            $("#btn-save").on("click", pageView.save);
         };
+
+        pageView.save = function () {
+            
+            var userSetting = {
+                "member": { "allowLogin": $("input[name='chk-meb-login']").is(":checked"), "allowRegist": $("input[name='chk-meb-regist']").is(":checked"), "employeLimit": 0 },
+                "origin": { "allowLogin": $("input[name='chk-org-login']").is(":checked"), "allowRegist": $("input[name='chk-org-regist']").is(":checked"), "employeLimit": $("#txt-org-employe-limit").val() },
+                "employe": { "allowLogin": $("input[name='chk-emp-login']").is(":checked"), "allowRegist": $("input[name='chk-emp-regist']").is(":checked"), "employeLimit": 0 }
+            };
+
+            var model = {
+                id: id,
+                appId: appId,
+                UserJson: JSON.stringify(userSetting)
+            };
+            var url = "/common/do?action=/basics/appsetting/insert";
+            if (!common.isEmpty(id)) {
+                url = "/common/do?action=/basics/appsetting/update";
+            }
+            common.request(url, { data: model }, function (result) {
+                common.message(__language.sysBaoCunChengGong, function () {
+                    if (!common.isEmpty(callback)) {
+                        common.parentFunc(callback);
+                    }
+                });
+            });
+        }
 
     </script>
 }

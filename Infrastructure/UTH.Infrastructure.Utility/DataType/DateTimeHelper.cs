@@ -10,7 +10,7 @@ namespace UTH.Infrastructure.Utility
         #region 属性变量
 
         /// <summary>
-        /// 默认时间
+        /// 默认时间(1900-01-01 00:00:00)
         ///// </summary>
         public static DateTime DefaultDateTime
         {

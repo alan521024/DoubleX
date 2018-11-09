@@ -1,0 +1,120 @@
+﻿@model OrganizeDTO
+@{
+    ViewData["Title"] = Lang.userGeRenYongHu;
+    Layout = string.Format("~/Views/Shared/{0}.cshtml", AppHelper.IsMaster ? "_Master" : "_Layout");
+}
+
+@section Heads{ }
+
+@section Styles{ }
+
+@if (!AppHelper.IsMaster)
+{
+    @section Menus{
+        @await Html.PartialAsync("~/Areas/User/Views/_Menus.cshtml")
+    }
+}
+<div class="dxm-page dxm-page-pos pos-no-head layui-form">
+    <div class="dxm-page-content bg-white">
+        <div class="dxm-page-content-inner  flex-form">
+            <div class="form-line">
+                <label>@(Lang.sysBianHao)：</label>
+                <div class="item">
+                    <input id="txt-code" autocomplete="off" class="layui-input" type="text" value="@(Model.Code)"  @(Model.Id.IsEmpty() ? "" : "disabled") />
+                </div>
+            </div>
+            <div class="form-line">
+                <label>@(Lang.userZhangHao)：</label>
+                <div class="item">
+                    <input id="txt-account" autocomplete="off" class="layui-input" type="text" value="@(Model.Account)" @(Model.Id.IsEmpty() ? "" : "disabled") />
+                </div>
+            </div>
+            @if (Model.Id.IsEmpty())
+            {
+                <div class="form-line">
+                    <label>@(Lang.userMiMa)：</label>
+                    <div class="item">
+                        <input id="txt-password" autocomplete="off" class="layui-input" type="text" value="@(Model.Password)" />
+                    </div>
+                </div>
+            }
+            <div class="form-line">
+                <label>@(Lang.sysMingCheng)：</label>
+                <div class="item">
+                    <input id="txt-name" autocomplete="off" class="layui-input" type="text" value="@(Model.Name)" />
+                </div>
+            </div>
+            <div class="form-line">
+                <label>@(Lang.sysDianHua)：</label>
+                <div class="item">
+                    <input id="txt-phone" autocomplete="off" class="layui-input" type="text" value="@(Model.Phone)" />
+                </div>
+            </div>
+            <div class="form-line">
+                <label>@(Lang.sysChuanZheng)：</label>
+                <div class="item">
+                    <input id="txt-fax" autocomplete="off" class="layui-input" type="text" value="@(Model.Fax)" />
+                </div>
+            </div>
+            <div class="form-line">
+                <label>@(Lang.sysDiZhi)：</label>
+                <div class="item">
+                    <input id="txt-address" autocomplete="off" class="layui-input" type="text" value="@(Model.Address)" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="dxm-page-foot clearfix bg-white">
+        <div class="left">
+        </div>
+        <div class="right">
+            <button id="btn-save" class="layui-btn">@(Lang.sysBaoCun)</button>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        var pageView = {};
+        var id = "@(Model.Id)";
+        var callback = "@(WebHelper.GetQueryValue(this.Context, "callback"))";
+        $(document).ready(function () { pageView.init(); pageView.event(); });
+    </script>
+    <script type="text/javascript">
+
+
+        pageView.init = function () {
+        };
+
+        pageView.event = function () {
+            $("#btn-save").on("click", pageView.save);
+        };
+
+        pageView.save = function () {
+            var model = {
+                id: id,
+                account: $("#txt-account").val(),
+                password: $("#txt-password").val(),
+                name: $("#txt-name").val(),
+                code: $("#txt-code").val(),
+                phone: $("#txt-phone").val(),
+                fax: $("#txt-fax").val(),
+                address: $("#txt-address").val()
+            };
+
+            var url = "/common/do?action=/user/organize/insert";
+            if (!common.isEmpty(id)) {
+                url = "/common/do?action=/user/organize/update";
+            }
+            common.request(url, { data: model }, function (result) {
+                common.message(__language.sysBaoCunChengGong, function () {
+                    if (!common.isEmpty(callback)) {
+                        common.parentFunc(callback);
+                    }
+                });
+            });
+        };
+
+    </script>
+}
+

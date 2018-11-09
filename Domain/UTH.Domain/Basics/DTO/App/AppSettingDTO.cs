@@ -32,6 +32,25 @@
         /// </summary>
         public Guid AppId { get; set; }
 
+        /// <summary>
+        /// 用户设置(JSON)
+        /// </summary>
+        public string UserJson { get; set; }
+
+        /// <summary>
+        /// 用户设置信息
+        /// </summary>
+        public UserSetting User
+        {
+            get
+            {
+                if (UserJson.IsEmpty())
+                {
+                    return new UserSetting();
+                }
+                return JsonHelper.Deserialize<UserSetting>(UserJson);
+            }
+        }
 
         /// <summary>
         /// 应用程序名称

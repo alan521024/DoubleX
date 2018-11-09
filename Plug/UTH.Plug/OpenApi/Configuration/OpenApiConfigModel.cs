@@ -33,7 +33,7 @@
 
         /// <summary>
         /// 文本翻译(Get)
-        /// {{baseUrl}}/api/tmxtranslate?key={{key}}&source=zs&target=en&Quality=&q=你好
+        /// {{baseUrl}}/api/tmxtranslate?key={{key}}source=zs target=en Quality= q=你好
         /// </summary>
         public virtual string TranslationGet { get; set; } = "/api/tmxtranslate";
 

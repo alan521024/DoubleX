@@ -13,15 +13,14 @@
     using UTH.Infrastructure.Utility;
     using UTH.Framework;
     using UTH.Domain;
-    using UTH.Plug;
 
     /// <summary>
     /// 应用程序仓储
     /// </summary>
     public class AppRepository : SqlSugarRepository<AppEntity>, IAppRepository
     {
-        public AppRepository(ConnectionModel model = null, SqlSugarClient client = null, IApplicationSession session = null) :
-            base(model, client, session)
+        public AppRepository(SqlSugarClient context = null, ConnectionModel model = null, IApplicationSession session = null) :
+            base(context, model, session)
         {
 
         }
@@ -70,8 +69,7 @@
 
             var ids = list.Select(x => x.Id).ToList();
 
-            var versions = client.Queryable<AppVersionEntity>().Where(x => ids.Contains(x.AppId)).ToList();
-
+            var versions = context.Queryable<AppVersionEntity>().Where(x => ids.Contains(x.AppId)).ToList();
 
             list.ForEach(item =>
             {

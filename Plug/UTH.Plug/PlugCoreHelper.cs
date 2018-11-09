@@ -384,6 +384,7 @@
         /// 获取语音(翻译接口使用)
         /// </summary>
         /// <param name="lang"></param>
+        /// <param name="split">split</param>
         /// <returns></returns>
         public static string GetTranslationLang(string lang, string split = "|")
         {
