@@ -20,8 +20,8 @@
     /// </summary>
     public class MeetingRepository : SqlSugarRepository<MeetingEntity>, IMeetingRepository
     {
-        public MeetingRepository(SqlSugarClient context = null, ConnectionModel model = null, IApplicationSession session = null) :
-            base(context, model, session)
+        public MeetingRepository(IUnitOfWorkManager unitMgr, ConnectionModel model = null, IApplicationSession session = null) :
+            base(unitMgr, model, session)
         {
 
         }

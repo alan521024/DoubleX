@@ -19,10 +19,10 @@
         IApplicationService
     {
         /// <summary>
-        /// 创建人员
+        /// 批量添加
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        EmployeDTO Create(EmployeEditInput input);
+        List<EmployeDTO> BatchAdd(EmployeEditInput input);
     }
 }

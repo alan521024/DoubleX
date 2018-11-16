@@ -22,21 +22,33 @@ namespace UTH.Server.Management.Areas.User.Controllers
         #region Page
 
         /// <summary>
-        /// 用户信息
+        /// 账号管理
         /// </summary>
         /// <returns></returns>
-        public IActionResult Detail()
+        public IActionResult Index()
         {
             return View();
         }
 
         /// <summary>
-        /// 用户导入
+        /// 账号编辑
         /// </summary>
-        /// <returns></returns>
-        public IActionResult Import()
+        public IActionResult Edit(Guid id)
         {
-            return View();
+            var model = new AccountDTO() { };
+            if (!id.IsEmpty())
+            {
+                var result = PlugCoreHelper.ApiUrl.User.AccountGetId.GetResult<AccountDTO, AccountEditInput>(new AccountEditInput() { Id = id });
+                if (result.Code == EnumCode.成功)
+                {
+                    model = result.Obj;
+                }
+                else
+                {
+                    throw new DbxException(result.Code, result.Message);
+                }
+            }
+            return View(model);
         }
 
         #endregion

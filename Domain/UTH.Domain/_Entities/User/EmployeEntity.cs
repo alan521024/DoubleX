@@ -12,10 +12,10 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 人员信息
+    /// 组织成员信息
     /// </summary>
     [SugarTable("UC_Employe")]
-    public class EmployeEntity : BaseFullEntity
+    public class EmployeEntity : UserAccountExtendEntity
     {
         /// <summary>
         /// 所属组织
@@ -23,25 +23,25 @@
         public string Organize { get; set; }
 
         /// <summary>
-        /// 员工编号
+        /// 编号
         /// </summary>
-        public string No { get; set; }
+        public string Code { get; set; }
 
         /// <summary>
-        /// 人员名称
+        /// 名称
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// 织组电话
+        /// 电话
         /// </summary>
         public string Phone { get; set; }
 
         /// <summary>
-        /// 状态
+        /// 账号编号
         /// </summary>
         [SugarColumn(IsIgnore = true)]
-        public EnumAccountStatus Status { get; set; }
+        public string No { get; set; }
 
     }
 }

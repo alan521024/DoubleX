@@ -469,8 +469,10 @@ String.prototype.date = function (format) {
         }
     };
 
-    common.tableEditTemplate = function (id) {
-        return "<span class='dxm-table-actions' data-id='" + id + "'><a href='javascript:;' class='dxm-table-item-update'>" + __language.sysXiuGai + "</a><a href='javascript:;' class='dxm-table-item-delete'>" + __language.sysShanChu + "</a></span>";
+    common.tableEditTemplate = function (id, edit,del) {
+        edit = edit || __language.sysXiuGai;
+        del = del || __language.sysShanChu;
+        return "<span class='dxm-table-actions' data-id='" + id + "'><a href='javascript:;' class='dxm-table-item-update'>" + edit + "</a><a href='javascript:;' class='dxm-table-item-delete'>" + del+ "</a></span>";
     };
 
 })();

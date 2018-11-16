@@ -154,5 +154,15 @@
         /// 账户状态(EnumAccountStatus)
         /// </summary>
         public EnumAccountStatus Status { get; set; }
+
+        /// <summary>
+        /// 类型名称
+        /// </summary>
+        public string TypeText { get { return Type.GetName(); } }
+
+        /// <summary>
+        /// 状态名称
+        /// </summary>
+        public string StatusText { get { return Status.GetName(); } }
     }
 }

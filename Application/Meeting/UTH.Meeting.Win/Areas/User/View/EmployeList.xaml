@@ -35,12 +35,12 @@
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,15,0">
                 <TextBlock Style="{StaticResource searchTxt}" Text="{x:Static culture:Lang.userYongHuMing}"></TextBlock>
-                <TextBox Style="{StaticResource searchTextbox}" Text="{Binding No}"></TextBox>
+                <TextBox Style="{StaticResource searchTextbox}" Text="{Binding Code}"></TextBox>
             </StackPanel>
-            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,15,0">
+            <!--<StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,15,0">
                 <TextBlock Style="{StaticResource searchTxt}" Text="{x:Static culture:Lang.sysZhuangTai}"></TextBlock>
                 <TextBox Style="{StaticResource searchTextbox}" Text=""></TextBox>
-            </StackPanel>
+            </StackPanel>-->
             <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,15,0">
                 <Button Content="{x:Static culture:Lang.sysChaZhao}" Style="{StaticResource searchButton}" Command="{Binding OnSearchCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"></Button>
             </StackPanel>
@@ -62,7 +62,7 @@
                                         ElementStyle="{DynamicResource MetroDataGridCheckBox}" IsReadOnly="False" CanUserSort="False"
                                         Header="{x:Static culture:Lang.sysXuanZe}" Width="45">
                     </DataGridCheckBoxColumn>
-                    <DataGridTextColumn Binding="{Binding No}" Header="{x:Static culture:Lang.userYongHuMing}" Width="*" IsReadOnly="True" />
+                    <DataGridTextColumn Binding="{Binding Account}" Header="{x:Static culture:Lang.userYongHuMing}" Width="*" IsReadOnly="True" />
                     <DataGridTextColumn Binding="{Binding Name}" Header="{x:Static culture:Lang.sysMingCheng}" Width="*" IsReadOnly="True" />
                     <DataGridTextColumn Binding="{Binding Status}" Header="{x:Static culture:Lang.sysZhuangTai}" Width="*" IsReadOnly="True" />
                 </DataGrid.Columns>

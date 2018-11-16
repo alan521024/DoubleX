@@ -78,7 +78,7 @@ namespace UTH.Meeting.Win.ViewModel
         /// <summary>
         /// 是否组织账号
         /// </summary>
-        public Visibility IsOrganize { get { return CurrentUser.User.Type == EnumAccountType.组织 ? Visibility.Visible : Visibility.Collapsed; } }
+        public Visibility IsOrganize { get { return CurrentUser.User.Type == EnumAccountType.组织用户 ? Visibility.Visible : Visibility.Collapsed; } }
 
 
         /// <summary>

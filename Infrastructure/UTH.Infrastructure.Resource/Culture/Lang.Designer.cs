@@ -529,38 +529,29 @@ namespace UTH.Infrastructure.Resource.Culture {
         }
         
         /// <summary>
-        ///   查找类似 Edit 的本地化字符串。
+        ///   查找类似 编号或名称已存在 的本地化字符串。
         /// </summary>
-        public static string sysBianJi {
+        public static string sysBianHaoHuoMingChengYiCunZai {
             get {
-                return ResourceManager.GetString("sysBianJi", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 编码 的本地化字符串。
-        /// </summary>
-        public static string sysBianMa {
-            get {
-                return ResourceManager.GetString("sysBianMa", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 编码已存在 的本地化字符串。
-        /// </summary>
-        public static string sysBianMaYiCunZai {
-            get {
-                return ResourceManager.GetString("sysBianMaYiCunZai", resourceCulture);
+                return ResourceManager.GetString("sysBianHaoHuoMingChengYiCunZai", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 编号已存在 的本地化字符串。
         /// </summary>
-        public static string sysBiaoHaoYiCunZai {
+        public static string sysBianHaoYiCunZai {
             get {
-                return ResourceManager.GetString("sysBiaoHaoYiCunZai", resourceCulture);
+                return ResourceManager.GetString("sysBianHaoYiCunZai", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Edit 的本地化字符串。
+        /// </summary>
+        public static string sysBianJi {
+            get {
+                return ResourceManager.GetString("sysBianJi", resourceCulture);
             }
         }
         
@@ -633,6 +624,15 @@ namespace UTH.Infrastructure.Resource.Culture {
         public static string sysChuanZheng {
             get {
                 return ResourceManager.GetString("sysChuanZheng", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 初始解析相关资源失败，请关闭所有进程重新启动应用 的本地化字符串。
+        /// </summary>
+        public static string sysChuShiJieXiZiYuanShiBaiQingGuanBiSuoYouXiangGuanXinXi {
+            get {
+                return ResourceManager.GetString("sysChuShiJieXiZiYuanShiBaiQingGuanBiSuoYouXiangGuanXinXi", resourceCulture);
             }
         }
         
@@ -970,6 +970,15 @@ namespace UTH.Infrastructure.Resource.Culture {
         }
         
         /// <summary>
+        ///   查找类似 没有操作权限 的本地化字符串。
+        /// </summary>
+        public static string sysMeiYouCaoZuoQuanXian {
+            get {
+                return ResourceManager.GetString("sysMeiYouCaoZuoQuanXian", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 描述 的本地化字符串。
         /// </summary>
         public static string sysMiaoShu {
@@ -1141,11 +1150,29 @@ namespace UTH.Infrastructure.Resource.Culture {
         }
         
         /// <summary>
+        ///   查找类似 认证 的本地化字符串。
+        /// </summary>
+        public static string sysRenZheng {
+            get {
+                return ResourceManager.GetString("sysRenZheng", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 认证失败或过期 的本地化字符串。
         /// </summary>
         public static string sysRenZhengShiBaiHuoGuoQi {
             get {
                 return ResourceManager.GetString("sysRenZhengShiBaiHuoGuoQi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 认证信息 的本地化字符串。
+        /// </summary>
+        public static string sysRenZhengXinXi {
+            get {
+                return ResourceManager.GetString("sysRenZhengXinXi", resourceCulture);
             }
         }
         
@@ -1519,6 +1546,15 @@ namespace UTH.Infrastructure.Resource.Culture {
         }
         
         /// <summary>
+        ///   查找类似 成员管理 的本地化字符串。
+        /// </summary>
+        public static string userChengYuanGuanLi {
+            get {
+                return ResourceManager.GetString("userChengYuanGuanLi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 重置密码 的本地化字符串。
         /// </summary>
         public static string userChongZhiMiMa {
@@ -1551,6 +1587,15 @@ namespace UTH.Infrastructure.Resource.Culture {
         public static string userDengLuShiBai {
             get {
                 return ResourceManager.GetString("userDengLuShiBai", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 登录信息 的本地化字符串。
+        /// </summary>
+        public static string userDengLuXinXi {
+            get {
+                return ResourceManager.GetString("userDengLuXinXi", resourceCulture);
             }
         }
         
@@ -2095,6 +2140,15 @@ namespace UTH.Infrastructure.Resource.Culture {
         }
         
         /// <summary>
+        ///   查找类似 账号信息 的本地化字符串。
+        /// </summary>
+        public static string userZhangHaoXinXi {
+            get {
+                return ResourceManager.GetString("userZhangHaoXinXi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 账户类型错误 的本地化字符串。
         /// </summary>
         public static string userZhangHuLeiXingCuoWu {
@@ -2194,11 +2248,29 @@ namespace UTH.Infrastructure.Resource.Culture {
         }
         
         /// <summary>
+        ///   查找类似 组织 的本地化字符串。
+        /// </summary>
+        public static string userZuZhi {
+            get {
+                return ResourceManager.GetString("userZuZhi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 组织成员 的本地化字符串。
         /// </summary>
         public static string userZuZhiChengYuan {
             get {
                 return ResourceManager.GetString("userZuZhiChengYuan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 组织信息 的本地化字符串。
+        /// </summary>
+        public static string userZuZhiXinXi {
+            get {
+                return ResourceManager.GetString("userZuZhiXinXi", resourceCulture);
             }
         }
         

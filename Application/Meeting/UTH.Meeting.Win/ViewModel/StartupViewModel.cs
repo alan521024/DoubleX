@@ -45,10 +45,14 @@ namespace UTH.Meeting.Win.ViewModel
         {
             new Thread(() =>
             {
-                CheckLicense();
-                UpdateVersion();
-                UpdateAppUse();
-                WpfHelper.ExcuteUI(ToLogin);
+                WpfHelper.ExcuteUI(() =>
+                {
+                    CheckLicense();
+                    UpdateVersion();
+                    UpdateAppUse();
+                    CopyRes();
+                    WpfHelper.ExcuteUI(ToLogin);
+                });
             }).Start();
         }
 
@@ -131,6 +135,32 @@ namespace UTH.Meeting.Win.ViewModel
             AppHelper.AddUseTimes();
 
             ProgressValue = 100;
+        }
+
+        /// <summary>
+        /// 复制资源
+        /// </summary>
+        private void CopyRes()
+        {
+            try
+            {
+                //杀掉相关进程进程
+                ProcessHelper.Kill("UTH.Update.Win");
+                var sourceDir = FilesHelper.GetDirectory("Assets/Res");
+                var destDir = FilesHelper.GetDirectory(".");
+                FilesHelper.CopyFold(sourceDir.FullName, destDir.FullName);
+                foreach (var dir in sourceDir.GetDirectories()) {
+                    System.IO.Directory.Delete(dir.FullName,true);
+                }
+                foreach (var file in sourceDir.GetFiles())
+                {
+                    System.IO.File.Delete(file.FullName);
+                }
+            }
+            catch(Exception ex) {
+                EngineHelper.LoggingError(ex);
+                throw new DbxException(EnumCode.提示消息, culture.Lang.sysChuShiJieXiZiYuanShiBaiQingGuanBiSuoYouXiangGuanXinXi);
+            }
         }
 
         /// <summary>

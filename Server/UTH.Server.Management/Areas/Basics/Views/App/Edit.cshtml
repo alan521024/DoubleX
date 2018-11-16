@@ -15,46 +15,49 @@
     }
 }
 
-<div class="dxm-page dxm-page-pos pos-no-head layui-form">
-    <div class="dxm-page-content bg-white">
-        <div class="dxm-page-content-inner">
-            <div class="m-t"></div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">@(Lang.sysMingCheng)：</label>
-                <div class="layui-input-inline">
-                    <input id="txt-name" autocomplete="off" class="layui-input" type="text" value="@(Model.Name)" />
+<div class="dxm-page layui-form">
+    <div class="dxm-page-content exist-footer bg-white">
+        <div class="inner">
+            <div class="flex-form">
+                <div class="form-line">
+                    <label>@(Lang.sysMingCheng)：</label>
+                    <div class="item">
+                        <input id="txt-name" autocomplete="off" class="layui-input" type="text" value="@(Model.Name)" />
+                    </div>
                 </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">@(Lang.sysLeiXing)：</label>
-                <div class="layui-input-inline">
-                    @(WebHelper.GetEnumSelectHtml<EnumAppType>(id: "ddl-appType", selected: Model.AppType.GetValue()))
+                <div class="form-line">
+                    <label>@(Lang.sysBianHao)：</label>
+                    <div class="group">
+                        <div class="group-item">
+                            <input id="txt-code" autocomplete="off" class="layui-input" type="text" value="@(Model.Code)" />
+                        </div>
+                        <div class="group-item">
+                            100x00 200x00 900x00
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">@(Lang.sysBianMa)：</label>
-                <div class="layui-input-inline">
-                    <input id="txt-code" autocomplete="off" class="layui-input" type="text" value="@(Model.Code)" />
+                <div class="form-line">
+                    <label>@(Lang.sysLeiXing)：</label>
+                    <div class="item">
+                        @(WebHelper.GetEnumSelectHtml<EnumAppType>(id: "ddl-appType", selected: Model.AppType.GetValue()))
+                    </div>
                 </div>
-                <div class="layui-form-mid layui-word-aux">
-                    100x00 200x00 900x00
+                <div class="form-line">
+                    <label>@(Lang.sysKey)：</label>
+                    <div class="item">
+                        <input id="txt-key" autocomplete="off" class="layui-input" type="text" value="@(Model.Key)" />
+                    </div>
                 </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">@(Lang.sysKey)：</label>
-                <div class="layui-input-inline">
-                    <input id="txt-key" autocomplete="off" class="layui-input" type="text" value="@(Model.Key)" />
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">@(Lang.sysMiYao)：</label>
-                <div class="layui-input-inline">
-                    <input id="txt-secret" autocomplete="off" class="layui-input" type="text" value="@(Model.Secret)" />
+                <div class="form-line">
+                    <label>@(Lang.sysMiYao)：</label>
+                    <div class="item">
+                        <input id="txt-secret" autocomplete="off" class="layui-input" type="text" value="@(Model.Secret)" />
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="dxm-page-foot clearfix bg-white">
+    <div class="dxm-page-footer bg-white clearfix">
         <div class="left">
         </div>
         <div class="right">

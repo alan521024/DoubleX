@@ -17,7 +17,7 @@
     public interface IUnitOfWork : IUnitOfWorkActive, IUnitOfWorkCompleteHandle, IDependency, IDisposable
     {
         /// <summary>
-        /// Unique id of this UOW.
+        /// 单元标识
         /// </summary>
         string Id { get; }
 
@@ -25,7 +25,10 @@
         /// 开始事务
         /// </summary>
         void Begin(UnitOfWorkOptions options);
-        
+
+
+
+
         /// <summary>
         /// 获取外部引用
         /// </summary>

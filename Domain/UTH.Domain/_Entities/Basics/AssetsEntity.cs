@@ -28,9 +28,9 @@
         public string Name { get; set; }
 
         /// <summary>
-        /// 资源MD5
+        /// 资源md5
         /// </summary>
-        public string MD5 { get; set; }
+        public string Md5 { get; set; }
 
         /// <summary>
         /// 资源大下

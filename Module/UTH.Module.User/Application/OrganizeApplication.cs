@@ -18,7 +18,7 @@
     /// 组织应用服务
     /// </summary>
     public class OrganizeApplication :
-        ApplicationCrudService<OrganizeEntity, OrganizeDTO, OrganizeEditInput>,
+        ApplicationCrudService<IOrganizeDomainService, OrganizeEntity, OrganizeDTO, OrganizeEditInput>,
         IOrganizeApplication
     {
         IAccountDomainService accountService;
@@ -34,41 +34,64 @@
         public override OrganizeDTO Insert(OrganizeEditInput input)
         {
             OrganizeDTO dto = null;
-            //using (var unit = unitManager.Begin())
-            //{
-            //    var _actService = unit.Resolve<AccountEntity, IAccountDomainService, IAccountRepository>();
-            //    var _orgService = unit.Resolve<OrganizeEntity, IOrganizeDomainService, IOrganizeRepository>();
+            using (var unit = CurrentUnitOfWorkManager.Begin())
+            {
+                var account = accountService.Create(Guid.Empty, input.Account, input.Mobile, input.Email, null, input.Password, input.Code, null,false);
+                account.CheckNull();
 
-            //    var account = accountService.Create(Guid.Empty, input.Account, input.Mobile, input.Email, null, input.Password, input.Code);
-            //    account.CheckNull();
+                input.Id = account.Id;
+                input.Name = service.GetDefaultName(input.Name, account);
 
-            //    input.Id = account.Id;
-            //    input.Name = input.Name ?? input.Code ?? account.Account;
+                dto = MapperToDto(service.Insert(MapperToEntity(input)));
 
-            //    dto = MapperToDto(_orgService.Insert(MapperToEntity(input)));
-
-            //    unit.SaveChanges();
-            //}
+                unit.Complete();
+            }
             return dto;
         }
 
         public override int Delete(OrganizeDTO input)
         {
             int rows = 0;
-            //using (var unit = unitManager.Begin())
-            //{
-            //    if (!input.Ids.IsEmpty())
-            //    {
-            //        rows += accountService.Delete(input.Ids);
-            //    }
-            //    if (!input.Id.IsEmpty())
-            //    {
-            //        rows += accountService.Delete(input.Id);
-            //    }
+            using (var unit = CurrentUnitOfWorkManager.Begin())
+            {
+                if (!input.Ids.IsEmpty())
+                {
+                    rows += accountService.Delete(input.Ids);
+                }
+                if (!input.Id.IsEmpty())
+                {
+                    rows += accountService.Delete(input.Id);
+                }
+                rows += base.Delete(input);
 
-            //    rows += base.Delete(input);
-            //}
+                unit.Complete();
+            }
             return rows;
+        }
+
+        protected override Expression<Func<OrganizeEntity, bool>> InputToWhere(QueryInput<OrganizeDTO> input)
+        {
+            if (input.IsNull())
+            {
+                return base.InputToWhere(input);
+            }
+
+            if (input.Query.IsNull())
+            {
+                return base.InputToWhere(input);
+            }
+            
+            var where = ExpressHelper.Get<OrganizeEntity>();
+
+            if (Session.User.Type != EnumAccountType.管理员)
+            {
+                //input.Query. = !input.Query.Organize.IsEmpty() ? input.Query.Organize : "-1";
+            }
+
+            where = where.AndIF(!input.Query.Code.IsEmpty(), x => x.Code.Contains(input.Query.Code));
+            //where = where.AndIF(!input.Query.Organize.IsEmpty(), x => x.Organize == input.Query.Organize);
+
+            return where.ToExpression();
         }
 
         #endregion

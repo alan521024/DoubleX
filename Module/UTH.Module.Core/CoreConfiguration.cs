@@ -60,8 +60,12 @@
             EngineHelper.RegisterType<ICaptchaApplication, CaptchaApplication>();
             EngineHelper.RegisterType<INotifyApplication, NotifyApplication>();
 
+            EngineHelper.RegisterType<IFlowService, FlowService>();
+            EngineHelper.RegisterType<IFlowApplication, FlowApplication>();
+
             EngineHelper.RegisterType<INotifyInterceptor, NotifyInterceptor>();
             EngineHelper.RegisterType<ICaptchaInterceptor, CaptchaInterceptor>();
+
         }
 
         /// <summary>

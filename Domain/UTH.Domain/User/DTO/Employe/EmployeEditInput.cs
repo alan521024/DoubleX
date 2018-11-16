@@ -29,15 +29,18 @@
     /// </summary>
     public class EmployeEditInputValidator : EmployeValidator<EmployeEditInput>, IValidator<EmployeEditInput>
     {
+        /// <summary>
+        /// ctor
+        /// </summary>
         public EmployeEditInputValidator()
         {
-            RuleFor(o => o.No).Configure(x => x.PropertyName = Lang.userYongHuMing)
+            RuleFor(o => o.Code).Configure(x => x.PropertyName = Lang.sysBianHao)
                 .NotNull().NotEmpty().MinimumLength(2);
 
-            RuleFor(o => o.Name).Configure(x => x.PropertyName = Lang.userXingMing);
+            RuleFor(o => o.Name).Configure(x => x.PropertyName = Lang.sysMingCheng);
 
             RuleFor(o => o.Password).Configure(x => x.PropertyName = Lang.userMiMa)
-                .NotNull().NotEmpty();
+                .NotNull().NotEmpty().When(x => x.Id.IsEmpty() && x.Ids.IsEmpty());
         }
     }
 }

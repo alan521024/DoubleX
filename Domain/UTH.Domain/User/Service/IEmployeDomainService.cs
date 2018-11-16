@@ -12,9 +12,16 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 人员领域服务接口
+    /// 组织成员领域服务接口
     /// </summary>
     public interface IEmployeDomainService : IDomainDefaultService<EmployeEntity>
     {
+        /// <summary>
+        /// 获取默认名称
+        /// </summary>
+        /// <param name="inputName"></param>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        string GetDefaultName(string inputName, AccountEntity account);
     }
 }

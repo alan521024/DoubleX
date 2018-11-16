@@ -37,12 +37,12 @@ namespace UTH.Meeting.Win.ViewModel
             BatchEnd = 0;
         }
 
-        public string No
+        public string Code
         {
-            get { return _no; }
-            set { _no = value; RaisePropertyChanged(() => No); }
+            get { return _code; }
+            set { _code = value; RaisePropertyChanged(() => Code); }
         }
-        private string _no;
+        private string _code;
 
         public string Name
         {
@@ -103,14 +103,14 @@ namespace UTH.Meeting.Win.ViewModel
             var input = new EmployeEditInput()
             {
                 Organize = CurrentUser.User.Organize,
-                No = No,
+                Code = Code,
                 Name = Name,
                 Password = Password,
                 BatchStart = BatchStart,
                 BatchEnd = BatchEnd
             };
 
-            if (input.No.IsEmpty())
+            if (input.Code.IsEmpty())
             {
                 throw new DbxException(EnumCode.提示消息, culture.Lang.userQingShuRuZhangHuBianHao);
             }
@@ -126,27 +126,33 @@ namespace UTH.Meeting.Win.ViewModel
                 {
                     throw new DbxException(EnumCode.提示消息, culture.Lang.sysQingShuRuQiZhiXingXi);
                 }
-            }
-
-            var result = "/api/user/employe/create".GetResult<EmployeDTO, EmployeEditInput>(input);
-            if (result.Code == EnumCode.成功)
-            {
-                No = string.Empty;
-                Name = string.Empty;
-                Password = string.Empty;
-                BatchStart = 0;
-                BatchEnd = 0;
-
-                MessageAlert("成功", okAction: () =>
+                var result = PlugCoreHelper.ApiUrl.User.EmployeBatchAdd.GetResult<List<EmployeDTO>, EmployeEditInput>(input);
+                if (result.Code != EnumCode.成功)
                 {
-                    new AppViewModelLocator().EmployeModel.Query(1);
-                });
-                Close(obj.GetType().FullName);
+                    throw new DbxException(EnumCode.提示消息, result.Message);
+                }
             }
             else
             {
-                throw new DbxException(EnumCode.提示消息, result.Message);
+                var result = PlugCoreHelper.ApiUrl.User.EmployeInsert.GetResult<EmployeDTO, EmployeEditInput>(input);
+                if (result.Code != EnumCode.成功)
+                {
+                    throw new DbxException(EnumCode.提示消息, result.Message);
+                }
+
             }
+
+            Code = string.Empty;
+            Name = string.Empty;
+            Password = string.Empty;
+            BatchStart = 0;
+            BatchEnd = 0;
+
+            MessageAlert("成功", okAction: () =>
+            {
+                new AppViewModelLocator().EmployeModel.Query(1);
+            });
+            Close(obj.GetType().FullName);
         }
     }
 }

@@ -19,72 +19,17 @@
     /// </summary>
     public class SqlSugarUnitOfWork : UnitOfWorkBase, IUnitOfWork
     {
+        IRepository repository;
+
+        public override dynamic Context { get; set; }
+
         protected override void BeginUow()
         {
-
+            Context = SqlSugarHelper.GetContext(Options.Connection ?? EngineHelper.Configuration.Store.Database);
+            repository = EngineHelper.Resolve<IRepository>();
+            repository.BeginTran();
         }
 
-        //IRepository repository;
-
-        //public UnitOfWorkSqlSugar(IRepository repository)
-        //{
-        //    this.repository = repository;
-        //}
-
-        //public override void Repository(IRepository repository)
-        //{
-        //    this.repository = repository;
-        //}
-
-        //public override void SaveChanges()
-        //{
-        //    CompleteUow();
-        //}
-
-        //public override IDomainDefaultService<TEntity> Resolve<TEntity>()
-        //{
-        //    IDomainDefaultService<TEntity> IService = default(IDomainDefaultService<TEntity>);
-        //    var iRep = EngineHelper.Resolve<IRepository<TEntity>>(new KeyValueModel<string, object>("context", repository.GetContext()));
-        //    IService = EngineHelper.Resolve<IDomainDefaultService<TEntity>>(new KeyValueModel<string, object>("repository", iRep));
-        //    return IService;
-        //}
-
-        //public override TService Resolve<TEntity, TService>()
-        //{
-        //    TService IService = default(TService);
-        //    var iRep = EngineHelper.Resolve<IRepository<TEntity>>(new KeyValueModel<string, object>("context", repository.GetContext()));
-        //    IService = EngineHelper.Resolve<TService>(new KeyValueModel<string, object>("repository", iRep));
-        //    return IService;
-        //}
-
-        //public override TService Resolve<TEntity, TService, TRepository>()
-        //{
-        //    TService IService = default(TService);
-        //    var iRep = EngineHelper.Resolve<TRepository>(new KeyValueModel<string, object>("context", repository.GetContext()));
-        //    IService = EngineHelper.Resolve<TService>(new KeyValueModel<string, object>("repository", iRep));
-        //    return IService;
-        //}
-
-
-        //protected override void BeginUow()
-        //{
-        //    repository.CheckNull();
-        //    repository.BeginTran();
-        //}
-
-        //protected override void CompleteUow()
-        //{
-        //    try
-        //    {
-        //        repository.CheckNull();
-        //        repository.CommitTran();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        repository.RollbackTran();
-        //        throw ex;
-        //    }
-        //}
         public override void SaveChanges()
         {
         }
@@ -96,15 +41,18 @@
 
         protected override void CompleteUow()
         {
+            repository.CommitTran();
         }
 
         protected override Task CompleteUowAsync()
         {
+            repository.CommitTran();
             return Task.FromResult(0);
         }
 
         protected override void DisposeUow()
         {
+            repository.RollbackTran();
         }
     }
 

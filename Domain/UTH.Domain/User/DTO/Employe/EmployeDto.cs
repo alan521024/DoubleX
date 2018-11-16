@@ -13,46 +13,30 @@
     using UTH.Framework;
 
     /// <summary>
-    /// 人员信息(DTO)
+    /// 组织成员(DTO)
     /// </summary>
     [Serializable]
-    public class EmployeDTO : IKeys, IOutput
+    public class EmployeDTO : AccountDTO, IKeys, IOutput
     {
         /// <summary>
-        /// Id
-        /// </summary>
-        public Guid Id { get; set; }
-
-
-        /// <summary>
-        /// Ids
-        /// </summary>
-        public List<Guid> Ids { get; set; }
-
-        /// <summary>
-        /// 所属组织
+        /// 组织
         /// </summary>
         public string Organize { get; set; }
 
         /// <summary>
-        /// 人员编号
+        /// 编号
         /// </summary>
-        public string No { get; set; }
+        public string Code { get; set; }
 
         /// <summary>
-        /// 人员名称
+        /// 名称
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// 织组电话
+        /// 电话
         /// </summary>
         public string Phone { get; set; }
-
-        /// <summary>
-        /// 人员账号状态
-        /// </summary>
-        public EnumAccountStatus Status { get; set; }
 
         public bool IsChecked { get; set; } = false;
     }

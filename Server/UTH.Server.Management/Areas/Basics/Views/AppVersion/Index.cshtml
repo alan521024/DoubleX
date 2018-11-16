@@ -12,8 +12,8 @@
     @await Html.PartialAsync("~/Areas/Basics/Views/_Menus.cshtml")
 }
 
-<div class="dxm-page dxm-page-pos pos-no-foot layui-form">
-    <div class="dxm-page-head bg-white">
+<div class="dxm-page layui-form">
+    <div class="dxm-page-header bg-white">
         <div id="data-list-option" class="dxm-option clearfix">
             <div class="left">
                 <a id="btn-add" href="javascript:;" class="layui-btn layui-btn-sm"><i class="iconfont icon-tool1"></i>@(Lang.sysTianJia)</a>
@@ -38,7 +38,7 @@
     @if (!Model.Id.IsEmpty())
     {
         <div class="dxm-page-content bg-white left">
-            <div class="dxm-page-content-inner">
+            <div class="inner">
                 <div class="box-title">
                     <span>@(Lang.basYingYongXinXi)</span>
                     <div class="right">
@@ -46,41 +46,43 @@
                     </div>
                 </div>
                 <div class="m-t"></div>
-                <div class="layui-form-item auto">
-                    <label class="layui-form-label">@(Lang.sysMingCheng)：</label>
-                    <div class="layui-input-inline">
-                        @(Model.Name)
+                <div class="flex-form flex-form-inner">
+                    <div class="form-line">
+                        <label>@(Lang.sysMingCheng)：</label>
+                        <div class="item">
+                            @(Model.Name)
+                        </div>
                     </div>
-                </div>
-                <div class="layui-form-item auto">
-                    <label class="layui-form-label">@(Lang.sysLeiXing)：</label>
-                    <div class="layui-input-inline">
-                        @(Model.AppTypeName)
+                    <div class="form-line">
+                        <label>@(Lang.sysBianHao)：</label>
+                        <div class="item">
+                            @(Model.Code)
+                        </div>
                     </div>
-                </div>
-                <div class="layui-form-item auto">
-                    <label class="layui-form-label">@(Lang.sysBianMa)：</label>
-                    <div class="layui-input-inline">
-                        @(Model.Code)
+                    <div class="form-line">
+                        <label>@(Lang.sysLeiXing)：</label>
+                        <div class="item">
+                            @(Model.AppTypeName)
+                        </div>
                     </div>
-                </div>
-                <div class="layui-form-item auto">
-                    <label class="layui-form-label">@(Lang.sysKey)：</label>
-                    <div class="layui-input-inline">
-                        @(Model.Key)
+                    <div class="form-line">
+                        <label>@(Lang.sysKey)：</label>
+                        <div class="item">
+                            @(Model.Key)
+                        </div>
                     </div>
-                </div>
-                <div class="layui-form-item auto">
-                    <label class="layui-form-label">@(Lang.sysMiYao)：</label>
-                    <div class="layui-input-inline">
-                        @(Model.Secret)
+                    <div class="form-line">
+                        <label>@(Lang.sysMiYao)：</label>
+                        <div class="item">
+                            @(Model.Secret)
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     }
     <div class="dxm-page-content bg-white @(!Model.Id.IsEmpty()?"right":"")">
-        <div class="dxm-page-content-inner">
+        <div class="inner">
             <div id="data-list"></div>
             <div id="data-paging" class="dx-list-paging"></div>
         </div>

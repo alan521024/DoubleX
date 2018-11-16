@@ -66,8 +66,7 @@
         that.container = null, that.header = null;
 
         that.render();
-    }
-
+    };
     listObj.prototype.render = function (options) {
         var that = this;
 
@@ -93,8 +92,7 @@
         that.setContainer();
 
         that.setHeader();
-    }
-
+    };
     listObj.prototype.setContainer = function (options) {
         var that = this;
 
@@ -116,8 +114,7 @@
         that.container.removeClass("layui-form").addClass("layui-form");
         that.container.attr("lay-filter", that.guid);
         $(that.id).html(that.container);
-    }
-
+    };
     listObj.prototype.setHeader = function (options) {
         var that = this;
 
@@ -159,8 +156,7 @@
             that.container.html($head);
         }
         that.header = $head;
-    }
-
+    };
     listObj.prototype.setData = function (rows, par) {
         var that = this;
         rows = rows || [];
@@ -201,8 +197,7 @@
         that.event();
 
         listObjLayUIRend(that.guid);
-    }
-
+    };
     listObj.prototype.query = function (options) {
         var that = this;
 
@@ -241,8 +236,7 @@
                 that.setData(that);
             });
         }
-    }
-
+    };
     listObj.prototype.event = function () {
         var that = this;
 
@@ -278,8 +272,7 @@
             listObjLayUIRend(that.guid);
         });
 
-    }
-
+    };
     listObj.prototype.checked = function (values) {
         var that = this;
 
@@ -301,8 +294,7 @@
         }
 
         listObjLayUIRend(that.guid);
-    }
-
+    };
     listObj.prototype.getSelecteds = function () {
         var that = this;
         var chks = that.container.find("[lay-filter='chk-item-" + that.guid + "']:checked");
@@ -311,11 +303,11 @@
             selecteds.push(chks[i].value);
         }
         return selecteds;
-    }
+    };
 
     var listObjLayUIRend = function (filter) {
         form.render('checkbox', filter);
-    }
+    };
 
 
     var pagingObj = function (options) {
@@ -338,8 +330,7 @@
         }, options);
 
         that.render();
-    }
-
+    };
     pagingObj.prototype.render = function (options) {
         var that = this;
 
@@ -348,8 +339,7 @@
         };
 
         paging.render(that.config);
-    }
-
+    };
 
     var itemsObj = function (options) {
         var that = this;
@@ -364,12 +354,11 @@
             select: null
         }, options);
 
-        that.obj = itemsInit(that.config);
+        that.obj = itemsObjInit(that.config);
         that.list = that.obj.find(".list");
         that.data = that.config.items || [];
         that.render();
-    }
-
+    };
     itemsObj.prototype.render = function (options) {
         var that = this;
         if (options) {
@@ -386,55 +375,49 @@
 
         that.obj.on("click", ".close", function () {
             var $item = $(this).parent("span");
-            itemsDataSource(that, 'del', $item.data());
+            itemsObjDataSource(that, 'del', $item.data());
         });
 
         that.source(that.data);
-    }
-
+    };
     itemsObj.prototype.source = function (items) {
         var that = this;
-        itemsDataSource(that, 'init', items);
-    }
-
+        itemsObjDataSource(that, 'init', items);
+    };
     itemsObj.prototype.add = function (v) {
         var that = this;
-        itemsDataSource(that, 'add', v);
-    }
-
+        itemsObjDataSource(that, 'add', v);
+    };
     itemsObj.prototype.remove = function (v) {
         var that = this;
-        itemsDataSource(that, 'del', v);
-    }
-
+        itemsObjDataSource(that, 'del', v);
+    };
     itemsObj.prototype.clear = function () {
 
-    }
-
+    };
     itemsObj.prototype.get = function (i) {
         var that = this;
         i = i || 0;
         if (that.data.length == 0)
             return null;
         return { text: that.data[i][that.config.field.text], value: that.data[i][that.config.field.value] };
-    }
-
+    };
     itemsObj.prototype.set = function (text, value) {
         var that = this;
         if (!common.util.isEmpty(text) && !common.util.isEmpty(value)) {
             var item = {};
             item[that.config.field.text] = text;
             item[that.config.field.value] = value;
-            itemsDataSource(that, 'add', item);
+            itemsObjDataSource(that, 'add', item);
         }
-    }
+    };
 
-    var itemsInit = function (config) {
+    var itemsObjInit = function (config) {
         var _obj = $("<div class='items-box'><div class='list'></div><div class='select'><a href='#'>选择</a></div></div>");
         $(config.id).html(_obj);
         return _obj;
     }
-    var itemsDataSource = function (me, type, v) {
+    var itemsObjDataSource = function (me, type, v) {
         var config = me.config;
         var items = [];
         if (common.util.isArray(v)) {
@@ -455,7 +438,7 @@
             }
             me.list.html("");
             $.map(me.data, function (item) {
-                me.list.append(itemsHtmlCreate(me.config, item));
+                me.list.append(itemsObjHtmlCreate(me.config, item));
             });
         }
         else if (type == 'add') {
@@ -474,7 +457,7 @@
             $.map(items, function (item) {
                 if (common.util.filter(me.data, function (d) { return d[me.config.field.value] == item[me.config.field.value]; }).length == 0) {
                     me.data.push(item);
-                    me.list.append(itemsHtmlCreate(config, item));
+                    me.list.append(itemsObjHtmlCreate(config, item));
                 }
             });
         }
@@ -501,7 +484,7 @@
         //})
         //console.log(me.data);
     }
-    var itemsHtmlCreate = function (config, item) {
+    var itemsObjHtmlCreate = function (config, item) {
         item = item || {};
         var text = item[config.field.text] || "";
         var value = item[config.field.value] || "";
@@ -511,7 +494,7 @@
     }
 
 
-    var uploadObj = function (options) {
+    var assetsObj = function (options) {
         var that = this;
         that.guid = common.util.getId(), that.__ = window.top, that.__$ = window.top.$, that.__layer = window.top.layer, that.__WebUploader = window.top.WebUploader;
         that.obj = null;
@@ -531,15 +514,13 @@
 
         that.render();
     }
-
-    uploadObj.prototype.render = function (options) {
+    assetsObj.prototype.render = function (options) {
         var that = this;
         if (options) {
             that.config = $.extend({}, that.config, options);
         };
     }
-
-    uploadObj.prototype.open = function (options) {
+    assetsObj.prototype.open = function (options) {
         var that = this;
         if (options) {
             that.config = $.extend({}, that.config, options);
@@ -646,7 +627,7 @@
             that.uploader.md5File(file).then(function (val) {
                 that.__$(".assets-up-file[data-id='" + file.id + "']").attr("data-md5", val);
             });
-            uploadSyncFiles(that);
+            assetsObjSyncFiles(that);
         });
 
         that.uploader.on('filesQueued', function (files) {
@@ -715,11 +696,11 @@
             var _id = $(this).parents(".assets-up-file").data("id");
             that.uploader.removeFile(_id, true);
             $(this).parents(".assets-up-file").remove();
-            uploadSyncFiles(that);
+            assetsObjSyncFiles(that);
         });
 
         that.obj.on("click", ".btn-upload", function () {
-            uploadChekMd5(that, function () {
+            assetsObjChekMd5(that, function () {
                 //console.log('all done!', arguments);
                 that.uploader.upload();
             });
@@ -733,21 +714,21 @@
             that.__layer.close(dialog);
         });
 
-        uploadSyncFiles(that);
+        assetsObjSyncFiles(that);
     }
 
-    var uploadInit = function (config) {
+    var assetsObjInit = function (config) {
 
     };
-    var uploadSyncFiles = function (me) {
-        var uploadBtn = me.obj.find(".btn-upload");
-        uploadBtn.removeClass("layui-btn-disabled").addClass("layui-btn-disabled");
+    var assetsObjSyncFiles = function (me) {
+        var upBtn = me.obj.find(".btn-upload");
+        upBtn.removeClass("layui-btn-disabled").addClass("layui-btn-disabled");
         var files = me.uploader.getFiles();
         if (files.length > 0) {
-            uploadBtn.removeClass("layui-btn-disabled");
+            upBtn.removeClass("layui-btn-disabled");
         }
     };
-    var uploadChekMd5 = function (me, callback) {
+    var assetsObjChekMd5 = function (me, callback) {
         //校验所有异步的md5是否完成
         function checkMd5() {
             var dfd = me.__$.Deferred();
@@ -768,13 +749,318 @@
         me.__$.when(checkMd5()).done(callback);
     };
 
+
+    var singleUploadObj = function (options) {
+        var that = this;
+        that.guid = common.util.getId(), that.__WebUploader = window.top.WebUploader;
+        that.uploader = null;
+        that.file = {};
+
+        that.config = $.extend({}, {
+            selectBtn: null,
+            uploadBtn: null,
+            auto: false,
+            maxNum: undefined,
+            maxSize: undefined,
+            fileSize: undefined,
+            formData: undefined,
+            fileData: undefined,     //TODO:暂未实现,
+            filesQueued: null,
+            sendBefore: null,
+            progress: null,
+            success: null,
+            error: null
+
+        }, options);
+
+        that.render();
+    };
+    singleUploadObj.prototype.render = function (options) {
+        var that = this;
+        rest();
+
+        if (options) {
+            that.config = $.extend({}, that.config, options);
+        };
+
+        var upOption = {
+            swf: '/js/Uploader.swf',
+            server: '/common/upload',
+            pick: that.config.selectBtn,
+            auto: false,
+            resize: false,
+            duplicate: true,
+            threads: 3,
+            chunked: true,
+            chunkSize: 5242880,  //5M
+            chunkRetry: 0,       //重试次数
+        };
+
+        //fileNumLimit { int } [可选][默认值：undefined]          //验证文件总数量, 超出则不允许加入队列。
+        //fileSizeLimit { int } [可选][默认值：undefined]         //验证文件总大小是否超出限制, 超出则不允许加入队列。
+        //fileSingleSizeLimit { int } [可选][默认值：undefined]   //验证单个文件大小是否超出限制, 超出则不允许加入队列。 
+
+        if (that.config.maxNum) {
+            upOption["fileNumLimit"] = that.config.maxNum;
+        }
+        if (that.config.maxSize) {
+            upOption["fileSizeLimit"] = that.config.maxSize;
+
+        }
+        if (that.config.fileSize) {
+            upOption["fileSingleSizeLimit"] = that.config.fileSize;
+
+        }
+        if (that.config.formData) {
+            upOption["formData"] = that.config.formData;
+        }
+
+        that.uploader = that.__WebUploader.create(upOption);
+
+
+        that.uploader.on('beforeFileQueued', function (file) {
+            if (that.file["name"] == file.name && that.file["size"] == file.size) {
+                return false;
+            }
+            that.file = file;
+            return true;
+        });
+
+        that.uploader.on('fileQueued', function (file) {
+            that.uploader.md5File(file).then(function (val) {
+                that.file["md5"] = val;
+            });
+        });
+
+        that.uploader.on('filesQueued', function (files) {
+            if (common.util.isFunction(that.config.filesQueued)) {
+                that.config.filesQueued(files[0]);
+            }
+            if (that.config.auto) {
+                uploader();
+            }
+        });
+
+        that.uploader.on('uploadBeforeSend', function (obj, data, headers) {
+            if (common.util.isFunction(that.config.sendBefore)) {
+                that.config.sendBefore(data);
+            }
+            data["md5"] = that.file["md5"] || "";
+            data["autoMerge"] = false;
+            if (that.config.fileData) {
+                //.......
+            }
+        })
+
+        that.uploader.on('uploadProgress', function (file, percentage) {
+            //多线程,其发送结果都100%，其中一返回结果错误
+            var pro = percentage;
+            if (pro == 1) {
+                pro = 0.9999;
+            }
+            if (common.util.isFunction(that.config.progress)) {
+                that.config.progress(common.util.formatPercent(pro), percentage, file);
+            }
+        });
+
+        that.uploader.on('uploadSuccess', function (file, response) {
+            var data = response.code == 0 ? response.obj : {};
+
+            var md5 = that.file["md5"] || "";
+            if (file.size > that.uploader.options.chunkSize) {
+                var action = encodeURIComponent("/assets/merge?md5=" + md5 + "&name=" + file.name);
+                common.request("/common/do?action=" + action, {}, function (data) {
+                    if (common.util.isFunction(that.config.success)) {
+                        that.config.success(data);
+                    }
+                    rest();
+                }, function (code, msg) {
+                    that.uploader.cancelFile(file); //取消当前错误文件
+                    if (common.util.isFunction(that.config.error)) {
+                        that.config.error(code, msg, file);
+                    }
+                    rest();
+                })
+            }
+            else {
+                if (common.util.isFunction(that.config.success)) {
+                    that.config.success(data);
+                }
+                rest();
+            }
+        });
+
+        that.uploader.on('uploadError', function (file, reason) {
+            if (common.util.isFunction(that.config.error)) {
+                that.config.error(-2, reason, file);
+            }
+            rest();
+        });
+
+        that.uploader.on("uploadAccept", function (obj, ret) {
+            if (ret.code != 0) {
+                return false;
+            }
+        });
+
+        that.uploader.on('error', function (type) {
+            rest();
+            //Q_EXCEED_NUM_LIMIT 在设置了fileNumLimit且尝试给uploader添加的文件数量超出这个值时派送。
+            //Q_EXCEED_SIZE_LIMIT 在设置了Q_EXCEED_SIZE_LIMIT且尝试给uploader添加的文件总大小超出这个值时派送。
+            //Q_TYPE_DENIED 当文件类型不满足时触发。。
+        });
+
+        $("body").on("click", that.config.uploadBtn, function () {
+            uploader();
+        });
+
+        function uploader() {
+            console.log('上传:', that.file);
+            singleUploadObjChekMd5(that, function () {
+                //console.log('all done!', arguments);
+                that.uploader.upload();
+            });
+        }
+
+        function rest() {
+            that.file = {};
+        }
+
+    };
+
+    var singleUploadObjChekMd5 = function (me, callback) {
+        //校验所有异步的md5是否完成
+        function checkMd5() {
+            var dfd = $.Deferred();
+            var i = 0;
+            var chkInterval = setInterval(function () {
+                if ((me.file["md5"] || "") != "") {
+                    clearInterval(chkInterval);
+                    chkInterval = null;
+                    dfd.resolve(i, me.file);
+                }
+                i++;
+            }, 5);
+            return dfd.promise();
+        }
+        $.when(checkMd5()).done(callback);
+    };
+
+
+    var flowObj = function (options) {
+        var that = this;
+        that.obj = null;
+        that.flowId = "";
+
+        that.config = $.extend({}, {
+            name: "",
+            data: {},
+            errors: 50,
+            interval: 1000,
+            expire: 1800000, //1000*60*30 30m
+            created: null,
+            intervaled: null,
+            success: null,
+            error: null
+        }, options);
+
+        that.render();
+    };
+    flowObj.prototype.render = function (options) {
+        var that = this;
+        if (options) {
+            that.config = $.extend({}, that.config, options);
+        };
+    };
+    flowObj.prototype.start = function (options) {
+        var that = this;
+        if (options) {
+            that.config = $.extend({}, that.config, options);
+        };
+        that.flowId = "";
+
+        var action = encodeURIComponent("/core/flow/create");
+        var post = $.extend({}, { flowType: that.config.name, expire: that.config.expire, param: "" }, that.config.data);
+
+        common.request("/common/do?action=" + action, { data: post },
+            function (data) {
+                if (!common.util.isEmpty(data)) {
+                    that.flowId = data["id"] || "";
+                }
+                var isGo = true;
+                if (common.util.isFunction(that.config.created)) {
+                    var __ = that.config.created(data);
+                    if (__ == false) {
+                        isGo = false;
+                    }
+                }
+                if (isGo) {
+                    flowObjCreateProgress(that);
+                }
+            },
+            function (code, msg) {
+                if (common.util.isFunction(that.config.error)) {
+                    that.config.error(code, msg);
+                }
+            })
+
+    };
+    var flowObjCreateProgress = function (me) {
+        var that = me;
+        var startTimeout = setTimeout(function () {
+            clearTimeout(startTimeout);
+            var progressTotal = 0;
+            var progressInvert = setInterval(function () {
+                if (progressTotal > that.config.errors) {
+                    //返回为空或错误， 超出最多调用次数
+                    clearInterval(progressInvert);
+                    if (common.util.isFunction(that.config.error)) {
+                        that.config.error(-1, "", progressTotal > that.config.errors);
+                    }
+                    return;
+                }
+                var action = encodeURIComponent("/core/flow/progress?flowId=" + that.flowId);
+                common.request("/common/do?action=" + action, {},
+                    function (data) {
+                        if (common.util.isEmpty(data)) {
+                            progressTotal++;
+                            return;
+                        }
+                        if (common.util.isFunction(that.config.intervaled)) {
+                            that.config.intervaled(data, 0, "");
+                        }
+
+                        if (data["isSuccess"] && data["isOver"]) {
+                            clearInterval(progressInvert);
+                            progressInvert = null;
+                            if (common.util.isFunction(that.config.success)) {
+                                that.config.success(data);
+                            }
+                        }
+                        else {
+                            progressTotal++;
+                        }
+                    },
+                    function (code, msg) {
+                        progressTotal++;
+                        if (common.util.isFunction(that.config.error)) {
+                            that.config.error(code, msg, progressTotal > that.config.errors);
+                        }
+                    });
+
+            }, that.config.interval);
+        }, 1000);
+    }
+
+
     var control = {
         list: function (opt) { return new listObj(opt); },
         paging: function (opt) { return new pagingObj(opt); },
         items: function (opt) { return new itemsObj(opt); },
-        upload: function (opt) { return new uploadObj(opt); },
-        file: function (opt) { return new fileObj(opt); }
-    }
+        assets: function (opt) { return new assetsObj(opt); },
+        singleUpload: function (opt) { return new singleUploadObj(opt); },
+        flow: function (opt) { return new flowObj(opt); }
+    };
 
     if (typeof exports !== 'undefined') {
         if (typeof module !== 'undefined' && module.exports) {

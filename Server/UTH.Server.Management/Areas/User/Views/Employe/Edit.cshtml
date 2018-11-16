@@ -1,0 +1,128 @@
+﻿@model EmployeViewModel
+@{
+    ViewData["Title"] = Lang.userZuZhiChengYuan;
+    Layout = string.Format("~/Views/Shared/{0}.cshtml", AppHelper.IsMaster ? "_Master" : "_Layout");
+}
+
+@section Heads{ }
+
+@section Styles{ }
+
+@if (!AppHelper.IsMaster)
+{
+    @section Menus{
+        @await Html.PartialAsync("~/Areas/User/Views/_Menus.cshtml")
+    }
+}
+
+<div class="dxm-page layui-form">
+    <div class="dxm-page-content exist-footer bg-white">
+        <div class="inner">
+            <div class="flex-form">
+                <div class="form-line">
+                    <label>@(Lang.userZuZhi)：</label>
+                    <div class="item">
+                        @if (Model.Organize.IsNull())
+                        {
+                            <label class="txt-error">@($"{Lang.userZuZhiXinXi}/({Lang.sysCuoWu})")</label>
+                        }
+                        else
+                        {
+                            @($"{Model.Organize.Code}/{Model.Organize.No} {(Model.Organize.Code == Model.Organize.Name ? "" : $"({Model.Organize.Name})")}")
+                        }
+                    </div>
+                </div>
+                <div class="form-line">
+                    <label>@(Lang.sysBianHao)：</label>
+                    <div class="item">
+                        <input id="txt-code" autocomplete="off" class="layui-input" type="text" value="@(Model.Employe.Code)" @(Model.Employe.Id.IsEmpty() ? "" : "disabled") />
+                    </div>
+                </div>
+                <div class="form-line">
+                    <label>@(Lang.userZhangHao)：</label>
+                    <div class="item">
+                        <input id="txt-account" autocomplete="off" class="layui-input" type="text" value="@(Model.Employe.Account)" @(Model.Employe.Id.IsEmpty() ? "" : "disabled") />
+                    </div>
+                </div>
+                @if (Model.Employe.Id.IsEmpty())
+                {
+                    <div class="form-line">
+                        <label>@(Lang.userMiMa)：</label>
+                        <div class="item">
+                            <input id="txt-password" autocomplete="off" class="layui-input" type="text" value="@(Model.Employe.Password)" />
+                        </div>
+                    </div>
+                }
+                <div class="form-line">
+                    <label>@(Lang.sysMingCheng)：</label>
+                    <div class="item">
+                        <input id="txt-name" autocomplete="off" class="layui-input" type="text" value="@(Model.Employe.Name)" />
+                    </div>
+                </div>
+                <div class="form-line">
+                    <label>@(Lang.sysDianHua)：</label>
+                    <div class="item">
+                        <input id="txt-phone" autocomplete="off" class="layui-input" type="text" value="@(Model.Employe.Phone)" />
+                    </div>
+                </div>
+                @*<div class="form-line">
+            <label>@(Lang.userXingBie)：</label>
+            <div class="item">
+                @(WebHelper.GetEnumSelectHtml<EnumGender>(id: "ddl-gender", selected: Model.Employe.Gender.GetValue()))
+            </div>
+        </div>*@
+            </div>
+        </div>
+    </div>
+    <div class="dxm-page-footer bg-white clearfix">
+        <div class="left">
+        </div>
+        <div class="right">
+            <button id="btn-save" class="layui-btn">@(Lang.sysBaoCun)</button>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        var pageView = {};
+        var id = "@(Model.Employe.Id)";
+        var callback = "@(WebHelper.GetQueryValue(this.Context, "callback"))";
+        var organizeId = "@(Model.Organize?.Id)", organizeCode = "@(Model.Organize?.Code)";
+        $(document).ready(function () { pageView.init(); pageView.event(); });
+    </script>
+    <script type="text/javascript">
+
+        pageView.init = function () {
+        };
+
+        pageView.event = function () {
+            $("#btn-save").on("click", pageView.save);
+        };
+
+        pageView.save = function () {
+            var model = {
+                id: id,
+                code: $("#txt-code").val(),
+                account: $("#txt-account").val(),
+                password: $("#txt-password").val(),
+                organize: organizeCode,
+                name: $("#txt-name").val(),
+                phone: $("#txt-phone").val()
+            };
+            var url = "/common/do?action=/user/employe/insert";
+            if (!common.isEmpty(id)) {
+                url = "/common/do?action=/user/employe/update";
+            }
+            common.request(url, { data: model }, function (result) {
+                common.message(__language.sysBaoCunChengGong, function () {
+                    if (!common.isEmpty(callback)) {
+                        common.parentFunc(callback);
+                    }
+                });
+            });
+        };
+
+    </script>
+}
+

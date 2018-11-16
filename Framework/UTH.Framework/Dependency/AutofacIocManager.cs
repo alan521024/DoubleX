@@ -394,10 +394,25 @@
                     .InterceptedBy(option.InterceptorTypes);
             }
 
-            //单例
-            if (option.SingleInstance)
+            //instance scope
+            switch (option.InstanceScope)
             {
-                registration = registration.SingleInstance();
+                case EnumInstanceScope.SingleInstance:
+                    registration = registration.SingleInstance();
+                    break;
+
+                case EnumInstanceScope.InstancePerLifetimeScope:
+                    registration = registration.InstancePerLifetimeScope();
+                    break;
+
+                case EnumInstanceScope.InstancePerRequest:
+                    registration = registration.InstancePerRequest();
+                    //(.net core 应用使 InstancePerLifetimeScope 而不是 InstancePerRequest)
+                    break;
+
+                case EnumInstanceScope.Default:
+                case EnumInstanceScope.InstancePerDependency:
+                    break;
             }
 
             //启用PropertiesAutowired 跟据属性注入

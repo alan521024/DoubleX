@@ -52,7 +52,7 @@ namespace UTH.Framework
 
             bool isCheck = false;
 
-            if (User.Type == EnumAccountType.组织 || User.Type == EnumAccountType.人员)
+            if (User.Type == EnumAccountType.组织用户 || User.Type == EnumAccountType.组织成员)
             {
                 isCheck = !organize.IsEmpty() && User.Organize == organize;
             }

@@ -1,0 +1,219 @@
+﻿@{
+    ViewData["Title"] = Lang.userZhangHaoGuanLi;
+    Layout = string.Format("~/Views/Shared/{0}.cshtml", AppHelper.IsMaster ? "_Master" : "_Layout");
+}
+
+@section Heads{ }
+
+@section Styles{ }
+
+@section Menus{
+    @await Html.PartialAsync("~/Areas/User/Views/_Menus.cshtml")
+}
+
+<div class="dxm-page layui-form">
+    <div class="dxm-page-header bg-white">
+        <div id="data-list-option" class="dxm-option clearfix">
+            <div class="left">
+                <a id="btn-add" href="javascript:;" class="layui-btn layui-btn-sm"><i class="iconfont icon-tool1"></i>@(Lang.sysTianJia)</a>
+            </div>
+            <div class="right">
+                <div class="dxm-input-search layui-inline">
+                    <input id="txt-search" type="text" placeholder="@(Lang.sysQingShuRuGuanJianZi)" autocomplete="off" class="layui-input">
+                    <a><i class="iconfont icon-tool15"></i></a>
+                </div>
+                <div class="layui-inline">
+                    <a id="btn-search" class="layui-btn layui-btn-sm"><i class="iconfont icon-tool1"></i>@(Lang.sysSouSuo)</a>
+                </div>
+            </div>
+        </div>
+        <div id="data-list-action" class="dxm-action layui-anim layui-anim-upbit" data-anim="layui-anim-upbit">
+            <span class="statices">@(new HtmlString(Lang.sysYiXuanZeXiang))</span>
+            @*<a id="btn-update" href="javascript:;"><i class="iconfont icon-tool2"></i>@(Lang.sysXiuGai)</a>*@
+            <a id="btn-delete" href="javascript:;"><i class="iconfont icon-tool3"></i>@(Lang.sysShanChu)</a>
+            <a href="javascript:;" class="close" id="data-list-action-close"><i class="iconfont icon-tool4"></i></a>
+        </div>
+    </div>
+    <div class="dxm-page-content bg-white">
+        <div class="inner">
+            <div id="data-list"></div>
+            <div id="data-paging" class="dx-list-paging"></div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        var title = __language.userZhangHaoXinXi;
+        var pageView = {};
+        var optTemplate = function (row) {
+            var content = "";
+            if (row["type"] == 1) {
+                content = "<a href=\"javascript:;\" class=\"row-view\">详细</a><a href=\"javascript:;\" class=\"row-delete\">删除</a>";
+            }
+            else {
+                content = "<a href=\"javascript:;\" class=\"row-info\">详细</a>";
+            }
+            return "<span class=\"dxm-table-actions\" data-id=\"" + row["id"] + "\" data-type=\"" + row["type"] + "\">" + content + "</span>";
+        }
+        var list;
+        var columns = [[
+            { field: 'id', type: 'checkbox' },
+            { field: 'account', title: __language.userZhangHao, template: function (row) { return "<a href='#' title='" + row["no"] + "' class='link-account' data-id='" + row["id"] + "'>" + row["account"] + "</a>"; }, width: 100 },
+            { field: 'typeText', title: __language.sysLeiXing, align: 'center', width: 80 },
+            { field: 'mobile', title: __language.sysShouJiHaoMa, width: 80 },
+            { field: 'email', title: __language.sysYouXiangDiZhi },
+            { title: __language.sysRenZhengXinXi, align: 'center', template: function (row) { return "手 邮 证" }, width: 100 }, //row['mobileAuth']
+            { title: __language.userDengLuXinXi, align: 'center', template: function (row) { return row['loginLastDt'].date() + " / " + row['loginCount'] + "(次)" }, width: 220 },
+            { field: 'statusText', title: __language.sysZhuangTai, align: 'center', width: 80 },
+            { title: __language.sysCaoZuo, align: 'center', template: optTemplate, width: 80 }
+        ]];
+        $(document).ready(function () { pageView.init(); pageView.event(); });
+    </script>
+    <script type="text/javascript">
+
+        pageView.init = function () {
+            list = control.list({
+                id: '#data-list',
+                columns: columns,
+                url: "/common/do?action=/user/account/paging",
+                param: { page: 1, size: 10 },
+                success: function (data) {
+                    return data.rows;
+                },
+                checkAllCallback: pageView.status,
+                checkItemCallback: pageView.status,
+                resultCallback: function (result, par) {
+                    control.paging({
+                        elem: 'data-paging',
+                        count: result.total,
+                        curr: par.page,
+                        limit: par.size,
+                        jump: function (obj, first) {
+                            if (!first) {
+                                pageView.query(obj.curr, obj.limit);
+                            }
+                        }
+                    });
+                    pageView.clear();
+                }
+            });
+            pageView.query();
+        };
+
+        pageView.event = function () {
+            $("#data-list-action-close").on("click", pageView.clear);
+
+            $("#btn-add").on("click", pageView.add);
+            $("#btn-update").on("click", function () {
+                var ids = pageView.getCheckedIds();
+                pageView.update(ids.length === 1 ? ids[0] : "");
+            });
+            $("#btn-delete").on("click", function () {
+                var ids = pageView.getCheckedIds();
+                pageView.delete(ids);
+            });
+            $("#btn-search").on("click", function () { list.query(); });
+
+            $("#data-list").on("click", ".row-view", function () {
+                pageView.update($(this).parent("span").attr("data-id"));
+            });
+            $("#data-list").on("click", ".row-delete", function () {
+                pageView.delete([$(this).parent("span").attr("data-id")]);
+            });
+            $("#data-list").on("click", ".row-info", function () {
+                var id = $(this).parent("span").attr("data-id");
+                var type = $(this).parent("span").attr("data-type");
+                if (common.isEmpty(id) || common.isEmpty(type)) {
+                    //common.message(__language.sysQingXuanZeXiuGaiShuJu);
+                    return;
+                }
+                console.log(type);
+                if (type == 2) {
+                    common.open("/user/member/edit?callback=list.query&id=" + id, { title: __language.userGeRenYongHu });
+                }
+                if (type == 3) {
+                    common.open("/user/organize/edit?callback=list.query&id=" + id, { title: __language.userZuZhiYongHu });
+                }
+                if (type == 4) {
+                    common.open("/user/employe/edit?callback=list.query&id=" + id, { title: __language.userGeRenYongHu });
+                }
+            });
+        };
+
+        pageView.query = function (page, size) {
+            if (!list)
+                return;
+            page = page || 1;
+            size = size || 10;
+            list.query({
+                param: function () {
+                    return {
+                        page: page,
+                        size: size,
+                        query: { search: ($("#txt-search").val() || "") },
+                        sorting: [{ key: "no", value: "asc" }]
+                    };
+                }
+            });
+        };
+
+        pageView.add = function () {
+            common.open("/user/account/edit?callback=list.query", { title: title });
+        };
+
+        pageView.update = function (id) {
+            id = id || "";
+            if (common.isEmpty(id)) {
+                common.message(__language.sysQingXuanZeXiuGaiShuJu);
+                return;
+            }
+            common.open("/user/account/edit?callback=list.query&id=" + id, { title: title });
+        };
+
+        pageView.delete = function (ids) {
+            ids = ids || [];
+            if (ids.length === 0) {
+                common.message(__language.sysQingXuanZeShanChuShuJu);
+                return;
+            }
+            common.confirm(__language.sysShiFouShanChuShuJu, function () {
+                common.request("/common/do?action=/user/account/delete", { data: { ids: ids } }, function (result) {
+                    list.query();
+                });
+            });
+        };
+
+        pageView.clear = function () {
+            list.checked();
+            pageView.status();
+        };
+
+        pageView.status = function () {
+            var items = $("input[name='list-chk-item']");
+            var chks = $("input[name='list-chk-item']:checked");
+
+            var $opt = $("#data-list-option"), $action = $("#data-list-action");
+            if (chks && chks.length > 0) {
+                $opt.hide();
+                $action.show();
+            }
+            else {
+                $opt.show();
+                $action.hide();
+            }
+            $action.find(".statices > em").html(chks.length);
+        };
+
+        pageView.getCheckedIds = function () {
+            var chks = $("input[name='list-chk-item']:checked");
+            var ids = [];
+            $(chks).each(function (i, v) {
+                ids.push($(v).val());
+            });
+            return ids;
+        };
+
+    </script>
+}
+

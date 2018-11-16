@@ -11,8 +11,8 @@
     @await Html.PartialAsync("~/Areas/Basics/Views/_Menus.cshtml")
 }
 
-<div class="dxm-page dxm-page-pos pos-no-foot layui-form">
-    <div class="dxm-page-head bg-white">
+<div class="dxm-page layui-form">
+    <div class="dxm-page-header bg-white">
         <div id="data-list-option" class="dxm-option clearfix">
             <div class="left">
                 <a id="btn-add" href="javascript:;" class="layui-btn layui-btn-sm"><i class="iconfont icon-tool1"></i>@(Lang.sysTianJia)</a>
@@ -34,8 +34,8 @@
             <a href="javascript:;" class="close" id="data-list-action-close"><i class="iconfont icon-tool4"></i></a>
         </div>
     </div>
-    <div class="dxm-page-content  bg-white">
-        <div class="dxm-page-content-inner">
+    <div class="dxm-page-content bg-white">
+        <div class="inner">
             <div id="data-list"></div>
             <div id="data-paging" class="dx-list-paging"></div>
         </div>
@@ -50,7 +50,7 @@
         var columns = [[
             { field: 'id', type: 'checkbox', width: 80 },
             { field: 'name', title: __language.sysMingCheng, template: function (row) { return "<a href=''>" + row["name"] + "</a>"; } },
-            { field: 'code', title: __language.sysBianMa },
+            { field: 'code', title: __language.sysBianHao },
             { field: 'appTypeName', title: __language.sysLeiXing },
             { title: __language.basYingYongPeiZhi, width: 80, align: 'center', template: function (row) { return "<a href='/basics/appsetting?app=" + row["id"] + "'>" + __language.basYingYongPeiZhi + "</a>"; } },
             { title: __language.basBanBengGuanLi, width: 80, align: 'center', template: function (row) { return "<a href='/basics/appversion?app=" + row["id"] + "'>" + __language.basBanBengGuanLi + "</a>"; } },

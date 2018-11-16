@@ -33,6 +33,44 @@
 
         #region override
 
+        public override EmployeDTO Insert(EmployeEditInput input)
+        {
+            EmployeDTO dto = null;
+            using (var unit = CurrentUnitOfWorkManager.Begin())
+            {
+                var account = accountService.Create(Guid.Empty, input.Account, input.Mobile, input.Email, null, input.Password, input.Organize, input.Code, false);
+                account.CheckNull();
+
+                input.Id = account.Id;
+                input.Name = service.GetDefaultName(input.Name, account);
+
+                dto = MapperToDto(service.Insert(MapperToEntity(input)));
+
+                unit.Complete();
+            }
+            return dto;
+        }
+
+        public override int Delete(EmployeDTO input)
+        {
+            int rows = 0;
+            using (var unit = CurrentUnitOfWorkManager.Begin())
+            {
+                if (!input.Ids.IsEmpty())
+                {
+                    rows += accountService.Delete(input.Ids);
+                }
+                if (!input.Id.IsEmpty())
+                {
+                    rows += accountService.Delete(input.Id);
+                }
+                rows += base.Delete(input);
+
+                unit.Complete();
+            }
+            return rows;
+        }
+
         protected override List<KeyValueModel> InputToSorting(QueryInput<EmployeDTO> input)
         {
             if (input.Sorting.IsEmpty())
@@ -56,7 +94,7 @@
                 return base.InputToWhere(input);
             }
 
-            if (input.Query.No.IsEmpty() && input.Query.Organize.IsEmpty())
+            if (input.Query.Code.IsEmpty() && input.Query.Organize.IsEmpty())
             {
                 return base.InputToWhere(input);
             }
@@ -65,10 +103,10 @@
 
             if (Session.User.Type != EnumAccountType.管理员)
             {
-                input.Query.Organize = input.Query.Organize ?? "-1";
+                input.Query.Organize = !input.Query.Organize.IsEmpty() ? input.Query.Organize : "-1";
             }
 
-            where = where.AndIF(!input.Query.No.IsEmpty(), x => x.No.Contains(input.Query.No));
+            where = where.AndIF(!input.Query.Code.IsEmpty(), x => x.Code.Contains(input.Query.Code));
             where = where.AndIF(!input.Query.Organize.IsEmpty(), x => x.Organize == input.Query.Organize);
 
             return where.ToExpression();
@@ -76,96 +114,24 @@
 
         #endregion
 
-        public EmployeDTO Create(EmployeEditInput input)
+        public List<EmployeDTO> BatchAdd(EmployeEditInput input)
         {
             input.CheckNull();
             input.Organize.CheckEmpty();
 
+            List<EmployeDTO> list = new List<EmployeDTO>();
+
             if (input.BatchStart > 0 && input.BatchEnd > 0 && input.BatchEnd >= input.BatchStart)
             {
-                var startNo = input.No;
-                List<AccountEntity> accounts = new List<AccountEntity>();
+                var startNo = input.Code;
                 for (var i = input.BatchStart; i <= input.BatchEnd; i++)
                 {
-                    input.No = $"{startNo}{i}";
-                    var item = Creates(input);
-                    if (!item.IsNull())
-                    {
-                        accounts.Add(item);
-                    }
-                }
-
-                EmployeDTO output = null;
-
-                for (var j = 0; j < accounts.Count; j++)
-                {
-                    var account = accounts[j];
-
-                    input.Id = Guid.NewGuid();
-                    input.No = $"{startNo + (input.BatchStart + j)}";
-
-                    account.Id = input.Id;
-
-                    var mebInput = new MemberEntity();
-                    mebInput.Id = input.Id;
-                    mebInput.Name = input.Name;
-                    mebInput.Gender = EnumGender.男;
-
-                    output = Insert(input);
-                    accountService.Create(account);
-                    memberService.Insert(mebInput);
-                }
-
-                return output;
-            }
-            else
-            {
-                var account = Creates(input);
-                if (account != null)
-                {
-                    input.Id = Guid.NewGuid();
-
-                    account.Id = input.Id;
-
-                    var mebInput = new MemberEntity();
-                    mebInput.Id = input.Id;
-                    mebInput.Name = input.Name;
-                    mebInput.Gender = EnumGender.男;
-
-                    var output = Insert(input);
-                    accountService.Create(account);
-                    memberService.Insert(mebInput);
-                    return output;
+                    input.Code = $"{startNo}{i}";
+                    list.Add(Insert(input));
                 }
             }
 
-            return null;
-        }
-
-        private AccountEntity Creates(EmployeEditInput input)
-        {
-            string name = $"{input.No}@{input.Organize}";
-            var account = accountService.Get(account: name);
-
-            if (!account.IsNull())
-            {
-                throw new DbxException(EnumCode.提示消息, Lang.userZhangHuYiCunZai);
-            }
-
-            if (service.Count(x => x.No == input.No && x.Organize == input.Organize) > 0)
-            {
-                throw new DbxException(EnumCode.提示消息, Lang.userZhangHuYiCunZai);
-            }
-
-            account = new AccountEntity()
-            {
-                Account = name,
-                Password = input.Password,
-                Type = EnumAccountType.人员,
-                Status = EnumAccountStatus.正常
-            };
-
-            return account;
+            return list;
         }
     }
 }

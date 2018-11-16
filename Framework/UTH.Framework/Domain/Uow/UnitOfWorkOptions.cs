@@ -16,6 +16,9 @@
     /// </summary>
     public class UnitOfWorkOptions
     {
-
+        /// <summary>
+        /// 连接信息
+        /// </summary>
+        public ConnectionModel Connection { get; set; }
     }
 }

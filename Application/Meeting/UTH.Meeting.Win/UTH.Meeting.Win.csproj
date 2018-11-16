@@ -511,6 +511,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assets\Data\Temp\" />
+    <Folder Include="Assets\Res\Tool\" />
     <Folder Include="Assets\Update\" />
   </ItemGroup>
   <ItemGroup>

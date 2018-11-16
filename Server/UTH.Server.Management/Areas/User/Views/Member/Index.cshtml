@@ -11,8 +11,8 @@
     @await Html.PartialAsync("~/Areas/User/Views/_Menus.cshtml")
 }
 
-<div class="dxm-page dxm-page-pos pos-no-foot layui-form">
-    <div class="dxm-page-head bg-white">
+<div class="dxm-page layui-form">
+    <div class="dxm-page-header bg-white">
         <div id="data-list-option" class="dxm-option clearfix">
             <div class="left">
                 <a id="btn-add" href="javascript:;" class="layui-btn layui-btn-sm"><i class="iconfont icon-tool1"></i>@(Lang.sysTianJia)</a>
@@ -34,8 +34,8 @@
             <a href="javascript:;" class="close" id="data-list-action-close"><i class="iconfont icon-tool4"></i></a>
         </div>
     </div>
-    <div class="dxm-page-content  bg-white">
-        <div class="dxm-page-content-inner">
+    <div class="dxm-page-content bg-white">
+        <div class="inner">
             <div id="data-list"></div>
             <div id="data-paging" class="dx-list-paging"></div>
         </div>
@@ -49,11 +49,10 @@
         var list;
         var columns = [[
             { field: 'id', type: 'checkbox' },
-            { field: 'no', title: __language.sysBianHao, width: 100  },
-            { field: 'account', title: __language.userZhangHao, template: function (row) { return "<a href=''>" + row["account"] + "</a>"; } },
+            { field: 'account', title: __language.userZhangHao, template: function (row) { return "<a href='#' title='" + row["no"] + "' class='link-account' data-id='" + row["id"] + "'>" + row["account"] + "</a>"; }, width: 100 },
             { field: 'name', title: __language.sysMingCheng },
             { field: 'genderText', title: __language.userXingBie },
-            { field: 'birthdate', title: __language.userChuShengRiQi, template: function (row) { return row["birthdate"].date("yyyy-MM-dd"); }  },
+            { field: 'birthdate', title: __language.userChuShengRiQi, template: function (row) { return row["birthdate"].date("yyyy-MM-dd"); } },
             { title: __language.sysCaoZuo, width: 80, align: 'center', template: function (row) { return common.tableEditTemplate(row["id"]); } }
         ]];
         $(document).ready(function () { pageView.init(); pageView.event(); });

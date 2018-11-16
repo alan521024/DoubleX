@@ -28,18 +28,61 @@
 
         #region override
 
-        public override int Delete(Guid id)
+        protected override List<EmployeEntity> InsertBefore(List<EmployeEntity> inputs)
         {
-            accountRepository.Delete(id);
-            return base.Delete(id);
+            var organizes = inputs.Select(x => x.Organize).GroupBy(x => x);
+            foreach (var org in organizes)
+            {
+                var codes = inputs.Where(x => x.Organize == org.Key).Select(x => x.Code.ToUpper()).ToList();
+                var isExist = Any(x => x.Organize == org.Key && codes.Contains(x.Code.ToUpper()));
+                if (isExist)
+                {
+                    throw new DbxException(EnumCode.提示消息, Lang.sysBianHaoYiCunZai);
+                }
+            }
+            return base.InsertBefore(inputs);
         }
 
-        public override int Delete(List<Guid> ids)
+        protected override List<EmployeEntity> UpdateBefore(List<EmployeEntity> inputs)
         {
-            accountRepository.Delete(ids);
-            return base.Delete(ids);
+            if (inputs.IsEmpty())
+                return inputs;
+
+            var ids = inputs.Select(x => x.Id).ToList();
+            var entitys = Find(where: x => ids.Contains(x.Id));
+
+            foreach (var entity in entitys)
+            {
+                var input = inputs.Where(x => x.Id == entity.Id).FirstOrDefault();
+                if (input.IsNull())
+                {
+                    continue;
+                }
+                //entity.Code = input.Code;
+                entity.Name = input.Name;
+                entity.Phone = input.Phone;
+            }
+
+            return entitys;
         }
 
         #endregion
+
+        /// <summary>
+        /// 获取默认名称
+        /// </summary>
+        /// <param name="inputName"></param>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public string GetDefaultName(string inputName, AccountEntity account)
+        {
+            account.CheckNull();
+
+            return !inputName.IsEmpty() ? inputName :
+                    !account.EmployeCode.IsEmpty() ? account.EmployeCode :
+                    !account.Mobile.IsEmpty() ? account.Mobile :
+                    !account.Email.IsEmpty() ? account.Email :
+                    !account.Account.IsEmpty() ? account.Account : "";
+        }
     }
 }

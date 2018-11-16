@@ -1,0 +1,133 @@
+﻿@{
+    ViewData["Title"] = Lang.userZhangHaoGuanLi;
+    Layout = string.Format("~/Views/Shared/{0}.cshtml", AppHelper.IsMaster ? "_Master" : "_Layout");
+}
+
+@section Heads{ }
+
+@section Styles{ }
+
+@section Menus{
+    @await Html.PartialAsync("~/Areas/User/Views/_Menus.cshtml")
+}
+
+<div class="dxm-page layui-form">
+    <div class="dxm-page-header bg-white">
+
+    </div>
+    <div class="dxm-page-content exist-footer bg-white">
+        <div class="inner">
+            <div class="box center">
+                <div class="box-title">
+                    <span>用户批量上传</span>
+                </div>
+                <div class="box-inner">
+                    <div class="m-t40"></div>
+                    <div class="flex-form flex-form-inner">
+                        <div class="form-line">
+                            <label>选择文件：</label>
+                            <div class="group">
+                                <div class="group-item">
+                                    <input id="txt-file-name" class="layui-input" type="text" readonly="readonly" disabled="disabled" autocomplete="off" />
+                                </div>
+                                <div class="single-upload" style="width:100px;">
+                                    <span id="btn-select">选择文件</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-line">
+                            <label class="full"></label>
+                            <div class="auto">
+                                <a id="btn-upload" href="javascript:;" class="layui-btn layui-btn-primary layui-btn-sm">开始上传</a>
+                            </div>
+                            <div class="item">
+                                <a href="#">*模版文件下载</a>
+                            </div>
+                        </div>
+                        <div class="form-line">
+                            <label class="full"></label>
+                            <div class="item">
+                                <span id="upload-msg" class="text-info"></span>
+                            </div>
+                        </div>
+                        <div class="form-line">
+                            <label class="full"></label>
+                            <div class="item">
+                                <span id="upload-errors" class="txt-error"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="m-t40"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="dxm-page-footer bg-white">
+    </div>
+</div>
+
+@section Scripts{
+<script type="text/javascript">
+    var title = __language.userZhangHaoXinXi;
+    var pageView = {};
+    $(document).ready(function () { pageView.init(); pageView.event(); });
+</script>
+<script type="text/javascript">
+
+    pageView.init = function () {
+        control.singleUpload({
+            selectBtn: "#btn-select",
+            uploadBtn: "#btn-upload",
+            filesQueued: function (file) {
+                $("#txt-file-name").val(file["name"]);
+            },
+            progress: function (pro) {
+                $("#upload-msg").html(pro)
+            },
+            success: function (data) {
+                $("#upload-msg").html("");
+                console.log(data);
+                control.flow().start({
+                    name: "UserImport",
+                    data: {
+                        param: {
+                            md5: data.md5,
+                            name: data.name
+                        }
+                    },
+                    created: function (v) { console.log("created:", arguments); },
+                    intervaled: function (data) {
+                        if (!common.util.isEmpty(data.errors)) { 
+                            
+                        }
+                        $("#upload-msg").html(data.message + data.errors.length);
+                    },
+                    success: function (v) {
+                        $("#upload-msg").html("导入完成");
+                     },
+                    error: function (code, msg, isTimeout) {
+                        if (code == -1) {
+                            alert("超时");
+                        }
+                        else if (code != 0) {
+                            alert(msg);
+                        }
+                        else { 
+                            alert(msg);
+                        }
+                    }
+                });
+            },
+            error: function (code, msg, file) {
+                $("#upload-msg").html(msg)
+            }
+        });
+    };
+
+    pageView.event = function () {
+
+    };
+
+</script>
+}
+

@@ -30,19 +30,19 @@ namespace UTH.Meeting.Win.ViewModel
     {
         public EmployeViewModel() : base(culture.Lang.userYongHuGuanLi, "")
         {
-            No = "";
+            Code = "";
             Status = EnumAccountStatus.Default;
         }
 
         /// <summary>
         /// ²éÑ¯±àºÅ
         /// </summary>
-        public string No
+        public string Code
         {
-            get { return _no; }
-            set { _no = value; RaisePropertyChanged(() => No); }
+            get { return _code; }
+            set { _code = value; RaisePropertyChanged(() => Code); }
         }
-        private string _no;
+        private string _code;
 
         /// <summary>
         /// ²éÑ¯×´Ì¬
@@ -136,7 +136,7 @@ namespace UTH.Meeting.Win.ViewModel
                 Query = new EmployeDTO()
                 {
                     Organize = CurrentUser.User.Organize,
-                    No = No
+                    Code = Code
                 }
             });
 
@@ -151,7 +151,11 @@ namespace UTH.Meeting.Win.ViewModel
                         Index = _index,
                         Id = item.Id,
                         No = item.No,
+                        Code = item.Code,
+                        Account = item.Account,
                         Name = item.Name,
+                        Mobile = item.Mobile,
+                        Email = item.Email,
                         Status = item.Status,
                         IsSelected = false
                     });

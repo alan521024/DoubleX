@@ -21,17 +21,50 @@
         ApplicationCrudService<IAccountDomainService, AccountEntity, AccountDTO, AccountEditInput>,
         IAccountApplication
     {
-        IDomainDefaultService<MemberEntity> memberService;
-        IDomainDefaultService<OrganizeEntity> organizeService;
+        IMemberDomainService memberService;
+        IOrganizeDomainService organizeService;
         ITokenService tokenService;
 
-        public AccountApplication(IAccountDomainService _service, IDomainDefaultService<MemberEntity> _memberService, IDomainDefaultService<OrganizeEntity> _organizeService, ITokenService _tokenService, IApplicationSession session, ICachingService caching) :
+        public AccountApplication(IAccountDomainService _service, IMemberDomainService _memberService, IOrganizeDomainService _organizeService, ITokenService _tokenService, IApplicationSession session, ICachingService caching) :
             base(_service, session, caching)
         {
             memberService = _memberService;
             organizeService = _organizeService;
             tokenService = _tokenService;
         }
+
+        #region override
+
+        public override AccountDTO Insert(AccountEditInput input)
+        {
+            if (Session.User.Type != EnumAccountType.管理员)
+            {
+                throw new DbxException(EnumCode.提示消息, Lang.sysMeiYouCaoZuoQuanXian);
+            }
+            var account = service.Create(Guid.Empty, input.Account, input.Mobile, input.Email, null, input.Password, null, null, true);
+            input.Type = EnumAccountType.管理员;
+            return MapperToDto(account);
+        }
+
+        public override AccountDTO Update(AccountEditInput input)
+        {
+            if (Session.User.Type != EnumAccountType.管理员)
+            {
+                throw new DbxException(EnumCode.提示消息, Lang.sysMeiYouCaoZuoQuanXian);
+            }
+            return base.Update(input);
+        }
+
+        public override int Delete(AccountDTO input)
+        {
+            if (Session.User.Type != EnumAccountType.管理员)
+            {
+                throw new DbxException(EnumCode.提示消息, Lang.sysMeiYouCaoZuoQuanXian);
+            }
+            return base.Delete(input);
+        }
+
+        #endregion
 
         /// <summary>
         /// 账户检查
@@ -56,30 +89,32 @@
 
             using (var unit = CurrentUnitOfWorkManager.Begin())
             {
+                var account = service.Create(Guid.Empty, input.Account, input.Mobile, input.Email, null, input.Password, input.Organize, null, false);
+
+                if (account.Type == EnumAccountType.个人用户)
+                {
+                    memberService.Insert(new MemberEntity()
+                    {
+                        Id = account.Id,
+                        Name = memberService.GetDefaultName(null, account),
+                        Birthdate = DateTimeHelper.DefaultDateTime
+                    });
+                }
+
+                if (account.Type == EnumAccountType.组织用户)
+                {
+                    organizeService.Insert(new OrganizeEntity()
+                    {
+                        Id = account.Id,
+                        Code = account.OrganizeCode,
+                        Name = organizeService.GetDefaultName(null, account)
+                    });
+                }
+
                 unit.Complete();
+
+                return EngineHelper.Map<RegistOutput>(account);
             }
-
-            //using (var unit = unitMgr.Begin())
-            //{
-            //    var account = service.Create(Guid.Empty, input.Account, input.Mobile, input.Email, null, input.Password, input.Organize);
-
-            //    var name = input.Account ?? input.Mobile ?? input.Email;
-
-            //    //注册默认个人用户
-            //    if (account.OrganizeCode.IsEmpty())
-            //    {
-            //        memberService.Insert(new MemberEntity() { Id = account.Id, Name = name });
-            //    }
-            //    else
-            //    {
-            //        organizeService.Insert(new OrganizeEntity() { Id = account.Id, Code = account.OrganizeCode, Name = name });
-            //    }
-
-            //    unit.SaveChanges();
-
-            //    return EngineHelper.Map<RegistOutput>(account);
-            //}
-            return null;
         }
 
         /// <summary>
@@ -159,7 +194,6 @@
 
             return !service.Update(account).IsNull();
         }
-
 
 
         /// <summary>

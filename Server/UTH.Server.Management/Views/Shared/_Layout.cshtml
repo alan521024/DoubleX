@@ -41,10 +41,10 @@
                         <a href="~/home/form" title="@(Lang.sysGuanLiGongJu)"><i class="iconfont icon-shangye2"></i></a>
                     </li>
                     <li>
-                        <a href="~/user/member" title="@(Lang.userYongHuGuanLi)"><i class="iconfont icon-user5"></i></a>
+                        <a href="~/user/account" class="@(WebHelper.GetPathHasValue(this.Context,"/user")?"active":"")" title="@(Lang.userYongHuGuanLi)"><i class="iconfont icon-user5"></i></a>
                     </li>
                     <li>
-                        <a href="~/basics/app" class="@(this.Context.Request.Path.ToString().Contains("/app",StringComparison.OrdinalIgnoreCase)?"active":"")" title="@(Lang.sysXiTongGuanLi)"><i class="iconfont icon-xitong1"></i></a>
+                        <a href="~/basics/app" class="@(WebHelper.GetPathHasValue(this.Context,"/app")?"active":"")" title="@(Lang.sysXiTongGuanLi)"><i class="iconfont icon-xitong1"></i></a>
                     </li>
                 </ul>
             </div>

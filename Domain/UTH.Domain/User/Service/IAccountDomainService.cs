@@ -37,8 +37,10 @@
         /// <param name="userName"></param>
         /// <param name="password"></param>
         /// <param name="organize"></param>
+        /// <param name="employe"></param>
+        /// <param name="isAdmin"></param>
         /// <returns></returns>
-        AccountEntity Create(Guid id, string account, string mobile, string email, string userName, string password, string organize);
+        AccountEntity Create(Guid id, string account, string mobile, string email, string userName, string password, string organize, string employe, bool isAdmin);
 
         /// <summary>
         /// 创建账户

@@ -14,21 +14,17 @@
             <h3>@(AppHelper.WebTitle)</h3>
         </div>
         <form action="@(WebHelper.GetUrl(this.Context,"/account/login"))" method="post">
-            <div class="form-group">
-                <div class="form-item">
-                    <div class="form-input">
-                        @Html.TextBox("account", Model?.Account, new { placeholder = Lang.userZhangHao })
-                    </div>
+            <div class="flex-form">
+                <div class="form-line">
+                    @Html.TextBox("account", Model?.Account, new { placeholder = Lang.userZhangHao, @class = "layui-input" })
                 </div>
-                <div class="form-item">
-                    <div class="form-input password">
-                        @Html.Password("password", Model?.Password, new { placeholder = Lang.userMiMa })
-                    </div>
+                <div class="form-line">
+                    @Html.Password("password", Model?.Password, new { placeholder = Lang.userMiMa, @class = "layui-input" })
                 </div>
-                <div class="form-item">
+                <div class="form-line">
                     <div class="clearfix">
                         <div class="left form-input verify-code-input">
-                            @Html.TextBox("imgCode", Model?.ImgCode, new { placeholder = Lang.userYanZhengMa })
+                            @Html.TextBox("imgCode", Model?.ImgCode, new { placeholder = Lang.userYanZhengMa, @class = "layui-input" })
                             @Html.Hidden("imgCodeKey", Model?.ImgCodeKey)
                         </div>
                         <div class="left form-input verify-code-img">
@@ -36,8 +32,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-item">
-                    <input class="form-submit" value="@(Lang.userDengLu)" type="submit">
+                <div class="form-line">
+                    <input class="layui-btn" value="@(Lang.userDengLu)" type="submit">
                 </div>
             </div>
         </form>
@@ -61,7 +57,6 @@
         };
         pageView.getCaptcha = function () {
             common.request("/common/verify?category=login&mode=image", { type: "GET" }, function (data) {
-                console.log(data);
                 $("#img-captcha").attr("src", "data:image/png;base64," + data.code);
                 $("#imgCodeKey").attr("value", data.key);
             }, function () {

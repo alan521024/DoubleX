@@ -17,9 +17,14 @@
     public class AsyncUnitOfWorkProvider : IUnitOfWorkProvider
     {
         /// <summary>
+        /// 是否初始
+        /// </summary>
+        private bool _isInit = false;
+
+        /// <summary>
         /// 程序标识
         /// </summary>
-        public Guid id = Guid.NewGuid();
+        public Guid id { get; set; } = Guid.NewGuid();
 
         /// <summary>
         /// 工作单元
@@ -27,15 +32,24 @@
         public IUnitOfWork Current
         {
             get { return GetCurrentUow(); }
-            set { SetCurrentUow(value); }
+            set
+            {
+                if (!_isInit)
+                {
+                    SetCurrentUow(null);
+                    _isInit = true;
+                }
+                else
+                {
+                    SetCurrentUow(value);
+                }
+            }
         }
-        
 
         private static readonly AsyncLocal<LocalUowWrapper> AsyncLocalUow = new AsyncLocal<LocalUowWrapper>();
         private static IUnitOfWork GetCurrentUow()
         {
             var uow = AsyncLocalUow.Value?.UnitOfWork;
-
             if (uow == null)
             {
                 return null;
@@ -86,6 +100,7 @@
                 }
             }
         }
+
 
         private class LocalUowWrapper
         {

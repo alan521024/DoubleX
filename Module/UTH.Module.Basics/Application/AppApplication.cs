@@ -53,7 +53,7 @@
         {
             var detail = new AppDetail();
             detail.Application = EngineHelper.Map<AppDTO>(service.Find(where: x => x.Code == code).FirstOrDefault());
-            detail.Versions = EngineHelper.Map<AppVersionDTO>(versionService.Find(where: x => x.AppId == detail.Application.Id).OrderBy(x=>x.No).Last());
+            detail.Versions = EngineHelper.Map<AppVersionDTO>(versionService.Find(where: x => x.AppId == detail.Application.Id).OrderBy(x => x.No).Last());
             detail.DownloadUrl = $"{EngineHelper.Configuration.FileServer.DownUrl}/api/assets/download";
             return detail;
         }
@@ -82,9 +82,30 @@
 
             var currentVersion = appVersions.OrderByDescending(x => x.No).FirstOrDefault();
 
-            var model = EngineHelper.Map<AppOld>(app);
-            model.Versions = EngineHelper.Map<AppVersionOld>(currentVersion);
-            model.Versions.No = new Version(currentVersion.No);
+            var model = new AppOld()
+            {
+                Id = app.Id,
+                Ids = new List<Guid>(),
+                Code = app.Code,
+                AppType = app.AppType,
+                Name = app.Name,
+                Key = app.Key,
+                Secret = app.Secret,
+                Versions = new AppVersionOld()
+                {
+                    Id = currentVersion.Id,
+                    Ids = new List<Guid>(),
+                    No = new Version(currentVersion.No),
+                    Descript = currentVersion.Descript,
+                    FileAddress = $"{EngineHelper.Configuration.FileServer.DownUrl}/api/assets/download",
+                    FileMd5 = currentVersion.FileMd5,
+                    FileName = currentVersion.FileName,
+                    ReleaseDt = DateTime.Now,
+                    UpdateType = EnumUpdateType.Forced,
+                    FileSize = 1
+                    
+                }
+            };
             return model;
         }
 

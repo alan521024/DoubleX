@@ -44,11 +44,15 @@ namespace UTH.Domain
             config.CreateMap<AppEntity, AppDTO>();
             config.CreateMap<AppDTO, AppEntity>();
             config.CreateMap<AppEditInput, AppEntity>();
+
+            config.CreateMap<AppEntity, AppOld>();
             config.CreateMap<AppDTO, AppOld>();
 
             config.CreateMap<AppVersionEntity, AppVersionDTO>();
             config.CreateMap<AppVersionDTO, AppVersionEntity>();
             config.CreateMap<AppVersionEditInput, AppVersionEntity>();
+
+            config.CreateMap<AppVersionEntity, AppVersionOld>();
             config.CreateMap<AppVersionDTO, AppVersionOld>();
 
 

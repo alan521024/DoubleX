@@ -64,5 +64,7 @@
         /// <param name="input"></param>
         /// <returns></returns>
         bool EditPwd(EditPwdInput input);
+
+        
     }
 }

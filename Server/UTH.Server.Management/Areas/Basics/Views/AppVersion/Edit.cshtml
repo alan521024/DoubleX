@@ -15,63 +15,65 @@
     }
 }
 
-<div class="dxm-page dxm-page-pos pos-no-head layui-form">
-    <div class="dxm-page-content bg-white">
-        <div class="dxm-page-content-inner flex-form">
-            <div class="form-line">
-                <label>@(Lang.basYingYongChengXu)：</label>
-                <div class="item">
-                    <select id="dll-app" @(!Model.Detail.AppId.IsEmpty() ? "disabled" : "" )>
-                        @foreach (var item in Model.Apps)
-                        {
-                            if (item.Id == Model.Detail.AppId)
+<div class="dxm-page layui-form">
+    <div class="dxm-page-content exist-footer bg-white">
+        <div class="inner">
+            <div class="flex-form">
+                <div class="form-line">
+                    <label>@(Lang.basYingYongChengXu)：</label>
+                    <div class="item">
+                        <select id="dll-app" @(!Model.Detail.AppId.IsEmpty() ? "disabled" : "" )>
+                            @foreach (var item in Model.Apps)
                             {
-                                <option value="@(item.Id)" selected="selected">@(item.Name)</option>
+                                if (item.Id == Model.Detail.AppId)
+                                {
+                                    <option value="@(item.Id)" selected="selected">@(item.Name)</option>
+                                }
+                                else
+                                {
+                                    <option value="@(item.Id)">@(item.Name)</option>
+                                }
                             }
-                            else
-                            {
-                                <option value="@(item.Id)">@(item.Name)</option>
-                            }
-                        }
-                    </select>
-                </div>
-            </div>
-            <div class="form-line">
-                <label>@(Lang.basBanBengHao)：</label>
-                <div class="item">
-                    <input id="txt-no" autocomplete="off" class="layui-input" type="text" value="@(Model.Detail.No)" />
-                </div>
-            </div>
-            <div class="form-line">
-                <label>@(Lang.basGengXinLeiXing)：</label>
-                <div class="group">
-                    <div class="group-item">
-                        @(WebHelper.GetEnumSelectHtml<EnumUpdateType>(id: "ddl-updatetype", selected: Model.Detail.UpdateType.GetValue()))
+                        </select>
                     </div>
-                    <div class="group-item"><span>*强制更新，增量更新</span></div>
                 </div>
-            </div>
-            <div class="form-line">
-                <label>@(Lang.sysFaBuShiJian)：</label>
-                <div class="item">
-                    <input id="txt-releasedt" autocomplete="off" class="layui-input" type="text" value="@(Model.Detail.ReleaseDt)" />
+                <div class="form-line">
+                    <label>@(Lang.basBanBengHao)：</label>
+                    <div class="item">
+                        <input id="txt-no" autocomplete="off" class="layui-input" type="text" value="@(Model.Detail.No)" />
+                    </div>
                 </div>
-            </div>
-            <div class="form-line">
-                <label>@(Lang.sysWenJian)：</label>
-                <div class="item">
-                    <div id="version-file"></div>
+                <div class="form-line">
+                    <label>@(Lang.basGengXinLeiXing)：</label>
+                    <div class="group">
+                        <div class="group-item">
+                            @(WebHelper.GetEnumSelectHtml<EnumUpdateType>(id: "ddl-updatetype", selected: Model.Detail.UpdateType.GetValue()))
+                        </div>
+                        <div class="group-item"><span>*强制更新，增量更新</span></div>
+                    </div>
                 </div>
-            </div>
-            <div class="form-line">
-                <label>@(Lang.sysMiaoShu)：</label>
-                <div class="item">
-                    <textarea id="txt-descript" class="layui-textarea">@(Model.Detail.Descript)</textarea>
+                <div class="form-line">
+                    <label>@(Lang.sysFaBuShiJian)：</label>
+                    <div class="item">
+                        <input id="txt-releasedt" autocomplete="off" class="layui-input" type="text" value="@(Model.Detail.ReleaseDt)" />
+                    </div>
+                </div>
+                <div class="form-line">
+                    <label>@(Lang.sysWenJian)：</label>
+                    <div class="item">
+                        <div id="version-file"></div>
+                    </div>
+                </div>
+                <div class="form-line">
+                    <label>@(Lang.sysMiaoShu)：</label>
+                    <div class="item">
+                        <textarea id="txt-descript" class="layui-textarea">@(Model.Detail.Descript)</textarea>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="dxm-page-foot clearfix bg-white">
+    <div class="dxm-page-footer bg-white clearfix">
         <div class="left">
         </div>
         <div class="right">
@@ -82,7 +84,7 @@
 
 @section Scripts{
     <script type="text/javascript">
-        var pageView = {}, verFiles, verUpload;
+        var pageView = {}, verFiles, verAssets;
         var id = "@(Model.Detail.Id)";
         var callback = "@(WebHelper.GetQueryValue(this.Context, "callback"))";
         var fileMd5 = "@(Model.Detail.FileMd5)", fileName = "@(Model.Detail.FileName)";
@@ -97,12 +99,12 @@
                 items: [],
                 field: { text: "name", value: "md5" },
                 select: function () {
-                    verUpload.open();
+                    verAssets.open();
                 }
             });
             verFiles.set(fileName, fileMd5);
 
-            verUpload = control.upload({
+            verAssets = control.assets({
                 confirm: function (files, all, obj) {
                     verFiles.add(files);
                 }

@@ -85,7 +85,7 @@ namespace UTH.Meeting.Win.ViewModel
                 return;
             }
 
-            if (!(result.Obj.Type == EnumAccountType.组织 || result.Obj.Type == EnumAccountType.人员))
+            if (!(result.Obj.Type == EnumAccountType.组织用户 || result.Obj.Type == EnumAccountType.组织成员))
             {
                 MessageAlert(culture.Lang.userZhangHuLeiXingCuoWu);
                 return;

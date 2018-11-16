@@ -17,22 +17,12 @@
     public interface IUnitOfWorkActive
     {
         /// <summary>
-        /// 工作单元 成功事件
+        /// 数据上下文
         /// </summary>
-        event EventHandler Completed;
+        dynamic Context { get; set; }
 
         /// <summary>
-        /// 工作单元 失败事件
-        /// </summary>
-        event EventHandler<UnitOfWorkFailedEventArgs> Failed;
-
-        /// <summary>
-        /// 工作单元 释放事件
-        /// </summary>
-        event EventHandler Disposed;
-
-        /// <summary>
-        /// 工作单元配置
+        /// 单元配置
         /// </summary>
         UnitOfWorkOptions Options { get; }
 
@@ -42,13 +32,30 @@
         bool IsDisposed { get; }
 
         /// <summary>
-        /// 保存事务
+        /// 完成事件
+        /// </summary>
+        event EventHandler Completed;
+
+        /// <summary>
+        /// 失败事件
+        /// </summary>
+        event EventHandler<UnitOfWorkFailedEventArgs> Failed;
+
+        /// <summary>
+        /// 释放事件
+        /// </summary>
+        event EventHandler Disposed;
+
+        /// <summary>
+        /// 保存操作
         /// </summary>
         void SaveChanges();
+
         /// <summary>
-        /// 保存事务
+        /// 保存操作(异步)
         /// </summary>
         /// <returns></returns>
         Task SaveChangesAsync();
+
     }
 }

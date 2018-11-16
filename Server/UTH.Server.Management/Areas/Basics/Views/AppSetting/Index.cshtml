@@ -12,50 +12,52 @@
     @await Html.PartialAsync("~/Areas/Basics/Views/_Menus.cshtml")
 }
 
-<div class="dxm-page dxm-page-pos pos-no-head layui-form">
-    <div class="dxm-page-content bg-white left">
-        <div class="dxm-page-content-inner">
+<div class="dxm-page layui-form">
+    <div class="dxm-page-content bg-white exist-footer left">
+        <div class="inner">
             <div class="box-title">
                 <span>@(Lang.basYingYongXinXi)</span>
                 <div class="right">
-                    <a href="/basics/app">@(Lang.sysQuanBu)</a>
+                    <a href="/basics/appversion">@(Lang.sysQuanBu)</a>
                 </div>
             </div>
             <div class="m-t"></div>
-            <div class="layui-form-item auto">
-                <label class="layui-form-label">@(Lang.sysMingCheng)：</label>
-                <div class="layui-input-inline">
-                    @(Model.App.Name)
+            <div class="flex-form flex-form-inner">
+                <div class="form-line">
+                    <label>@(Lang.sysMingCheng)：</label>
+                    <div class="item">
+                        @(Model.App.Name)
+                    </div>
                 </div>
-            </div>
-            <div class="layui-form-item auto">
-                <label class="layui-form-label">@(Lang.sysLeiXing)：</label>
-                <div class="layui-input-inline">
-                    @(Model.App.AppTypeName)
+                <div class="form-line">
+                    <label>@(Lang.sysBianHao)：</label>
+                    <div class="item">
+                        @(Model.App.Code)
+                    </div>
                 </div>
-            </div>
-            <div class="layui-form-item auto">
-                <label class="layui-form-label">@(Lang.sysBianMa)：</label>
-                <div class="layui-input-inline">
-                    @(Model.App.Code)
+                <div class="form-line">
+                    <label>@(Lang.sysLeiXing)：</label>
+                    <div class="item">
+                        @(Model.App.AppTypeName)
+                    </div>
                 </div>
-            </div>
-            <div class="layui-form-item auto">
-                <label class="layui-form-label">@(Lang.sysKey)：</label>
-                <div class="layui-input-inline">
-                    @(Model.App.Key)
+                <div class="form-line">
+                    <label>@(Lang.sysKey)：</label>
+                    <div class="item">
+                        @(Model.App.Key)
+                    </div>
                 </div>
-            </div>
-            <div class="layui-form-item auto">
-                <label class="layui-form-label">@(Lang.sysMiYao)：</label>
-                <div class="layui-input-inline">
-                    @(Model.App.Secret)
+                <div class="form-line">
+                    <label>@(Lang.sysMiYao)：</label>
+                    <div class="item">
+                        @(Model.App.Secret)
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="dxm-page-content bg-white right">
-        <div class="dxm-page-content-inner">
+    <div class="dxm-page-content  bg-white exist-footer right">
+        <div class="inner">
             <div class="box-title">
                 <span>@(Lang.basYongHuPeiZhi)</span>
             </div>
@@ -63,9 +65,9 @@
             <div class="box-inner">
                 <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
                     <ul class="layui-tab-title">
-                        <li class="layui-this">@EnumAccountType.个人</li>
-                        <li class="">@EnumAccountType.组织</li>
-                        <li class="">@EnumAccountType.人员</li>
+                        <li class="layui-this">@EnumAccountType.个人用户</li>
+                        <li class="">@EnumAccountType.组织用户</li>
+                        <li class="">@EnumAccountType.组织成员</li>
                     </ul>
                     <div class="layui-tab-content">
                         <div class="flex-form layui-tab-item layui-show">
@@ -124,16 +126,16 @@
             </div>
             <div class="m-t"></div>
             @*<div class="box-title">
-                    <span>用户配置2</span>
-                </div>
-                <div class="m-t"></div>
-                <div class="box-inner">
-                    2
-                </div>
-                <div class="m-t"></div>*@
+            <span>用户配置2</span>
+        </div>
+        <div class="m-t"></div>
+        <div class="box-inner">
+            2
+        </div>
+        <div class="m-t"></div>*@
         </div>
     </div>
-    <div class="dxm-page-foot clearfix bg-white">
+    <div class="dxm-page-footer clearfix bg-white">
         <div class="left">
         </div>
         <div class="right">
@@ -159,7 +161,7 @@
         };
 
         pageView.save = function () {
-            
+
             var userSetting = {
                 "member": { "allowLogin": $("input[name='chk-meb-login']").is(":checked"), "allowRegist": $("input[name='chk-meb-regist']").is(":checked"), "employeLimit": 0 },
                 "origin": { "allowLogin": $("input[name='chk-org-login']").is(":checked"), "allowRegist": $("input[name='chk-org-regist']").is(":checked"), "employeLimit": $("#txt-org-employe-limit").val() },

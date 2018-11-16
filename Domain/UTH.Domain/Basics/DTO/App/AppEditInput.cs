@@ -30,7 +30,7 @@
             RuleFor(o => o.Name).Configure(x => x.PropertyName = Lang.sysMingCheng)
                 .NotNull().NotEmpty().When(x => x.Ids == null);
 
-            RuleFor(o => o.Code).Configure(x => x.PropertyName = Lang.sysBianMa)
+            RuleFor(o => o.Code).Configure(x => x.PropertyName = Lang.sysBianHao)
                 .NotNull().NotEmpty().Length(6).When(x => x.Ids == null);
         }
     }

@@ -51,7 +51,7 @@ namespace UTH.Server.Api.Controllers
             return File(datas, "application/octet-stream", name);
         }
 
-        public virtual JsonResult Upload(IFormCollection files)
+        public virtual AssetsDTO Upload(IFormCollection files)
         {
             var model = WebHelper.GetFileUploadModel(files);
 
@@ -62,7 +62,7 @@ namespace UTH.Server.Api.Controllers
             if (model.Chunks <= 1)
             {
                 var file = FilesHelper.SaveFile(fileDir, fileName, model.Bytes);
-                InsertAssets(model.Md5, model.Name, file, model.AssetsType);
+                return InsertAssets(model.Md5, model.Name, file, model.AssetsType);
             }
             else
             {
@@ -72,14 +72,13 @@ namespace UTH.Server.Api.Controllers
                 if (model.AutoMerge && model.Chunk == model.Chunks - 1)
                 {
                     var file = FilesHelper.MergeChunks(chunkDir, fileDir, fileName);
-                    InsertAssets(model.Md5, model.Name, file, model.AssetsType);
+                    return InsertAssets(model.Md5, model.Name, file, model.AssetsType);
                 }
+                return null;
             }
-
-            return new JsonResult(true);
         }
 
-        public virtual JsonResult Merge(string md5, string name, EnumAssetsType assetsType = EnumAssetsType.Default)
+        public virtual AssetsDTO Merge(string md5, string name, EnumAssetsType assetsType = EnumAssetsType.Default)
         {
             var rootPath = EngineHelper.Configuration.FileServer.Upload;
             var fileDir = FilesHelper.GetMd5DirPath(rootPath, md5);
@@ -87,23 +86,22 @@ namespace UTH.Server.Api.Controllers
             var fileName = FilesHelper.GetMd5FileName(md5, name);
 
             var file = FilesHelper.MergeChunks(chunkDir, fileDir, fileName);
-            InsertAssets(md5, name, file, assetsType);
-
-            return new JsonResult(true);
+            return InsertAssets(md5, name, file, assetsType);
         }
 
-        protected void InsertAssets(string md5, string name, FileInfo file, EnumAssetsType assetsType)
+        protected AssetsDTO InsertAssets(string md5, string name, FileInfo file, EnumAssetsType assetsType)
         {
-            assetsService.Insert(new AssetsEntity()
+            var input = new AssetsEntity()
             {
                 AssetsType = assetsType,
-                MD5 = md5,
+                Md5 = md5,
                 Name = name,
                 Size = file.Length,
                 Type = file.Extension,
                 AccountId = session.User.Id,
                 AppCode = session.Accessor.AppCode
-            });
+            };
+            return EngineHelper.Map<AssetsDTO>(assetsService.Insert(input));
         }
     }
 }

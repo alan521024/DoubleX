@@ -45,9 +45,9 @@ namespace UTH.Server.Management.Controllers
         /// <param name="files"></param>
         /// <returns></returns>
         [Produces("application/json")]
-        public ResultModel<bool> Upload(IFormCollection files)
+        public ResultModel<AssetsDTO> Upload(IFormCollection files)
         {
-            return PlugCoreHelper.ApiUrl.Core.AssetsUpload.GetResult<bool>(WebHelper.GetFileUploadModel(files));
+            return PlugCoreHelper.ApiUrl.Core.AssetsUpload.GetResult<AssetsDTO>(WebHelper.GetFileUploadModel(files));
         }
 
         /// <summary>

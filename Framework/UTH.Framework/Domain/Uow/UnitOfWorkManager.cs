@@ -23,11 +23,19 @@
             _currentUnitOfWorkProvider = _provider;
         }
 
+        /// <summary>
+        /// 获取当前活动的工作单元(如果不存在，则为空)。
+        /// </summary>
         public IUnitOfWorkActive Current
         {
             get { return _currentUnitOfWorkProvider.Current; }
         }
 
+        /// <summary>
+        /// 开始一个工作单元
+        /// </summary>
+        /// <param name="options"></param>
+        /// <returns></returns>
         public IUnitOfWorkCompleteHandle Begin(UnitOfWorkOptions options = null)
         {
             options = options ?? new UnitOfWorkOptions();
@@ -57,9 +65,9 @@
                 //options.FillOuterUowFiltersForNonProvidedOptions(outerUow.Filters.ToList());
             }
 
-            uow.Begin(options);
-
             _currentUnitOfWorkProvider.Current = uow;
+
+            uow.Begin(options);
 
             return uow;
         }

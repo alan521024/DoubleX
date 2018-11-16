@@ -57,7 +57,7 @@
         public long Size { get { return LongHelper.Get(Items["size"]); } }
 
         /// <summary>
-        /// 文件MD5
+        /// 文件md5
         /// </summary>
         public string Md5 { get { var md5 = StringHelper.Get(Items["md5"]); return md5.IsEmpty() ? Guid.NewGuid().ToString("N") : StringHelper.Get(Items["md5"]); } }
 

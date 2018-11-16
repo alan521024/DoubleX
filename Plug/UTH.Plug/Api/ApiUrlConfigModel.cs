@@ -181,7 +181,8 @@
         public string EmployeUpdate { get; set; } = "/api/user/employe/update";
         public string EmployeDelete { get; set; } = "/api/user/employe/delete";
         public string EmployeQuery { get; set; } = "/api/user/employe/query";
-        public string EmployePaging { get; set; } = "/api/user/employe/paging";
+        public string EmployePaging { get; set; } = "/api/user/employe/paging"; 
+        public string EmployeBatchAdd { get; set; } = "/api/user/employe/batchadd";
 
         #endregion
     }

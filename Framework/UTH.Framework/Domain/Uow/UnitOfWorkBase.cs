@@ -12,7 +12,6 @@
     using UTH.Infrastructure.Resource.Culture;
     using UTH.Infrastructure.Utility;
 
-
     /// <summary>
     /// 工作单元
     /// </summary>
@@ -24,36 +23,48 @@
         private Exception _exception;
         private IUnitOfWork _outer;
 
-        /// <inheritdoc/>
-        public event EventHandler Completed;
+        /// <summary>
+        /// 单元标识
+        /// </summary>
+        public string Id { get; private set; } = Guid.NewGuid().ToString("N");
 
-        /// <inheritdoc/>
-        public event EventHandler<UnitOfWorkFailedEventArgs> Failed;
-
-        /// <inheritdoc/>
-        public event EventHandler Disposed;
-
-        /// <inheritdoc/>
+        /// <summary>
+        /// 数据上下文
+        /// </summary>
+        public abstract dynamic Context { get;  set; }
+        
+        /// <summary>
+        /// 配置信息
+        /// </summary>
         public UnitOfWorkOptions Options { get; private set; }
 
-        public string Id { get; private set; }
+        /// <summary>
+        /// 是否释放
+        /// </summary>
         public bool IsDisposed { get; private set; }
+        /// <summary>
+        /// 完成事件
+        /// </summary>
+        public event EventHandler Completed;
 
-        public UnitOfWorkBase()
-        {
-            Id = Guid.NewGuid().ToString("N");
-        }
+        /// <summary>
+        /// 失败事件
+        /// </summary>
+        public event EventHandler<UnitOfWorkFailedEventArgs> Failed;
+
+        /// <summary>
+        /// 释放事件
+        /// </summary>
+        public event EventHandler Disposed;
 
         public virtual void Begin(UnitOfWorkOptions options)
         {
             options.IsNull();
             Options = options; //TODO: Do not set options like that, instead make a copy?
-
             PreventMultipleBegin();
-
             BeginUow();
         }
-        
+
         public abstract void SaveChanges();
         public abstract Task SaveChangesAsync();
 
@@ -154,7 +165,5 @@
         {
             _outer = outer;
         }
-
-
     }
 }

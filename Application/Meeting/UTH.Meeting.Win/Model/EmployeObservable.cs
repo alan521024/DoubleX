@@ -71,7 +71,7 @@
         private Guid _id;
 
         /// <summary>
-        /// 编号  
+        /// 编号(账号序号)  
         /// </summary>
         public string No
         {
@@ -83,6 +83,62 @@
             }
         }
         private string _no;
+
+        /// <summary>
+        /// 员工编号
+        /// </summary>
+        public string Code
+        {
+            get { return _code; }
+            set
+            {
+                _code = value;
+                RaisePropertyChanged(() => Code);
+            }
+        }
+        private string _code;
+
+        /// <summary>
+        /// 账号
+        /// </summary>
+        public string Account
+        {
+            get { return _account; }
+            set
+            {
+                _account = value;
+                RaisePropertyChanged(() => Account);
+            }
+        }
+        private string _account;
+
+        /// <summary>
+        /// 手机
+        /// </summary>
+        public string Mobile
+        {
+            get { return _mobile; }
+            set
+            {
+                _mobile = value;
+                RaisePropertyChanged(() => Mobile);
+            }
+        }
+        private string _mobile;
+
+        /// <summary>
+        /// 邮箱
+        /// </summary>
+        public string Email
+        {
+            get { return _email; }
+            set
+            {
+                _email = value;
+                RaisePropertyChanged(() => Email);
+            }
+        }
+        private string _email;
 
         /// <summary>
         /// 名称

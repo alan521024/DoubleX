@@ -1,8 +1,8 @@
 <div class="dxm-menu">
-    <a href="~/user/member" class="active"><i class="iconfont icon-shangye1"></i>个人用户</a>
-    <a href="~/user/organize"><i class="iconfont icon-shangye1"></i>组织用户</a>
-    <a href="~/user/employe"><i class="iconfont icon-shangye1"></i>组织成员</a>
-    <a href="~/user/admin"><i class="iconfont icon-shangye1"></i>管理员</a>
-    <a href="~/user/import"><i class="iconfont icon-shangye1"></i>用户导入</a>
-    <a href="~/user/log"><i class="iconfont icon-shangye1"></i>用户日志</a>
+    <a href="~/user/account" class="@(WebHelper.GetPathHasValue(this.Context,"/user/account")?"active":"")"><i class="iconfont icon-shangye1"></i>账号管理</a>
+    <a href="~/user/member" class="@(WebHelper.GetPathHasValue(this.Context,"/user/member")?"active":"")"><i class="iconfont icon-shangye1"></i>个人用户</a>
+    <a href="~/user/organize" class="@(WebHelper.GetPathHasValue(this.Context,"/user/organize")?"active":"")"><i class="iconfont icon-shangye1"></i>组织用户</a>
+    <a href="~/user/employe" class="@(WebHelper.GetPathHasValue(this.Context,"/user/employe")?"active":"")"><i class="iconfont icon-shangye1"></i>组织成员</a>
+    @*<a href="~/user/log" class="@(WebHelper.GetPathHasValue(this.Context,"/user/log")?"active":"")"><i class="iconfont icon-shangye1"></i>用户日志</a>*@
+    <a href="~/user/import" class="@(WebHelper.GetPathHasValue(this.Context,"/user/import")?"active":"")"><i class="iconfont icon-shangye1"></i>用户导入</a>
 </div>

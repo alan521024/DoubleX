@@ -18,6 +18,16 @@
     public class AppVersionOld
     {
         /// <summary>
+        /// Id
+        /// </summary>
+        public Guid Id { get; set; }
+
+        /// <summary>
+        /// Ids
+        /// </summary>
+        public List<Guid> Ids { get; set; }
+
+        /// <summary>
         /// 版本信息
         /// </summary>
         public Version No { get; set; }
@@ -49,7 +59,7 @@
         public string FileAddress { get; set; }
 
         /// <summary>
-        /// 文件MD5(用于校验)
+        /// 文件md5(用于校验)
         /// </summary>
         public string FileMd5 { get; set; }
 

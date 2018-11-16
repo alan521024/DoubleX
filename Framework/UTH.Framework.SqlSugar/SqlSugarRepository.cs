@@ -1,6 +1,7 @@
 ﻿namespace UTH.Framework
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
@@ -19,32 +20,13 @@
     /// </summary>
     public class SqlSugarRepository : IRepository
     {
-        public SqlSugarRepository(SqlSugarClient context = null, ConnectionModel connection = null, IApplicationSession session = null)
+        public SqlSugarRepository(IUnitOfWorkManager unitMgr, ConnectionModel connection = null, IApplicationSession session = null)
         {
-            this.context = context;
+
             this.session = session;
-
-            if (connection.IsNull())
-            {
-                connection = EngineHelper.Configuration.Store.Database;
-            }
-
-            if (this.context.IsNull())
-            {
-                connection.CheckNull();
-                this.context = CreateContext(connection);
-            }
-
-            if (this.context.IsNull())
-            {
-                throw new Exception("SqlSugarRepository Params is null");
-            }
+            this.unitMgr = unitMgr;
+            this.Connection = connection;
         }
-
-        /// <summary>
-        /// 数据对象
-        /// </summary>
-        protected SqlSugarClient context;
 
         /// <summary>
         /// 会话信息
@@ -52,13 +34,34 @@
         protected IApplicationSession session;
 
         /// <summary>
-        /// 获取Context
+        /// 工作单元
         /// </summary>
-        /// <returns></returns>
-        public object GetContext()
+        protected IUnitOfWorkManager unitMgr;
+
+        /// <summary>
+        /// 数据对象
+        /// </summary>
+        protected SqlSugarClient context
         {
-            return this.context;
+            get
+            {
+                if (unitMgr?.Current != null && unitMgr.Current?.Context != null)
+                {
+                    return unitMgr?.Current.Context as SqlSugarClient;
+                }
+                if (_context.IsNull())
+                {
+                    _context = SqlSugarHelper.GetContext(Connection ?? EngineHelper.Configuration.Store.Database);
+                }
+                return _context;
+            }
         }
+        private SqlSugarClient _context;
+
+        /// <summary>
+        /// 连接信息
+        /// </summary>
+        public ConnectionModel Connection { get; protected set; }
 
         /// <summary>
         /// 脚本执行
@@ -152,78 +155,6 @@
 
             return result.Data;
         }
-
-
-        protected SqlSugarClient CreateContext(ConnectionModel connection)
-        {
-            var config = new ConnectionConfig()
-            {
-                ConnectionString = connection.GetConnectionString(),
-                DbType = ToDBType(connection.DbType),
-                IsAutoCloseConnection = connection.AutoCloseConnection,
-                //IsShardSameThread = true //设为true相同线程是同一个SqlSugarClient http://www.codeisbug.com/Doc/8/1158
-                //不能使用异步方法
-            };
-
-            var model = new SqlSugarClient(config);
-
-            if (EngineHelper.Configuration.IsDebugger)
-            {
-                model.Ado.IsEnableLogEvent = true;
-                model.Ado.LogEventStarting = (sql, pars) =>
-                {
-                    Console.WriteLine(sql + "\r\n" + model.Utilities.SerializeObject(pars.ToDictionary(s => s.ParameterName, s => s.Value)));
-                    Console.WriteLine();
-                };
-            }
-
-            return model;
-        }
-
-        protected OrderByType ConvertOrderType(string value)
-        {
-            if (value.IsEmpty())
-                return OrderByType.Asc;
-            value = value.ToLower().Trim();
-            if (value == "desc" || value == "1")
-                return OrderByType.Desc;
-
-            return OrderByType.Asc;
-        }
-
-        protected SqlSugar.DbType ToDBType(EnumDbType dbType)
-        {
-            switch (dbType)
-            {
-                case EnumDbType.SqlServer:
-                    return SqlSugar.DbType.SqlServer;
-                case EnumDbType.MySql:
-                    return SqlSugar.DbType.MySql;
-                case EnumDbType.Oracle:
-                    return SqlSugar.DbType.Oracle;
-                case EnumDbType.Sqlite:
-                    return SqlSugar.DbType.Sqlite;
-                default:
-                    return SqlSugar.DbType.SqlServer;
-            }
-        }
-
-        protected EnumDbType ResDBType(SqlSugar.DbType dbType)
-        {
-            switch (dbType)
-            {
-                case SqlSugar.DbType.SqlServer:
-                    return EnumDbType.SqlServer;
-                case SqlSugar.DbType.MySql:
-                    return EnumDbType.MySql;
-                case SqlSugar.DbType.Oracle:
-                    return EnumDbType.Oracle;
-                case SqlSugar.DbType.Sqlite:
-                    return EnumDbType.Sqlite;
-                default:
-                    return EnumDbType.SqlServer;
-            }
-        }
     }
 
     /// <summary>
@@ -231,8 +162,8 @@
     /// </summary>
     public class SqlSugarRepository<TEntity, TKey> : SqlSugarRepository, IRepository<TEntity, TKey> where TEntity : class, IEntity<TKey>, new()
     {
-        public SqlSugarRepository(SqlSugarClient context = null, ConnectionModel connection = null, IApplicationSession session = null) :
-            base(context, connection, session)
+        public SqlSugarRepository(IUnitOfWorkManager unitMgr, ConnectionModel connection = null, IApplicationSession session = null) :
+            base(unitMgr, connection, session)
         {
             this.SetQueryFilter();
         }
@@ -445,7 +376,7 @@
                 StringBuilder builder = new StringBuilder();
                 sorting.ForEach((o) =>
                 {
-                    builder.AppendFormat(" {0} {1},", o.Key, ConvertOrderType(o.Value).GetName().ToUpper());
+                    builder.AppendFormat(" {0} {1},", o.Key, SqlSugarHelper.ConvertOrderType(o.Value).GetName().ToUpper());
                 });
                 query = query.OrderBy(builder.TrimEnd(',').ToString());
             }
@@ -466,6 +397,10 @@
         {
             try
             {
+                if (unitMgr?.Current != null)
+                {
+
+                }
                 SetOperate(entity, EnumOperateType.Insert);
                 return GetInsertable(entity).ExecuteCommand();
             }
@@ -1298,8 +1233,8 @@
     /// </summary>
     public class SqlSugarRepository<TEntity> : SqlSugarRepository<TEntity, Guid>, IRepository<TEntity> where TEntity : class, IEntity, new()
     {
-        public SqlSugarRepository(SqlSugarClient context = null, ConnectionModel connection = null, IApplicationSession session = null) :
-            base(context, connection, session)
+        public SqlSugarRepository(IUnitOfWorkManager unitMgr, ConnectionModel connection = null, IApplicationSession session = null) :
+            base(unitMgr, connection, session)
         {
 
         }

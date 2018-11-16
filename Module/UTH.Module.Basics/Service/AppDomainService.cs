@@ -36,7 +36,7 @@
             var isExist = Any(x => names.Contains(x.Name) || codes.Contains(x.Code));
             if (isExist)
             {
-                throw new DbxException(EnumCode.提示消息, Lang.sysBiaoHaoYiCunZai);
+                throw new DbxException(EnumCode.提示消息, Lang.sysBianHaoYiCunZai);
             }
             return inputs;
         }
@@ -68,7 +68,7 @@
 
                 if (exists.Where(x => x.Code == input.Code && x.Id != input.Id).Count() > 0)
                 {
-                    throw new DbxException(EnumCode.提示消息, Lang.sysBianMaYiCunZai);
+                    throw new DbxException(EnumCode.提示消息, Lang.sysBianHaoYiCunZai);
                 }
 
                 entity.Name = input.Name;

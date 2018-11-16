@@ -39,7 +39,7 @@ namespace UTH.Infrastructure.Utility
         }
 
         /// <summary>
-        /// 获取MD5目录路径
+        /// 获取md5目录路径
         /// </summary>
         /// <param name="root"></param>
         /// <param name="md5"></param>
@@ -55,7 +55,7 @@ namespace UTH.Infrastructure.Utility
         }
 
         /// <summary>
-        /// 获取MD5文件名
+        /// 获取md5文件名
         /// </summary>
         /// <param name="md5"></param>
         /// <param name="name"></param>
@@ -673,6 +673,64 @@ namespace UTH.Infrastructure.Utility
                         {
                             //假始返回tag 为 false，则跳出操作
                             var tag = func(i, j, rowTotal, sheet.GetRow(j));
+                            if (!tag)
+                            {
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+        /// <summary>
+        /// 导入Excel文件
+        /// </summary>
+        public static void ImportExcel(string dir, string name, Func<int, int, int, string, int, int, int, IRow, bool> func)
+        {
+            dir.CheckNull();
+            name.CheckNull();
+            string filePath = $"{dir}/{name}";
+
+            if (string.IsNullOrWhiteSpace(filePath))
+                return;
+            FileStream fs = null;
+            using (fs = File.OpenRead(filePath))
+            {
+                IWorkbook workbook = null;
+
+                if (filePath.IndexOf(".xlsx") > 0)
+                    workbook = new XSSFWorkbook(fs); //2007
+                else if (filePath.IndexOf(".xls") > 0)
+                    workbook = new HSSFWorkbook(fs); //2003
+
+                if (workbook == null)
+                    return;
+
+                var sheets = workbook.NumberOfSheets;
+
+                //Func<sheetTotal, curSheetName,curSheetIndex, rowTotal, rowIndex, IRow, bool>
+                //func<int,string,int,int,int, IRow, bool>
+                int total = 0;
+                for (var i = 0; i < workbook.NumberOfSheets; i++)
+                {
+                    total = total + (workbook.GetSheetAt(i)?.PhysicalNumberOfRows).Value;
+                }
+
+                int current = 0;
+                for (var i = 0; i < workbook.NumberOfSheets; i++)
+                {
+                    ISheet sheet = workbook.GetSheetAt(i);
+                    if (sheet != null)
+                    {
+                        var rowTotal = sheet.PhysicalNumberOfRows; // sheet.LastRowNum;
+                        for (int j = 0; j < rowTotal; j++)
+                        {
+                            current++;
+
+                            //假始返回tag 为 false，则跳出操作
+                            var tag = func(total, current, workbook.NumberOfSheets, sheet.SheetName, i, rowTotal, j, sheet.GetRow(j));
                             if (!tag)
                             {
                                 return;

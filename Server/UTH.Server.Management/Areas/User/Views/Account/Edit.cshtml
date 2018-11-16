@@ -1,0 +1,104 @@
+﻿@model AccountDTO
+@{
+    ViewData["Title"] = Lang.userZhangHaoXinXi;
+    Layout = string.Format("~/Views/Shared/{0}.cshtml", AppHelper.IsMaster ? "_Master" : "_Layout");
+}
+
+@section Heads{ }
+
+@section Styles{ }
+
+@if (!AppHelper.IsMaster)
+{
+    @section Menus{
+        @await Html.PartialAsync("~/Areas/User/Views/_Menus.cshtml")
+    }
+}
+
+<div class="dxm-page layui-form">
+    <div class="dxm-page-content exist-footer bg-white">
+        <div class="inner">
+            <div class="flex-form">
+                @if (Model.Id.IsEmpty())
+                {
+                    <div class="form-line">
+                        <label>@(Lang.userZhangHao)：</label>
+                        <div class="item">
+                            <input id="txt-account" autocomplete="off" class="layui-input" type="text" value="@(Model.Account)" @(Model.Id.IsEmpty() ? "" : "disabled") />
+                        </div>
+                    </div>
+                    <div class="form-line">
+                        <label>@(Lang.userMiMa)：</label>
+                        <div class="item">
+                            <input id="txt-password" autocomplete="off" class="layui-input" type="text" value="@(Model.Password)" />
+                        </div>
+                    </div>
+                    <div class="form-line">
+                        <label>@(Lang.sysShouJiHaoMa)：</label>
+                        <div class="item">
+                            <input id="txt-mobile" autocomplete="off" class="layui-input" type="text" value="@(Model.Mobile)" />
+                        </div>
+                    </div>
+                    <div class="form-line">
+                        <label>@(Lang.sysYouXiangDiZhi)：</label>
+                        <div class="item">
+                            <input id="txt-email" autocomplete="off" class="layui-input" type="text" value="@(Model.Email)" />
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="form-line">
+                        账号详细信息
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="dxm-page-footer bg-white clearfix">
+        <div class="left">
+        </div>
+        <div class="right">
+            @if (Model.Id.IsEmpty())
+            {
+                <button id="btn-save" class="layui-btn">@(Lang.sysBaoCun)</button>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        var pageView = {};
+        var id = "@(Model.Id)";
+        var callback = "@(WebHelper.GetQueryValue(this.Context, "callback"))";
+        $(document).ready(function () { pageView.init(); pageView.event(); });
+    </script>
+    <script type="text/javascript">
+
+        pageView.init = function () {
+        };
+
+        pageView.event = function () {
+            $("#btn-save").on("click", pageView.save);
+        };
+
+        pageView.save = function () {
+            var model = {
+                id: id,
+                account: $("#txt-account").val(),
+                password: $("#txt-password").val()
+            };
+
+            common.request("/common/do?action=/user/account/insert", { data: model }, function (result) {
+                common.message(__language.sysBaoCunChengGong, function () {
+                    if (!common.isEmpty(callback)) {
+                        common.parentFunc(callback);
+                    }
+                });
+            });
+        };
+
+    </script>
+}
+

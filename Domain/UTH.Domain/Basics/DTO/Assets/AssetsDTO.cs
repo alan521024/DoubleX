@@ -41,7 +41,7 @@
         /// <summary>
         /// 资源描述
         /// </summary>
-        public string MD5 { get; set; }
+        public string Md5 { get; set; }
 
         /// <summary>
         /// 资源大下

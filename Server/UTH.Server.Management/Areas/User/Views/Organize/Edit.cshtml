@@ -14,57 +14,60 @@
         @await Html.PartialAsync("~/Areas/User/Views/_Menus.cshtml")
     }
 }
-<div class="dxm-page dxm-page-pos pos-no-head layui-form">
-    <div class="dxm-page-content bg-white">
-        <div class="dxm-page-content-inner  flex-form">
-            <div class="form-line">
-                <label>@(Lang.sysBianHao)：</label>
-                <div class="item">
-                    <input id="txt-code" autocomplete="off" class="layui-input" type="text" value="@(Model.Code)"  @(Model.Id.IsEmpty() ? "" : "disabled") />
-                </div>
-            </div>
-            <div class="form-line">
-                <label>@(Lang.userZhangHao)：</label>
-                <div class="item">
-                    <input id="txt-account" autocomplete="off" class="layui-input" type="text" value="@(Model.Account)" @(Model.Id.IsEmpty() ? "" : "disabled") />
-                </div>
-            </div>
-            @if (Model.Id.IsEmpty())
-            {
+
+<div class="dxm-page layui-form">
+    <div class="dxm-page-content exist-footer bg-white">
+        <div class="inner">
+            <div class="flex-form">
                 <div class="form-line">
-                    <label>@(Lang.userMiMa)：</label>
+                    <label>@(Lang.sysBianHao)：</label>
                     <div class="item">
-                        <input id="txt-password" autocomplete="off" class="layui-input" type="text" value="@(Model.Password)" />
+                        <input id="txt-code" autocomplete="off" class="layui-input" type="text" value="@(Model.Code)" @(Model.Id.IsEmpty() ? "" : "disabled") />
                     </div>
                 </div>
-            }
-            <div class="form-line">
-                <label>@(Lang.sysMingCheng)：</label>
-                <div class="item">
-                    <input id="txt-name" autocomplete="off" class="layui-input" type="text" value="@(Model.Name)" />
+                <div class="form-line">
+                    <label>@(Lang.userZhangHao)：</label>
+                    <div class="item">
+                        <input id="txt-account" autocomplete="off" class="layui-input" type="text" value="@(Model.Account)" @(Model.Id.IsEmpty() ? "" : "disabled") />
+                    </div>
                 </div>
-            </div>
-            <div class="form-line">
-                <label>@(Lang.sysDianHua)：</label>
-                <div class="item">
-                    <input id="txt-phone" autocomplete="off" class="layui-input" type="text" value="@(Model.Phone)" />
+                @if (Model.Id.IsEmpty())
+                {
+                    <div class="form-line">
+                        <label>@(Lang.userMiMa)：</label>
+                        <div class="item">
+                            <input id="txt-password" autocomplete="off" class="layui-input" type="text" value="@(Model.Password)" />
+                        </div>
+                    </div>
+                }
+                <div class="form-line">
+                    <label>@(Lang.sysMingCheng)：</label>
+                    <div class="item">
+                        <input id="txt-name" autocomplete="off" class="layui-input" type="text" value="@(Model.Name)" />
+                    </div>
                 </div>
-            </div>
-            <div class="form-line">
-                <label>@(Lang.sysChuanZheng)：</label>
-                <div class="item">
-                    <input id="txt-fax" autocomplete="off" class="layui-input" type="text" value="@(Model.Fax)" />
+                <div class="form-line">
+                    <label>@(Lang.sysDianHua)：</label>
+                    <div class="item">
+                        <input id="txt-phone" autocomplete="off" class="layui-input" type="text" value="@(Model.Phone)" />
+                    </div>
                 </div>
-            </div>
-            <div class="form-line">
-                <label>@(Lang.sysDiZhi)：</label>
-                <div class="item">
-                    <input id="txt-address" autocomplete="off" class="layui-input" type="text" value="@(Model.Address)" />
+                <div class="form-line">
+                    <label>@(Lang.sysChuanZheng)：</label>
+                    <div class="item">
+                        <input id="txt-fax" autocomplete="off" class="layui-input" type="text" value="@(Model.Fax)" />
+                    </div>
+                </div>
+                <div class="form-line">
+                    <label>@(Lang.sysDiZhi)：</label>
+                    <div class="item">
+                        <input id="txt-address" autocomplete="off" class="layui-input" type="text" value="@(Model.Address)" />
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="dxm-page-foot clearfix bg-white">
+    <div class="dxm-page-footer bg-white clearfix">
         <div class="left">
         </div>
         <div class="right">

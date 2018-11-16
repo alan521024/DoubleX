@@ -25,7 +25,7 @@
         }
 
         #region override
-        
+
         protected override void DeleteBefore(List<Guid> ids)
         {
             //操作管理员不允许删除
@@ -91,8 +91,9 @@
         /// <param name="userName"></param>
         /// <param name="password"></param>
         /// <param name="organize"></param>
+        /// <param name="employe"></param>
         /// <returns></returns>
-        public AccountEntity Create(Guid id, string account, string mobile, string email, string userName, string password, string organize)
+        public AccountEntity Create(Guid id, string account, string mobile, string email, string userName, string password, string organize, string employe, bool isAdmin)
         {
             return Create(new AccountEntity()
             {
@@ -101,72 +102,94 @@
                 Mobile = mobile,
                 Email = email,
                 Password = password,
-                OrganizeCode = organize
+                OrganizeCode = organize,
+                EmployeCode = employe,
+                Type = isAdmin ? EnumAccountType.管理员 : EnumAccountType.Default
             });
         }
 
         /// <summary>
         /// 创建账户
         /// </summary>
-        /// <param name="account"></param>
+        /// <param name="input"></param>
         /// <param name="organize"></param>
         /// <returns></returns>
-        public AccountEntity Create(AccountEntity account)
+        public AccountEntity Create(AccountEntity input)
         {
-            account.CheckNull();
-            if (!Get(account.Account, account.Mobile, account.Email).IsNull())
+            input.CheckNull();
+
+            input.Id = !input.Id.IsEmpty() ? input.Id : Guid.NewGuid();
+
+            input.Type = input.Type == EnumAccountType.Default ? EnumAccountType.个人用户 : input.Type;
+
+            if (!input.OrganizeCode.IsEmpty())
+            {
+                input.Type = input.EmployeCode.IsEmpty() ? EnumAccountType.组织用户 : EnumAccountType.组织成员;
+            }
+
+            if (input.Type == EnumAccountType.组织用户)
+            {
+                input.OrganizeCode.CheckEmpty();
+                input.Account = !input.Account.IsEmpty() ? input.Account : input.OrganizeCode;
+            }
+
+            if (input.Type == EnumAccountType.组织成员)
+            {
+                input.OrganizeCode.CheckEmpty();
+                input.EmployeCode.CheckEmpty();
+                input.Account = !input.Account.IsEmpty() ? input.Account : $"{input.EmployeCode}@{input.OrganizeCode}";
+            }
+
+            if (!Get(input.Account, input.Mobile, input.Email).IsNull())
             {
                 throw new DbxException(EnumCode.提示消息, Lang.userZhangHuYiCunZai);
             }
 
-            account.Id = !account.Id.IsEmpty() ? account.Id : Guid.NewGuid();
-            account.Type = account.Type == EnumAccountType.Default ? EnumAccountType.个人 : account.Type;
-            if (!account.OrganizeCode.IsEmpty())
-            {
-                account.Type = EnumAccountType.组织;
-            }
 
-            account.No = GetMaxNo(account.Type);
+            input.Account = !input.Account.IsEmpty() ? input.Account : $"AUTO_{GuidHelper.GetToString(input.Id, removeSplit: true, isCaseUpper: true)}";
 
-            account.Account = !account.Account.IsEmpty() ? account.Account : $"AUTO_{GuidHelper.GetToString(account.Id, removeSplit: true, isCaseUpper: true)}";
-            account.Mobile = account.Mobile;
-            account.Email = account.Email;
+            input.Account.CheckEmpty();
+            input.Password.CheckEmpty();
 
-            account.Password = HashSecurityHelper.GetSecurity(account.Password);
+            input.No = GetMaxNo(input.Type);
+            input.Mobile = input.Mobile;
+            input.Email = input.Email;
 
-            account.MobileAuth = false;
-            account.EmailAuth = false;
-            account.CertificateAuth = false;
+            input.Password = HashSecurityHelper.GetSecurity(input.Password);
+
+            input.MobileAuth = false;
+            input.EmailAuth = false;
+            input.CertificateAuth = false;
 
             //DO:使用手机号码，邮箱地址注册，需进行校验码验证，才能进入该方法，考虑使用AOP(CODE+接收者+类型)对Input输入继承ICodeCheckService 进行校验
-            if (!account.Mobile.IsEmpty())
+            if (!input.Mobile.IsEmpty())
             {
-                account.MobileAuth = true;
+                input.MobileAuth = true;
             }
-            if (!account.Email.IsEmpty())
+            if (!input.Email.IsEmpty())
             {
-                account.EmailAuth = true;
+                input.EmailAuth = true;
             }
 
-            account.NormalizedAccount = !account.Account.IsEmpty() ? account.Account.ToUpper() : "";
-            account.NormalizedEmail = !account.Email.IsEmpty() ? account.Email.ToUpper() : "";
+            input.NormalizedAccount = !input.Account.IsEmpty() ? input.Account.ToUpper() : "";
+            input.NormalizedEmail = !input.Email.IsEmpty() ? input.Email.ToUpper() : "";
 
-            account.IsTwoFactorEnabled = false;
-            account.IsLockoutEnabled = false;
-            account.AccessFailedCount = 0;
-            account.InviterId = Guid.Empty;
+            input.IsTwoFactorEnabled = false;
+            input.IsLockoutEnabled = false;
+            input.AccessFailedCount = 0;
+            input.InviterId = Guid.Empty;
 
-            account.LoginCount = 0;
-            account.LoginLastIp = "127.0.0.1";
-            account.LoginLastDt = DateTimeHelper.DefaultDateTime;
+            input.LoginCount = 0;
+            input.LoginLastIp = "127.0.0.1";
+            input.LoginLastDt = DateTimeHelper.DefaultDateTime;
 
-            account.Status = account.Status == EnumAccountStatus.Default ? EnumAccountStatus.正常 : account.Status;
-            if (Insert(account).IsNull())
+            input.Status = input.Status == EnumAccountStatus.Default ? EnumAccountStatus.正常 : input.Status;
+            if (Insert(input).IsNull())
             {
                 throw new DbxException(EnumCode.提示消息, Lang.userZhuCeShiBai);
             }
 
-            return account;
+            return input;
         }
 
         /// <summary>
@@ -199,6 +222,17 @@
             return entity;
         }
 
+        /// <summary>
+        /// 修改密码
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="newPassword"></param>
+        /// <param name="oldPassword"></param>
+        /// <param name="key"></param>
+        /// <param name="mobile"></param>
+        /// <param name="email"></param>
+        /// <param name="code"></param>
+        /// <returns></returns>
         public AccountEntity EditPwd(Guid id, string newPassword, string oldPassword, string key, string mobile, string email, string code)
         {
             if (oldPassword.IsEmpty() && (mobile + email + code).IsEmpty())

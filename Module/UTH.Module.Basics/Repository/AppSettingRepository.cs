@@ -19,8 +19,8 @@
     /// </summary>
     public class AppSettingRepository : SqlSugarRepository<AppSettingEntity>, IAppSettingRepository
     {
-        public AppSettingRepository(SqlSugarClient context = null, ConnectionModel model = null, IApplicationSession session = null) :
-            base(context,model, session)
+        public AppSettingRepository(IUnitOfWorkManager unitMgr, ConnectionModel model = null, IApplicationSession session = null) :
+            base(unitMgr, model, session)
         {
 
         }

@@ -43,7 +43,7 @@
         public string Descript { get; set; }
 
         /// <summary>
-        /// 文件MD5(用于校验)
+        /// 文件md5(用于校验)
         /// </summary>
         public string FileMd5 { get; set; }
 

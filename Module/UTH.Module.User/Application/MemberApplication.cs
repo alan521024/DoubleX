@@ -38,11 +38,12 @@
             MemberDTO dto = null;
             using (var unit = unitMgr.Begin())
             {
-                //var account = accountService.Create(Guid.Empty, input.Account, input.Mobile, input.Email, null, input.Password, null);
-                //input.Id = account.Id;
-                //input.Name = input.Name ?? account.Account;
-                //dto = base.Insert(input);
-                //unit.SaveChanges();
+                var account = accountService.Create(Guid.Empty, input.Account, input.Mobile, input.Email, null, input.Password, null, null,false);
+                input.Id = account.Id;
+                input.Name = service.GetDefaultName(input.Name, account);
+                dto = base.Insert(input);
+
+                unit.Complete();
             }
             return dto;
         }
@@ -50,21 +51,23 @@
         public override int Delete(MemberDTO input)
         {
             int rows = 0;
-            //using (var unit = unitMgr.Begin())
-            //{
-            //    if (!input.Ids.IsEmpty())
-            //    {
-            //        rows += accountService.Delete(input.Ids);
-            //    }
-            //    if (!input.Id.IsEmpty())
-            //    {
-            //        rows += accountService.Delete(input.Id);
-            //    }
-            //}
-            return base.Delete(input);
+            using (var unit = CurrentUnitOfWorkManager.Begin())
+            {
+                if (!input.Ids.IsEmpty())
+                {
+                    rows += accountService.Delete(input.Ids);
+                }
+                if (!input.Id.IsEmpty())
+                {
+                    rows += accountService.Delete(input.Id);
+                }
+                rows += base.Delete(input);
+
+                unit.Complete();
+            }
+            return rows;
         }
 
         #endregion
-
     }
 }

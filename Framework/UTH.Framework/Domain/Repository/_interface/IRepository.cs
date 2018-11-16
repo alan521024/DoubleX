@@ -19,10 +19,9 @@
     public interface IRepository : IDependency
     {
         /// <summary>
-        /// 获取Context
+        /// 连接信息
         /// </summary>
-        /// <returns></returns>
-        object GetContext();
+        ConnectionModel Connection { get; }
 
         /// <summary>
         /// 脚本执行
@@ -266,7 +265,7 @@
         /// <param name="key">主键</param>
         /// <returns>TEntity 对象 or null</returns>
         Task<TEntity> GetAsync(TKey key);
-        
+
         /// <summary>
         /// 获取对象
         /// </summary>

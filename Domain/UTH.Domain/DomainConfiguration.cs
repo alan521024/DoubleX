@@ -40,7 +40,8 @@
             //配置文件
             //仅支持不需要在IOC注册时获取的配置
             //eg:EngineConfig,...等需要在IOC注册处理,时使用，所以自定义扩展了IConfigObjService
-            EngineHelper.RegisterGeneric(typeof(IConfigObjService<>), typeof(DefaultConfigObjService<>), new IocRegisterOptions() { SingleInstance = true });
+            EngineHelper.RegisterGeneric(typeof(IConfigObjService<>), typeof(DefaultConfigObjService<>),
+                new IocRegisterOptions() { InstanceScope = EnumInstanceScope.SingleInstance });
 
             //缓存服务
             EngineHelper.RegisterType<ICachingService, RedisCachingService>(new IocRegisterOptions()
@@ -74,7 +75,11 @@
 
             //unitofwork
             EngineHelper.RegisterType<IUnitOfWork, SqlSugarUnitOfWork>();
-            EngineHelper.RegisterType<IUnitOfWorkProvider, AsyncUnitOfWorkProvider>(new IocRegisterOptions() { SingleInstance = true });
+            EngineHelper.RegisterType<IUnitOfWorkProvider, AsyncUnitOfWorkProvider>(new IocRegisterOptions()
+            {
+                InstanceScope = EnumInstanceScope.InstancePerLifetimeScope,
+                Properties = new List<KeyValueModel<string, object>>() { new KeyValueModel<string, object>("Current", null) }
+            });
             EngineHelper.RegisterType<IUnitOfWorkManager, UnitOfWorkManager>();
 
             //domain repository

@@ -65,6 +65,18 @@
         }
 
         /// <summary>
+        /// 判断路径中是否存在值
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static bool GetPathHasValue(HttpContext context, string value)
+        {
+            return context.Request.Path.ToString().ToLower().Contains(value);
+        }
+
+
+        /// <summary>
         /// 根据名称获取请求方式
         /// </summary>
         /// <param name="name"></param>

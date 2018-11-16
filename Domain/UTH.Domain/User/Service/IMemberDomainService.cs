@@ -16,5 +16,12 @@
     /// </summary>
     public interface IMemberDomainService : IDomainDefaultService<MemberEntity>
     {
+        /// <summary>
+        /// 获取默认名称
+        /// </summary>
+        /// <param name="inputName"></param>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        string GetDefaultName(string inputName, AccountEntity account);
     }
 }

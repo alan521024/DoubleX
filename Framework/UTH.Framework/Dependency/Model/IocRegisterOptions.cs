@@ -44,9 +44,8 @@
         public Type[] InterceptorTypes { get; set; }
 
         /// <summary>
-        /// 是否单例
+        /// 实例生命周期
         /// </summary>
-        public bool SingleInstance { get; set; } = false;
-
+        public EnumInstanceScope InstanceScope { get; set; } = EnumInstanceScope.Default;
     }
 }

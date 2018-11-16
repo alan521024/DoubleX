@@ -14,46 +14,48 @@
         @await Html.PartialAsync("~/Areas/User/Views/_Menus.cshtml")
     }
 }
-<div class="dxm-page dxm-page-pos pos-no-head layui-form">
-    <div class="dxm-page-content bg-white">
-        <div class="dxm-page-content-inner  flex-form">
 
-            <div class="form-line">
-                <label>@(Lang.userZhangHao)：</label>
-                <div class="item">
-                    <input id="txt-account" autocomplete="off" class="layui-input" type="text" value="@(Model.Account)" @(Model.Id.IsEmpty() ? "" : "disabled") />
-                </div>
-            </div>
-            @if (Model.Id.IsEmpty())
-            {
+<div class="dxm-page layui-form">
+    <div class="dxm-page-content exist-footer bg-white">
+        <div class="inner">
+            <div class="flex-form">
                 <div class="form-line">
-                    <label>@(Lang.userMiMa)：</label>
+                    <label>@(Lang.userZhangHao)：</label>
                     <div class="item">
-                        <input id="txt-password" autocomplete="off" class="layui-input" type="text" value="@(Model.Password)" />
+                        <input id="txt-account" autocomplete="off" class="layui-input" type="text" value="@(Model.Account)" @(Model.Id.IsEmpty() ? "" : "disabled") />
                     </div>
                 </div>
-            }
-            <div class="form-line">
-                <label>@(Lang.sysMingCheng)：</label>
-                <div class="item">
-                    <input id="txt-name" autocomplete="off" class="layui-input" type="text" value="@(Model.Name)" />
+                @if (Model.Id.IsEmpty())
+                {
+                    <div class="form-line">
+                        <label>@(Lang.userMiMa)：</label>
+                        <div class="item">
+                            <input id="txt-password" autocomplete="off" class="layui-input" type="text" value="@(Model.Password)" />
+                        </div>
+                    </div>
+                }
+                <div class="form-line">
+                    <label>@(Lang.sysMingCheng)：</label>
+                    <div class="item">
+                        <input id="txt-name" autocomplete="off" class="layui-input" type="text" value="@(Model.Name)" />
+                    </div>
                 </div>
-            </div>
-            <div class="form-line">
-                <label>@(Lang.userXingBie)：</label>
-                <div class="item">
-                    @(WebHelper.GetEnumSelectHtml<EnumGender>(id: "ddl-gender", selected: Model.Gender.GetValue()))
+                <div class="form-line">
+                    <label>@(Lang.userXingBie)：</label>
+                    <div class="item">
+                        @(WebHelper.GetEnumSelectHtml<EnumGender>(id: "ddl-gender", selected: Model.Gender.GetValue()))
+                    </div>
                 </div>
-            </div>
-            <div class="form-line">
-                <label>@(Lang.userChuShengRiQi)：</label>
-                <div class="item">
-                    <input id="txt-birthdate" autocomplete="off" class="layui-input" type="text" value="@(StringHelper.Get(Model.Birthdate,"yyyy-MM-dd"))" />
+                <div class="form-line">
+                    <label>@(Lang.userChuShengRiQi)：</label>
+                    <div class="item">
+                        <input id="txt-birthdate" autocomplete="off" class="layui-input" type="text" value="@(StringHelper.Get(Model.Birthdate,"yyyy-MM-dd"))" />
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="dxm-page-foot clearfix bg-white">
+    <div class="dxm-page-footer bg-white clearfix">
         <div class="left">
         </div>
         <div class="right">

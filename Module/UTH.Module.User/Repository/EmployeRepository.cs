@@ -20,11 +20,13 @@
     /// </summary>
     public class EmployeRepository : SqlSugarRepository<EmployeEntity>, IEmployeRepository, IRepository<EmployeEntity>
     {
-        public EmployeRepository(SqlSugarClient context = null, ConnectionModel model = null, IApplicationSession session = null) :
-            base(context, model, session)
+        public EmployeRepository(IUnitOfWorkManager unitMgr, ConnectionModel model = null, IApplicationSession session = null) :
+            base(unitMgr, model, session)
         {
 
         }
+
+        #region override
 
         protected override ISugarQueryable<EmployeEntity> GetQueryable(ISugarQueryable<EmployeEntity> query = null, Expression<Func<EmployeEntity, bool>> where = null, List<KeyValueModel> sorting = null)
         {
@@ -32,13 +34,18 @@
                 JoinType.Left,st.Id==sc.Id})
                 .Select((st, sc) => new EmployeEntity()
                 {
-                    Id = SqlFunc.GetSelfAndAutoFill(st.Id),
-                    Status = sc.Status
+                    Id = SqlFunc.GetSelfAndAutoFill(sc.Id),
+                    Code = st.Code,
+                    Organize = st.Organize,
+                    Name = st.Name,
+                    Phone=st.Phone
                 });
 
             source = source.MergeTable();
 
             return base.GetQueryable(source, where, sorting);
         }
+
+        #endregion
     }
 }

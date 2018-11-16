@@ -51,7 +51,7 @@ namespace UTH.Meeting.Win.Areas.User.View
             viewModel.CheckNull();
             viewModel.MaskHide();
 
-            viewModel.No = "";
+            viewModel.Code = "";
             viewModel.Name = "";
             viewModel.Password = "";
             viewModel.BatchStart = 0;

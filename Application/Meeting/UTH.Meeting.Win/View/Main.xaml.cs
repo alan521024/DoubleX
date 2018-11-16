@@ -56,11 +56,11 @@ namespace UTH.Meeting.Win.View
 
         public void ShowMeeting()
         {
-            if (viewModel.CurrentUser.User.Type == EnumAccountType.组织)
+            if (viewModel.CurrentUser.User.Type == EnumAccountType.组织用户)
             {
                 mainFrame.Navigate(new Areas.Conference.View.Preside());
             }
-            if (viewModel.CurrentUser.User.Type == EnumAccountType.人员)
+            if (viewModel.CurrentUser.User.Type == EnumAccountType.组织成员)
             {
                 mainFrame.Navigate(new Areas.Conference.View.Participant());
             }

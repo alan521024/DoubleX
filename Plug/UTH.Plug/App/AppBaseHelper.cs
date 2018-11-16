@@ -158,7 +158,7 @@
         #endregion
 
         /// <summary>
-        /// 根据MD5获取路径
+        /// 根据md5获取路径
         /// </summary>
         /// <param name="md5"></param>
         /// <param name="fileName"></param>
