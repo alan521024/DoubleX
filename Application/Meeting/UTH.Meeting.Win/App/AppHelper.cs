@@ -266,6 +266,13 @@
         {
             var cur = VersionHelper.Get();
             var last = new Version(CurrentApp.Versions.No);
+
+            //相同版本不更新
+            if (cur == last)
+            {
+                return;
+            }
+
             var updateType = WpfHelper.GetAppUpdateType(cur, last);
             if (CurrentApp.Versions.UpdateType == EnumUpdateType.Forced)
             {
