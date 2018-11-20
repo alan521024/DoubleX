@@ -16,7 +16,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.6" />
+    <PackageReference Include="System.Drawing.Common" Version="4.5.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,7 +29,6 @@
     <ProjectReference Include="..\..\Infrastructure\UTH.Infrastructure.Resource\UTH.Infrastructure.Resource.csproj" />
     <ProjectReference Include="..\..\Infrastructure\UTH.Infrastructure.Utility\UTH.Infrastructure.Utility.csproj" />
     <ProjectReference Include="..\..\Module\UTH.Module.Basics\UTH.Module.Basics.csproj" />
-    <ProjectReference Include="..\..\Module\UTH.Module.Core\UTH.Module.Core.csproj" />
     <ProjectReference Include="..\..\Plug\UTH.Plug.Notification\UTH.Plug.Notification.csproj" />
   </ItemGroup>
 

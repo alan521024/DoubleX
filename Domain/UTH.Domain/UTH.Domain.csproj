@@ -14,7 +14,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="User\Application\IAccountService.cs" />
+    <Compile Remove="Entities\Core\**" />
+    <EmbeddedResource Remove="Entities\Core\**" />
+    <None Remove="Entities\Core\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Module\User\Application\IAccountService.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,8 +31,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="_Entities\Core\" />
-    <Folder Include="Core\Repository\" />
+    <Folder Include="Entities\_Default\" />
+    <Folder Include="Module\_Default\" />
   </ItemGroup>
 
 </Project>

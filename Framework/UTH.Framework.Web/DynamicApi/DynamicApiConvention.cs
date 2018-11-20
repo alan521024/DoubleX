@@ -29,6 +29,11 @@
         {
             foreach (var appController in application.Controllers)
             {
+                //DEBUGGER
+                //if (appController.ControllerType.Name == "CaptchaApplication") {
+                //    var dd = "123";
+                //}
+
                 var component = DynamicApiHelper.GetServiceComponent(appController.ControllerType);
                 if (component.IsNull())
                     continue;
@@ -66,8 +71,12 @@
             if (controller.IsNull() || component.IsNull())
                 return;
 
+            if (component.Name.IsEmpty())
+                return;
+
             if (controller.RouteValues.ContainsKey("module"))
                 return;
+
 
             controller.RouteValues["module"] = component.Name;
         }
@@ -229,6 +238,9 @@
                     .Replace("[controller]", name)
                     .Replace("{action}", action)
                     .Replace("[action]", action);
+            while (routeFormat.Contains("//")) {
+                routeFormat = routeFormat.Replace("//", "/");
+            }
 
             return new AttributeRouteModel(new RouteAttribute(routeFormat.ToLower()));
         }

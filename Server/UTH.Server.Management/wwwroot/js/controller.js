@@ -1030,12 +1030,19 @@
                             that.config.intervaled(data, 0, "");
                         }
 
-                        if (data["isSuccess"] && data["isOver"]) {
+                        if (data["isOver"]) {
+                            if (data["isSuccess"]) {
+                                if (common.util.isFunction(that.config.success)) {
+                                    that.config.success(data);
+                                }
+                            } else {
+                                if (common.util.isFunction(that.config.error)) {
+                                    that.config.error(-2, data["message"], progressTotal > that.config.errors);
+                                }
+                            }
                             clearInterval(progressInvert);
                             progressInvert = null;
-                            if (common.util.isFunction(that.config.success)) {
-                                that.config.success(data);
-                            }
+                            
                         }
                         else {
                             progressTotal++;

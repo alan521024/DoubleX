@@ -40,9 +40,9 @@
     <ProjectReference Include="..\..\Infrastructure\UTH.Infrastructure.Resource\UTH.Infrastructure.Resource.csproj" />
     <ProjectReference Include="..\..\Infrastructure\UTH.Infrastructure.Utility\UTH.Infrastructure.Utility.csproj" />
     <ProjectReference Include="..\..\Module\UTH.Module.Basics\UTH.Module.Basics.csproj" />
-    <ProjectReference Include="..\..\Module\UTH.Module.Core\UTH.Module.Core.csproj" />
     <ProjectReference Include="..\..\Module\UTH.Module.Meeting\UTH.Module.Meeting.csproj" />
     <ProjectReference Include="..\..\Module\UTH.Module.User\UTH.Module.User.csproj" />
+    <ProjectReference Include="..\..\Module\UTH.Module\UTH.Module.csproj" />
     <ProjectReference Include="..\..\Plug\UTH.Plug.Notification\UTH.Plug.Notification.csproj" />
     <ProjectReference Include="..\..\Plug\UTH.Plug\UTH.Plug.csproj" />
   </ItemGroup>

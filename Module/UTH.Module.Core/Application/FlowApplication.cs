@@ -53,7 +53,6 @@
                     {
                         string md5 = StringHelper.Get(input.Param.md5);
                         string name = StringHelper.Get(input.Param.name);
-                        var p = input.Param as AssetsEditInput;
                         UserImport(model, md5, name);
                     }
                 }
@@ -87,7 +86,7 @@
         {
             var rootPath = EngineHelper.Configuration.FileServer.Upload;
             var fileDir = FilesHelper.GetMd5DirPath(rootPath, md5);
-            var fileName = FilesHelper.GetMd5FileName(md5, "用户数据.xlsx");
+            var fileName = FilesHelper.GetMd5FileName(md5, name);
 
             model.IsOver = false;
             model.IsSuccess = false;
@@ -100,9 +99,9 @@
 
                 model.Total = total;
                 model.Current = current;
-                model.Message = $"正在导入 {total} /{current}";
+                model.Message = $"{Lang.sysZhengZaiDaoRu} {total} /{current}";
 
-                string actName=string.Empty, password = string.Empty, mobile = string.Empty, email = string.Empty;
+                string actName = string.Empty, password = string.Empty, mobile = string.Empty, email = string.Empty;
                 try
                 {
                     actName = StringHelper.Get(row.GetCell(0));
@@ -127,15 +126,60 @@
                             unit.Complete();
                         }
                     }
+                    else if (sIndex == 1)
+                    {
+                        using (var unit = EngineHelper.Resolve<IUnitOfWorkManager>().Begin())
+                        {
+                            string code = StringHelper.Get(row.GetCell(4)), orgName = StringHelper.Get(row.GetCell(5)), phone = StringHelper.Get(row.GetCell(6)),
+                            fax = StringHelper.Get(row.GetCell(7));
 
-                    if (total == current) {
+                            var account = _accountService.Create(Guid.Empty,
+                                actName, mobile, email, null, password, code, null, false);
+
+                            var input = new OrganizeEntity()
+                            {
+                                Id = account.Id,
+                                Code = code,
+                                Name = _organizeService.GetDefaultName(orgName, account),
+                                Phone = phone,
+                                Fax = fax,
+                                AreaCode = "",
+                                Address = ""
+                            };
+                            _organizeService.Insert(input);
+                            unit.Complete();
+                        }
+                    }
+                    else if (sIndex == 2)
+                    {
+                        using (var unit = EngineHelper.Resolve<IUnitOfWorkManager>().Begin())
+                        {
+                            string orgCode = StringHelper.Get(row.GetCell(4)), code = StringHelper.Get(row.GetCell(5)), empName = StringHelper.Get(row.GetCell(6));
+
+                            var account = _accountService.Create(Guid.Empty,
+                                actName, mobile, email, null, password, orgCode, code, false);
+
+                            var input = new EmployeEntity()
+                            {
+                                Id = account.Id,
+                                Organize = orgCode,
+                                Code = code,
+                                Name = _employeService.GetDefaultName(empName, account)
+                            };
+                            _employeService.Insert(input);
+                            unit.Complete();
+                        }
+                    }
+
+                    if (total == current)
+                    {
                         model.IsOver = true;
                         model.IsSuccess = true;
                     }
                 }
                 catch (Exception ex)
                 {
-                    model.Errors.Add($"导入->{actName} ExceptionHelper.GetMessage(ex)");
+                    model.Errors.Add($"{Lang.sysDaoRu} ->  sheet:{sName} row:{rowIndex} {actName} {ExceptionHelper.GetMessage(ex)}");
                 }
                 finally
                 {
@@ -143,6 +187,11 @@
                 }
                 return true;
             });
+
+            model.IsOver = true;
+            model.IsSuccess = model.Errors.IsEmpty();
+            model.Message = model.IsSuccess ? Lang.sysDaoRuWanCheng : Lang.sysDaoRuShiBai;
+            _service.SetProgress(model);
         }
 
     }

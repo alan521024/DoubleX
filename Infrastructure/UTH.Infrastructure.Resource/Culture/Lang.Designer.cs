@@ -574,6 +574,15 @@ namespace UTH.Infrastructure.Resource.Culture {
         }
         
         /// <summary>
+        ///   查找类似 操作失败 的本地化字符串。
+        /// </summary>
+        public static string sysCaoZuoShiBai {
+            get {
+                return ResourceManager.GetString("sysCaoZuoShiBai", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 {PropertyName} must be {MinLength} - {MaxLength} characters 的本地化字符串。
         /// </summary>
         public static string sysChangDuQuJianFormat {
@@ -705,6 +714,33 @@ namespace UTH.Infrastructure.Resource.Culture {
         public static string sysDaoJiShi {
             get {
                 return ResourceManager.GetString("sysDaoJiShi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 导入 的本地化字符串。
+        /// </summary>
+        public static string sysDaoRu {
+            get {
+                return ResourceManager.GetString("sysDaoRu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 导入失败 的本地化字符串。
+        /// </summary>
+        public static string sysDaoRuShiBai {
+            get {
+                return ResourceManager.GetString("sysDaoRuShiBai", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 导入完成 的本地化字符串。
+        /// </summary>
+        public static string sysDaoRuWanCheng {
+            get {
+                return ResourceManager.GetString("sysDaoRuWanCheng", resourceCulture);
             }
         }
         
@@ -1506,6 +1542,15 @@ namespace UTH.Infrastructure.Resource.Culture {
         public static string sysZhengShiBan {
             get {
                 return ResourceManager.GetString("sysZhengShiBan", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 正在导入 的本地化字符串。
+        /// </summary>
+        public static string sysZhengZaiDaoRu {
+            get {
+                return ResourceManager.GetString("sysZhengZaiDaoRu", resourceCulture);
             }
         }
         

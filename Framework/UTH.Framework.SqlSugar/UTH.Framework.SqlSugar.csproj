@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="sqlSugarCore" Version="4.6.4.9" />
+    <PackageReference Include="sqlSugarCore" Version="4.8.5" />
   </ItemGroup>
 
   <ItemGroup>

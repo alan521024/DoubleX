@@ -20,6 +20,22 @@
     /// </summary>
     public static class DynamicApiHelper
     {
+        /// <summary>
+        /// 是否启用动态Api(配置文件是否存在)
+        /// </summary>
+        public static bool IsDynamicApi
+        {
+            get
+            {
+                if (_isDynamicApi.IsNull())
+                {
+                    _isDynamicApi = FilesHelper.GetFile(EngineHelper.Configuration.ConfigPath, "DynamicApi.config").Exists;
+                }
+                return _isDynamicApi.Value;
+            }
+        }
+        private static bool? _isDynamicApi = null;
+
         #region 动态Api 根据配置 创建 组件/控制器/Action 
 
         public static List<DynamicApiComponent> ApiComponents
@@ -63,9 +79,9 @@
             {
                 if (setting == null)
                     continue;
-
-                //module name not empty
-                setting.Name.CheckEmpty();
+                
+                //the default module is empty
+                //setting.Name.CheckEmpty();
 
                 if (!BoolHelper.Get(setting.Enable, defaultValue: root.Enable))
                 {
@@ -210,19 +226,29 @@
 
         public static bool IsServiceController(Type controllerType, bool checkEnable = true)
         {
-            return !GetServiceController(controllerType, checkEnable: true).IsNull();
+            if (IsDynamicApi) {
+                return !GetServiceController(controllerType, checkEnable: true).IsNull();
+            }
+            return false;
         }
 
         public static bool IsServiceAction(Type controllerType, MethodInfo method, bool checkEnable = true)
         {
-            var controller = GetServiceController(controllerType, checkEnable: true);
-            return IsServiceAction(controller, method, checkEnable: true);
-
+            if (IsDynamicApi)
+            {
+                var controller = GetServiceController(controllerType, checkEnable: true);
+                return IsServiceAction(controller, method, checkEnable: true);
+            }
+            return false;
         }
 
         public static bool IsServiceAction(DynamicApiControls controller, MethodInfo method, bool checkEnable = true)
         {
-            return !GetServiceAction(controller, method, checkEnable: true).IsNull();
+            if (IsDynamicApi)
+            {
+                return !GetServiceAction(controller, method, checkEnable: true).IsNull();
+            }
+            return false;
         }
 
 

@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Domain\UTH.Domain\UTH.Domain.csproj" />
+    <ProjectReference Include="..\..\Framework\UTH.Framework.SqlSugar\UTH.Framework.SqlSugar.csproj" />
+    <ProjectReference Include="..\..\Framework\UTH.Framework\UTH.Framework.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\UTH.Infrastructure.Resource\UTH.Infrastructure.Resource.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\UTH.Infrastructure.Utility\UTH.Infrastructure.Utility.csproj" />
+    <ProjectReference Include="..\..\Plug\UTH.Plug\UTH.Plug.csproj" />
+  </ItemGroup>
+
+</Project>

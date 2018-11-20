@@ -15,7 +15,14 @@
     /// </summary>
     public class PagingModel<TOutput>
     {
+        /// <summary>
+        /// 分页数据
+        /// </summary>
         public List<TOutput> Rows { get; set; }
+
+        /// <summary>
+        /// 分页总数
+        /// </summary>
         public long Total { get; set; }
     }
 }

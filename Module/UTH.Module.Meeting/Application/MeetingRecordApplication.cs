@@ -44,6 +44,11 @@
                 return results;
             }
             var recModel = EngineHelper.Map<MeetingSyncModel>(recEntity);
+
+            if (!StringHelper.Punctuations.Contains(recModel.Content.Substring(recModel.Content.Length - 1, 1)))
+            {
+                recModel.Content = recModel.Content + (recModel.Langue == "zs" ? "。" : ".");
+            }
             recModel.SyncType = 1;
             recModel.RefreshDt = DateTime.Now;
             results.Add(recModel);
@@ -88,6 +93,11 @@
         /// <returns></returns>
         public virtual MeetingRecordOutput Add(MeetingRecordEditInput input)
         {
+            if (!StringHelper.Punctuations.Contains(input.Content.Substring(input.Content.Length - 1, 1)))
+            {
+                input.Content = input.Content + (input.Langue == "zs" ? "。" : ".");
+            }
+
             var dto = base.Insert(input);
             var output = EngineHelper.Map<MeetingRecordOutput>(dto);
             if (output.IsNull())

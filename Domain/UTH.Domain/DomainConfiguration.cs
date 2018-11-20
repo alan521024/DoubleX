@@ -37,12 +37,6 @@
             FluentValidationOptions.Configuration();
             EngineHelper.RegisterType(typeof(IValidatorFactory), typeof(FluentValidatorDefaultFactory));
 
-            //配置文件
-            //仅支持不需要在IOC注册时获取的配置
-            //eg:EngineConfig,...等需要在IOC注册处理,时使用，所以自定义扩展了IConfigObjService
-            EngineHelper.RegisterGeneric(typeof(IConfigObjService<>), typeof(DefaultConfigObjService<>),
-                new IocRegisterOptions() { InstanceScope = EnumInstanceScope.SingleInstance });
-
             //缓存服务
             EngineHelper.RegisterType<ICachingService, RedisCachingService>(new IocRegisterOptions()
             {
@@ -51,19 +45,23 @@
                 }
             });
 
+            //配置文件
+            //仅支持不需要在IOC注册时获取的配置
+            //eg:EngineConfig,...等需要在IOC注册处理,时使用，所以自定义扩展了IConfigObjService
+            EngineHelper.RegisterGeneric(typeof(IConfigObjService<>), typeof(DefaultConfigObjService<>),
+                new IocRegisterOptions() { InstanceScope = EnumInstanceScope.SingleInstance });
+
             //Aop(执行日志/输入校验)
             EngineHelper.RegisterType<ILoggingInterceptor, LoggingInterceptor>();
             EngineHelper.RegisterType<IInputValidatorInterceptor, InputValidatorInterceptor>();
 
             //domain profiles
             var profiles = new List<IDomainProfile>();
-            var items = EngineHelper.TypeFinder.FindClassesOfType<IDomainProfile>();
-            foreach (var item in EngineHelper.TypeFinder.FindClassesOfType<IDomainProfile>())
+            var domainProfiles = EngineHelper.TypeFinder.FindClassesOfType<IDomainProfile>();
+            foreach (var item in domainProfiles)
             {
                 profiles.Add((Activator.CreateInstance(item) as IDomainProfile));
             }
-
-            //configuration
             profiles.ForEach(x => x.Configuration());
 
             //mapper

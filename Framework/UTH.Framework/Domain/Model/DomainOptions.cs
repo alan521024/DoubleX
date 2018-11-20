@@ -18,6 +18,9 @@
     /// </summary>
     public class DomainOptions
     {
+        /// <summary>
+        /// ctor
+        /// </summary>
         public DomainOptions()
         {
             var config = EngineHelper.Configuration;

@@ -61,6 +61,18 @@
             {
                 throw new DbxException(EnumCode.提示消息, Lang.sysMeiYouCaoZuoQuanXian);
             }
+            var checkIds = input.Ids ?? new List<Guid>();
+            if (!input.Id.IsEmpty())
+            {
+                checkIds.Add(input.Id);
+            }
+            if (!checkIds.IsEmpty())
+            {
+                if (service.Any(x => checkIds.Contains(x.Id) && x.Type != EnumAccountType.管理员))
+                {
+                    throw new DbxException(EnumCode.提示消息, Lang.sysCaoZuoShiBai);
+                }
+            }
             return base.Delete(input);
         }
 

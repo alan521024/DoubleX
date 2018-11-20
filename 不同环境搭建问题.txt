@@ -1,0 +1,60 @@
+Linux环境 ：
+   验证码未找到库(.net core Linux ( Centos 7 ) 下 验证码图片显示不出来，或者乱码)
+   
+	在 Linux 命令行运行：
+
+	dotnet Web.dll  # dll文件名 自己换
+
+	（注意：不要用 nohup dotnet Web.dll 在后台运行，后台运行看不到异常）
+
+	再来访问登录界面， 此时验证码看不到， Linux 下提示： “Unable to load shared library 'gdiplus'” .
+
+	#1. 安装 glib-2.0
+	yum install libgnomeui-devel
+
+	#2. 安装 libgdiplus
+	wget http://download.mono-project.com/sources/libgdiplus/libgdiplus-5.6.tar.gz
+	tar -zxf libgdiplus-5.6.tar.gz
+	cd libgdiplus-5.6
+	./configure --prefix=/usr
+	make
+	make install
+
+	或者直接按： https://github.com/zkweb-framework/zkweb.system.drawing
+
+	的做法：
+
+	yum install autoconf automake libtool
+	yum install freetype-devel fontconfig libXft-devel
+	yum install libjpeg-turbo-devel libpng-devel giflib-devel libtiff-devel libexif-devel
+	yum install glib2-devel cairo-devel
+	git clone https://github.com/mono/libgdiplus
+	cd libgdiplus
+	./autogen.sh
+	make
+	make install
+	cd /usr/lib64/
+	ln -s /usr/local/lib/libgdiplus.so gdiplus.dll
+
+	安装完， 再运行， 会发现验证码出来了， 但有乱码：
+
+
+
+	验证码乱码的解决
+
+	主要是解决字体问题。
+
+	在生成验证码的代码中， 关于字体的有一行：
+
+	string[] font = { "Times New Roman" };
+
+	所以先在 Windows 系统中找到：
+
+	复制到 Linux 中的 /usr/share/fonts/micro/ 下
+
+	mkdir /usr/share/fonts/micro/
+	cd /usr/share/fonts/micro/
+	# 字体文件复制到这个文件夹， 略
+	fc-cache  #重新加载字体
+
+	再重新执行 dotnet Web.dll , 验证码正常了。

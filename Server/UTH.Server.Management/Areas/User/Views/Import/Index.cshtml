@@ -41,7 +41,7 @@
                                 <a id="btn-upload" href="javascript:;" class="layui-btn layui-btn-primary layui-btn-sm">开始上传</a>
                             </div>
                             <div class="item">
-                                <a href="#">*模版文件下载</a>
+                                <a href="~/template/import/user.zip">*模版文件下载</a>
                             </div>
                         </div>
                         <div class="form-line">
@@ -97,22 +97,25 @@
                     },
                     created: function (v) { console.log("created:", arguments); },
                     intervaled: function (data) {
-                        if (!common.util.isEmpty(data.errors)) { 
-                            
+                        if (!common.util.isEmpty(data.errors)) {
+                            $("#upload-errors").html(data.errors[data.errors.length - 1]);
                         }
-                        $("#upload-msg").html(data.message + data.errors.length);
+                        $("#upload-msg").html(data.message);
                     },
                     success: function (v) {
                         $("#upload-msg").html("导入完成");
-                     },
+                    },
                     error: function (code, msg, isTimeout) {
                         if (code == -1) {
                             alert("超时");
+                            $("#upload-errors").html("任务超时");
+                        } else if (code == -2) {
+                            $("#upload-errors").html(msg);
                         }
                         else if (code != 0) {
                             alert(msg);
                         }
-                        else { 
+                        else {
                             alert(msg);
                         }
                     }

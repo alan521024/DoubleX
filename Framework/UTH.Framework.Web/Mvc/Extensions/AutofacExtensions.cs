@@ -35,7 +35,7 @@
         /// <summary>
         /// 使用Autofac IOC 组件(如使用动态Api 必须)
         /// </summary>
-        public static AutofacServiceProvider AddAutofacProvider(this IMvcBuilder mvcBuilder, IServiceCollection services, Microsoft.Extensions.Configuration.IConfiguration configuration, IHosting hosting,Action<WebAppServiceOptions> optionAction = null)
+        public static AutofacServiceProvider AddAutofacProvider(this IMvcBuilder mvcBuilder, IServiceCollection services, Microsoft.Extensions.Configuration.IConfiguration configuration, IHosting hosting, Action<WebAppServiceOptions> optionAction = null)
         {
             //set options
             optionAction?.Invoke(current);
@@ -48,14 +48,18 @@
             builder.RegisterType<ApplicationPartManager>().AsSelf().SingleInstance();
 
             //注意使用class,并不是业务的接口，这里己经将service实现列视为控制器类了
-            builder.RegisterTypes(feature.Controllers.Select(ti => ti.AsType()).ToArray())
+            var register = builder.RegisterTypes(feature.Controllers.Select(ti => ti.AsType()).ToArray())
                     .EnableClassInterceptors(new ProxyGenerationOptions()
                     {
                         Hook = new ActionProxyHook(),
                         Selector = new ServiceInterceptorSelector()
-                    })
-                    .InterceptedBy(current.Interceptors)
-                    .PropertiesAutowired();
+                    });
+            if (!current.Interceptors.IsEmpty())
+            {
+                register.InterceptedBy(current.Interceptors);
+            };
+            register.PropertiesAutowired();
+
 
             builder.Populate(services);
 
