@@ -66,6 +66,8 @@
             EngineHelper.RegisterType<INotifyInterceptor, NotifyInterceptor>();
             EngineHelper.RegisterType<ICaptchaInterceptor, CaptchaInterceptor>();
 
+            EngineHelper.RegisterType<UTH.Module.ITest, UTH.Module.Test>();
+
         }
 
         /// <summary>

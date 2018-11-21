@@ -56,24 +56,24 @@
         public void Install()
         {
             //account,sign,regist
-            EngineHelper.RegisterType<IAccountRepository, AccountRepository>(DomainConfiguration.Options.IocRepositoryOption);
-            EngineHelper.RegisterType<IAccountDomainService, AccountDomainService>(DomainConfiguration.Options.IocServiceOption);
-            EngineHelper.RegisterType<IAccountApplication, AccountApplication>(DomainConfiguration.Options.IocServiceOption);
+            EngineHelper.RegisterType<IAccountRepository, AccountRepository>(DomainHelper.RepositoryIoc);
+            EngineHelper.RegisterType<IAccountDomainService, AccountDomainService>(DomainHelper.ServiceIoc);
+            EngineHelper.RegisterType<IAccountApplication, AccountApplication>(DomainHelper.ApplicationIoc);
 
             //member
-            EngineHelper.RegisterType<IMemberRepository, MemberRepository>(DomainConfiguration.Options.IocServiceOption);
-            EngineHelper.RegisterType<IMemberDomainService, MemberDomainService>(DomainConfiguration.Options.IocServiceOption);
-            EngineHelper.RegisterType<IMemberApplication, MemberApplication>(DomainConfiguration.Options.IocServiceOption);
+            EngineHelper.RegisterType<IMemberRepository, MemberRepository>(DomainHelper.RepositoryIoc);
+            EngineHelper.RegisterType<IMemberDomainService, MemberDomainService>(DomainHelper.ServiceIoc);
+            EngineHelper.RegisterType<IMemberApplication, MemberApplication>(DomainHelper.ApplicationIoc);
 
             //organize
-            EngineHelper.RegisterType<IOrganizeRepository, OrganizeRepository>(DomainConfiguration.Options.IocServiceOption);
-            EngineHelper.RegisterType<IOrganizeDomainService, OrganizeDomainService>(DomainConfiguration.Options.IocServiceOption);
-            EngineHelper.RegisterType<IOrganizeApplication, OrganizeApplication>(DomainConfiguration.Options.IocServiceOption);
+            EngineHelper.RegisterType<IOrganizeRepository, OrganizeRepository>(DomainHelper.RepositoryIoc);
+            EngineHelper.RegisterType<IOrganizeDomainService, OrganizeDomainService>(DomainHelper.ServiceIoc);
+            EngineHelper.RegisterType<IOrganizeApplication, OrganizeApplication>(DomainHelper.ApplicationIoc);
 
             //employe
-            EngineHelper.RegisterType<IEmployeRepository, EmployeRepository>(DomainConfiguration.Options.IocRepositoryOption);
-            EngineHelper.RegisterType<IEmployeDomainService, EmployeDomainService>(DomainConfiguration.Options.IocServiceOption);
-            EngineHelper.RegisterType<IEmployeApplication, EmployeApplication>(DomainConfiguration.Options.IocServiceOption);
+            EngineHelper.RegisterType<IEmployeRepository, EmployeRepository>(DomainHelper.RepositoryIoc);
+            EngineHelper.RegisterType<IEmployeDomainService, EmployeDomainService>(DomainHelper.ServiceIoc);
+            EngineHelper.RegisterType<IEmployeApplication, EmployeApplication>(DomainHelper.ApplicationIoc);
         }
 
         /// <summary>

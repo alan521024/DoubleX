@@ -23,6 +23,7 @@ namespace UTH.Server.Api
             configuration = _configuration;
             hosting = new AppHosting();
         }
+
         public IConfiguration configuration { get; }
 
         public IHosting hosting { get; }
@@ -49,13 +50,14 @@ namespace UTH.Server.Api
 
             });
 
-            var interceptors = DomainConfiguration.Options.Interceptors.ToList();
-            interceptors.Add(typeof(INotifyInterceptor));
-            interceptors.Add(typeof(ICaptchaInterceptor));
+
+            //services.AddTransient<UTH.Module.ITest, UTH.Module.Test>();
+            //EngineHelper.RegisterType<UTH.Module.ITest, UTH.Module.Test>();
 
             return builder.AddAutofacProvider(services, Configuration, hosting, (opt) =>
             {
-                opt.Interceptors = interceptors.ToArray();
+                opt.Interceptors.Add(typeof(ICaptchaInterceptor));
+                opt.Interceptors.Add(typeof(INotifyInterceptor));
             });
         }
 

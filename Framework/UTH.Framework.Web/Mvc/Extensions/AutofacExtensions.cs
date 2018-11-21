@@ -30,7 +30,7 @@
         /// <summary>
         /// 当前配置
         /// </summary>
-        private static WebAppServiceOptions current = new WebAppServiceOptions();
+        private static WebAppServiceOptions options = new WebAppServiceOptions();
 
         /// <summary>
         /// 使用Autofac IOC 组件(如使用动态Api 必须)
@@ -38,7 +38,7 @@
         public static AutofacServiceProvider AddAutofacProvider(this IMvcBuilder mvcBuilder, IServiceCollection services, Microsoft.Extensions.Configuration.IConfiguration configuration, IHosting hosting, Action<WebAppServiceOptions> optionAction = null)
         {
             //set options
-            optionAction?.Invoke(current);
+            optionAction?.Invoke(options);
 
             var builder = EngineHelper.GetBuilder<ContainerBuilder>();
 
@@ -52,17 +52,18 @@
                     .EnableClassInterceptors(new ProxyGenerationOptions()
                     {
                         Hook = new ActionProxyHook(),
-                        Selector = new ServiceInterceptorSelector()
+                        Selector = new ControllerInterceptorSelector()
                     });
-            if (!current.Interceptors.IsEmpty())
+
+            if (!options.Interceptors.IsEmpty())
             {
-                register.InterceptedBy(current.Interceptors);
+                register.InterceptedBy(options.Interceptors.ToArray());
             };
+
             register.PropertiesAutowired();
 
-
             builder.Populate(services);
-
+            
             return new AutofacServiceProvider(EngineHelper.ContainerBuilder<IContainer>());
         }
     }

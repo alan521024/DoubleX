@@ -56,20 +56,20 @@
         public void Install()
         {
             //meeting
-            EngineHelper.RegisterType<IMeetingRepository, MeetingRepository>(DomainConfiguration.Options.IocRepositoryOption);
-            EngineHelper.RegisterType<IMeetingDomainService, MeetingDomainService>(DomainConfiguration.Options.IocServiceOption);
-            EngineHelper.RegisterType<IMeetingApplication, MeetingApplication>(DomainConfiguration.Options.IocServiceOption);
+            EngineHelper.RegisterType<IMeetingRepository, MeetingRepository>(DomainHelper.RepositoryIoc);
+            EngineHelper.RegisterType<IMeetingDomainService, MeetingDomainService>(DomainHelper.ServiceIoc);
+            EngineHelper.RegisterType<IMeetingApplication, MeetingApplication>(DomainHelper.ApplicationIoc);
 
             //record
-            EngineHelper.RegisterType<IMeetingRecordDomainService, MeetingRecordDomainService>(DomainConfiguration.Options.IocServiceOption);
-            EngineHelper.RegisterType<IMeetingRecordApplication, MeetingRecordApplication>(DomainConfiguration.Options.IocServiceOption);
+            EngineHelper.RegisterType<IMeetingRecordDomainService, MeetingRecordDomainService>(DomainHelper.ServiceIoc);
+            EngineHelper.RegisterType<IMeetingRecordApplication, MeetingRecordApplication>(DomainHelper.ApplicationIoc);
 
             //translation
-            EngineHelper.RegisterType<IMeetingTranslationApplication, MeetingTranslationApplication>(DomainConfiguration.Options.IocServiceOption);
+            EngineHelper.RegisterType<IMeetingTranslationApplication, MeetingTranslationApplication>(DomainHelper.ApplicationIoc);
 
             //Profile
-            EngineHelper.RegisterType<IMeetingProfileDomainService, MeetingProfileDomainService>(DomainConfiguration.Options.IocServiceOption);
-            EngineHelper.RegisterType<IMeetingProfileApplication, MeetingProfileApplication>(DomainConfiguration.Options.IocServiceOption);
+            EngineHelper.RegisterType<IMeetingProfileDomainService, MeetingProfileDomainService>(DomainHelper.ServiceIoc);
+            EngineHelper.RegisterType<IMeetingProfileApplication, MeetingProfileApplication>(DomainHelper.ApplicationIoc);
         }
 
         /// <summary>

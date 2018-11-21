@@ -57,8 +57,8 @@
             LoggingManager.AddLoggerAdapter(new Log4netLoggerAdapter());  //增加日志组件
             EngineHelper.LoggingInfo("UTH.Server.Management - Startup - ");
 
-            //(1)领域相关初始配置
-            DomainConfiguration.Initialize();
+            //(1)业务领域信息配置
+            DomainHelper.Configuration();
 
             //(2)组件安装初始配置
             EngineHelper.Component.List.ForEach(x => x.Install());

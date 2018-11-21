@@ -33,7 +33,7 @@
         /// <summary>
         /// 拦截器列表
         /// </summary>
-        public Type[] Interceptors { get; set; }
+        public List<Type> Interceptors { get; set; } = new List<Type>() { typeof(IApplicationLoggingInterceptor), typeof(IInputValidatorInterceptor) };
 
         /// <summary>
         /// 过滤器列表

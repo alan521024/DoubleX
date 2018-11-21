@@ -32,7 +32,7 @@
 
   <ItemGroup>
     <Folder Include="Entities\_Default\" />
-    <Folder Include="Module\_Default\" />
+    <Folder Include="Model\" />
   </ItemGroup>
 
 </Project>

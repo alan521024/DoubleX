@@ -1060,6 +1060,15 @@ namespace UTH.Infrastructure.Resource.Culture {
         }
         
         /// <summary>
+        ///   查找类似 配置错误 的本地化字符串。
+        /// </summary>
+        public static string sysPeiZhiCuoWu {
+            get {
+                return ResourceManager.GetString("sysPeiZhiCuoWu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 批量添加 的本地化字符串。
         /// </summary>
         public static string sysPiLiangTianJia {

@@ -55,27 +55,27 @@
         public void Install()
         {
             //app
-            EngineHelper.RegisterType<IAppRepository, AppRepository>(DomainConfiguration.Options.IocRepositoryOption);
-            EngineHelper.RegisterType<IAppDomainService, AppDomainService>(DomainConfiguration.Options.IocServiceOption);
-            EngineHelper.RegisterType<IAppApplication, AppApplication>(DomainConfiguration.Options.IocServiceOption);
+            EngineHelper.RegisterType<IAppRepository, AppRepository>(DomainHelper.RepositoryIoc);
+            EngineHelper.RegisterType<IAppDomainService, AppDomainService>(DomainHelper.ServiceIoc);
+            EngineHelper.RegisterType<IAppApplication, AppApplication>(DomainHelper.ApplicationIoc);
 
-            EngineHelper.RegisterType<IAppVersionRepository, AppVersionRepository>(DomainConfiguration.Options.IocRepositoryOption);
-            EngineHelper.RegisterType<IAppVersionDomainService, AppVersionDomainService>(DomainConfiguration.Options.IocServiceOption);
-            EngineHelper.RegisterType<IAppVersionApplication, AppVersionApplication>(DomainConfiguration.Options.IocServiceOption);
+            EngineHelper.RegisterType<IAppVersionRepository, AppVersionRepository>(DomainHelper.RepositoryIoc);
+            EngineHelper.RegisterType<IAppVersionDomainService, AppVersionDomainService>(DomainHelper.ServiceIoc);
+            EngineHelper.RegisterType<IAppVersionApplication, AppVersionApplication>(DomainHelper.ApplicationIoc);
 
-            EngineHelper.RegisterType<IAppSettingRepository, AppSettingRepository>(DomainConfiguration.Options.IocRepositoryOption);
-            EngineHelper.RegisterType<IAppSettingDomainService, AppSettingDomainService>(DomainConfiguration.Options.IocServiceOption);
-            EngineHelper.RegisterType<IAppSettingApplication, AppSettingApplication>(DomainConfiguration.Options.IocServiceOption);
+            EngineHelper.RegisterType<IAppSettingRepository, AppSettingRepository>(DomainHelper.RepositoryIoc);
+            EngineHelper.RegisterType<IAppSettingDomainService, AppSettingDomainService>(DomainHelper.ServiceIoc);
+            EngineHelper.RegisterType<IAppSettingApplication, AppSettingApplication>(DomainHelper.ApplicationIoc);
 
             //dictionary
-            EngineHelper.RegisterType<IDictionaryApplication, DictionaryApplication>(DomainConfiguration.Options.IocServiceOption);
+            EngineHelper.RegisterType<IDictionaryApplication, DictionaryApplication>(DomainHelper.ApplicationIoc);
 
             //assets
-            EngineHelper.RegisterType<IAssetsApplication, AssetsApplication>(DomainConfiguration.Options.IocServiceOption);
+            EngineHelper.RegisterType<IAssetsApplication, AssetsApplication>(DomainHelper.ApplicationIoc);
 
             //permission
-            EngineHelper.RegisterType<INavigationApplication, NavigationApplication>(DomainConfiguration.Options.IocRepositoryOption);
-            EngineHelper.RegisterType<IOperateApplication, OperateApplication>(DomainConfiguration.Options.IocRepositoryOption);
+            EngineHelper.RegisterType<INavigationApplication, NavigationApplication>(DomainHelper.ApplicationIoc);
+            EngineHelper.RegisterType<IOperateApplication, OperateApplication>(DomainHelper.ApplicationIoc);
 
         }
 

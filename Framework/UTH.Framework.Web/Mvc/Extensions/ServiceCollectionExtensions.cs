@@ -54,6 +54,7 @@
             services.AddTransient<IAccessor, WebAccessor>();
             services.AddTransient<IApplicationSession, IdentifierSession>();
             services.AddTransient<ITokenService, TokenService>();
+            //EngineHelper.RegisterType<ITest, Test>();
 
             //routing
             services.AddRouting(routingOpt =>
@@ -66,7 +67,7 @@
 
             //authentication
             services.AddAuthent();
-            
+
             //mvc builder
             var builder = services.AddMvc((option) =>
             {
@@ -75,9 +76,13 @@
                 {
                     option.Conventions.Add(item);
                 }
-                if (current.IsDynamicApi && !current.MvcFeatures.Any(x => x is DynamicApiConvention))
+
+                if (current.IsDynamicApi)
                 {
-                    option.Conventions.Add(new DynamicApiConvention(services));
+                    if (!current.MvcFeatures.Any(x => x is DynamicApiConvention))
+                    {
+                        option.Conventions.Add(new DynamicApiConvention(services));
+                    }
                 }
 
                 //filters
@@ -102,9 +107,12 @@
             {
                 builder.PartManager.FeatureProviders.Add(item);
             }
-            if (current.IsDynamicApi && !current.MvcFeatures.Any(x => x is DynamicApiFeature))
+            if (current.IsDynamicApi)
             {
-                builder.PartManager.FeatureProviders.Add(new DynamicApiFeature());
+                if (!current.MvcFeatures.Any(x => x is DynamicApiFeature))
+                {
+                    builder.PartManager.FeatureProviders.Add(new DynamicApiFeature());
+                }
             }
 
             return builder;

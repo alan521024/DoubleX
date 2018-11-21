@@ -84,8 +84,11 @@
         /// </summary>
         public void RegisterType<T>(IocRegisterOptions option)
         {
-            builder.RegisterType(typeof(T))
-                .RegistrationOption(option);
+            var regBuilder = builder.RegisterType(typeof(T));
+            if (!option.IsNull())
+            {
+                regBuilder.RegistrationOption(option);
+            }
         }
 
         /// <summary>
@@ -101,15 +104,18 @@
         /// </summary>
         public void RegisterType<T, TService>(IocRegisterOptions option) where TService : class, T
         {
-            if (option.Named.IsEmpty())
-            {
-                builder.RegisterType<TService>().As<T>()
-                        .RegistrationOption(option);
-            }
-            else
+            if (!option.IsNull() && !option.Named.IsEmpty())
             {
                 builder.RegisterType<TService>().Named<T>(option.Named)
                     .RegistrationOption(option);
+            }
+            else
+            {
+                var regBuilder = builder.RegisterType<TService>().As<T>();
+                if (!option.IsNull())
+                {
+                    regBuilder.RegistrationOption(option);
+                }
             }
         }
 
@@ -126,15 +132,18 @@
         /// </summary>
         public void RegisterType(Type type, Type service, IocRegisterOptions option)
         {
-            if (option.Named.IsEmpty())
+            if (!option.IsNull() && !option.Named.IsEmpty())
             {
-                builder.RegisterType(service).As(type)
+                builder.RegisterType(service).Named(option.Named, type)
                     .RegistrationOption(option);
             }
             else
             {
-                builder.RegisterType(service).Named(option.Named, type)
-                    .RegistrationOption(option);
+                var regBuilder = builder.RegisterType(service).As(type);
+                if (!option.IsNull())
+                {
+                    regBuilder.RegistrationOption(option);
+                }
             }
         }
 
@@ -173,8 +182,11 @@
         /// </summary>
         public void RegisterGeneric(Type type, Type service, IocRegisterOptions option)
         {
-            builder.RegisterGeneric(service).As(type)
-                .RegistrationOption(option);
+            var regBuilder = builder.RegisterGeneric(service).As(type);
+            if (!option.IsNull())
+            {
+                regBuilder.RegistrationOption(option);
+            }
         }
 
         #endregion

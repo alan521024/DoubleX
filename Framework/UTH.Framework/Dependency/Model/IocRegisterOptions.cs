@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using Castle.DynamicProxy;
     using UTH.Infrastructure.Resource;
     using UTH.Infrastructure.Resource.Culture;
     using UTH.Infrastructure.Utility;
@@ -36,7 +37,7 @@
         /// <summary>
         /// Aop代理配置(ProxyGenerationOptions)
         /// </summary>
-        public dynamic InterceptorProxy { get; set; }
+        public ProxyGenerationOptions InterceptorProxy { get; set; }
 
         /// <summary>
         /// Aop拦截器

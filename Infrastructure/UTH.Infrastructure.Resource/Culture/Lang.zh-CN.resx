@@ -873,4 +873,7 @@
   <data name="sysDaoRuWanCheng" xml:space="preserve">
     <value>导入完成</value>
   </data>
+  <data name="sysPeiZhiCuoWu" xml:space="preserve">
+    <value>配置错误</value>
+  </data>
 </root>

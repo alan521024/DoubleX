@@ -23,6 +23,8 @@
     /// </summary>
     public class CaptchaInterceptor : ICaptchaInterceptor, IInterceptor
     {
+        //TODO: 验证码校验 应该是 SecurityCode 校验 不应该是 Captcha 的AOP
+
         IApplicationSession session { get; set; }
         ISecurityCodeService securityCodeService { get; set; }
 

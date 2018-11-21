@@ -74,7 +74,7 @@
                     var result = validator.Validate(item.Value);
                     if (result != null && !result.IsValid && !result.Errors.IsEmpty())
                     {
-                        throw DomainHelper.GeValidationException(result);
+                        throw FrameworkHelper.GeValidationException(result);
                     }
                 }
             }

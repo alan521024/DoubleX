@@ -302,6 +302,21 @@
             if (action.IsNull())
                 return null;
 
+            if (method.IsSpecialName)
+            {
+                return null;
+            }
+
+            if (TypeHelper.IsIDisposableMethod(method))
+            {
+                return null;
+            }
+
+            if (method.GetBaseDefinition().DeclaringType == typeof(object))
+            {
+                return null;
+            }
+
             if (action.Name == "DeleteId" || action.Name == "DeleteIds")
                 return null;
 

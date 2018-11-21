@@ -19,6 +19,7 @@ namespace UTH.Server.Api.Controllers
     {
         public IActionResult Index()
         {
+            var DDD = EngineHelper.Resolve<UTH.Module.ITest>().Get();
             return View();
         }
     }

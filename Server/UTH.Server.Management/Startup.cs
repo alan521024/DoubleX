@@ -42,13 +42,9 @@ namespace UTH.Server.Management
                 option.Filters.Add<WebResultFilter>();
             });
 
-            var interceptors = DomainConfiguration.Options.Interceptors.ToList();
-            interceptors.Add(typeof(INotifyInterceptor));
-            interceptors.Add(typeof(ICaptchaInterceptor));
-
             return builder.AddAutofacProvider(services, Configuration, hosting, (opt) =>
             {
-                opt.Interceptors = interceptors.ToArray();
+                //opt.Interceptors.Add(typeof(IApplicationLoggingInterceptor));
             });
         }
 
