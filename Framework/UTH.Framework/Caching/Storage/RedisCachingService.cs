@@ -13,7 +13,7 @@
     /// <summary>
     /// 基于Redis的缓存服务
     /// </summary>
-    public class RedisCachingService : ICachingService
+    public class RedisCachingService : ICachingService,IAppCachingService
     {
 
         public RedisCachingService(ConnectionModel model)

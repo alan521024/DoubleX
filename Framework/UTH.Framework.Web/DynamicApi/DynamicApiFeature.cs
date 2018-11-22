@@ -22,6 +22,10 @@
     {
         protected override bool IsController(TypeInfo controllerType)
         {
+            //if (controllerType.FullName.Contains("UTH.Modeule"))
+            //{
+            //    var tag = "ttt";
+            //}
             var isController = DynamicApiHelper.IsServiceController(controllerType);
             if (isController)
                 return true;

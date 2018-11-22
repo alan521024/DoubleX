@@ -17,11 +17,11 @@
     /// <summary>
     /// 仓储拦截器选择
     /// </summary>
-    public class RepositoryInterceptorSelector : BaseInterceptorSelector, IInterceptorSelector
+    public class RepositoryInterceptorSelector : IInterceptorSelector
     {
-        public override IInterceptor[] SelectInterceptors(Type type, MethodInfo method, IInterceptor[] interceptors)
+        public IInterceptor[] SelectInterceptors(Type type, MethodInfo method, IInterceptor[] interceptors)
         {
-            return base.SelectInterceptors(type, method, interceptors);
+            return FrameworkHelper.GetServiceInterceptors(type, method, interceptors);
         }
     }
 }

@@ -54,7 +54,6 @@
             services.AddTransient<IAccessor, WebAccessor>();
             services.AddTransient<IApplicationSession, IdentifierSession>();
             services.AddTransient<ITokenService, TokenService>();
-            //EngineHelper.RegisterType<ITest, Test>();
 
             //routing
             services.AddRouting(routingOpt =>
@@ -107,6 +106,7 @@
             {
                 builder.PartManager.FeatureProviders.Add(item);
             }
+
             if (current.IsDynamicApi)
             {
                 if (!current.MvcFeatures.Any(x => x is DynamicApiFeature))

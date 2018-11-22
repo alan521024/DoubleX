@@ -33,7 +33,7 @@ namespace UTH.Server.Api
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             EngineHelper.Worker.Startup(hosting).OnStart();
-
+            
             var builder = services.AddWeb(Configuration, hosting, (option) =>
             {
                 option.IsDynamicApi = true;
@@ -47,12 +47,7 @@ namespace UTH.Server.Api
                 {
                     option.MvcApplicationParts.Add(new AssemblyPart(item.Assemblies));
                 });
-
             });
-
-
-            //services.AddTransient<UTH.Module.ITest, UTH.Module.Test>();
-            //EngineHelper.RegisterType<UTH.Module.ITest, UTH.Module.Test>();
 
             return builder.AddAutofacProvider(services, Configuration, hosting, (opt) =>
             {

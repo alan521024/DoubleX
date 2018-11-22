@@ -277,6 +277,24 @@ namespace UTH.Infrastructure.Resource.Culture {
         }
         
         /// <summary>
+        ///   查找类似 文档管理 的本地化字符串。
+        /// </summary>
+        public static string docWenDangGuanLi {
+            get {
+                return ResourceManager.GetString("docWenDangGuanLi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 文档组管理 的本地化字符串。
+        /// </summary>
+        public static string docWenDangZuGuanLi {
+            get {
+                return ResourceManager.GetString("docWenDangZuGuanLi", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Close 的本地化字符串。
         /// </summary>
         public static string GuanBi {
@@ -849,6 +867,15 @@ namespace UTH.Infrastructure.Resource.Culture {
         public static string sysGongNengQuanXian {
             get {
                 return ResourceManager.GetString("sysGongNengQuanXian", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 功能未开通 的本地化字符串。
+        /// </summary>
+        public static string sysGongNengWeiKaiTong {
+            get {
+                return ResourceManager.GetString("sysGongNengWeiKaiTong", resourceCulture);
             }
         }
         

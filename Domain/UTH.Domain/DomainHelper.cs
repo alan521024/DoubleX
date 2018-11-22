@@ -103,6 +103,12 @@
                     new KeyValueModel<string, object>("model", engine.Store.Caching)
                 }
             });
+            EngineHelper.RegisterType<IAppCachingService, RedisCachingService>(new IocRegisterOptions()
+            {
+                Parameters = new List<KeyValueModel<string, object>>(){
+                    new KeyValueModel<string, object>("model", engine.Store.Caching)
+                }
+            });
 
             //配置文件
             //仅支持不需要在IOC注册时获取的配置

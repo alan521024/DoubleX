@@ -16,22 +16,40 @@
     /// <summary>
     /// 应用服务Aop代理钩子
     /// </summary>
-    public class ApplicationProxyHook : BaseProxyHook, IProxyGenerationHook
+    public class ApplicationProxyHook : IProxyGenerationHook
     {
+        /// <summary>
+        /// 调用生成过程来通知整个过程已经完成
+        /// </summary>
+        public void MethodsInspected()
+        {
+            //throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 调用的生成过程通知成员没有标记为虚拟。
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="method"></param>
+        public void NonProxyableMemberNotification(Type type, MemberInfo method)
+        {
+            //throw new NotImplementedException();
+        }
+
         /// <summary>
         /// 通过生成过程调用来确定指定的方法应被代理。返回给定方法是否需要被代理
         /// </summary>
         /// <param name="type"></param>
         /// <param name="method"></param>
         /// <returns></returns>
-        public override bool ShouldInterceptMethod(Type type, MethodInfo method)
+        public bool ShouldInterceptMethod(Type type, MethodInfo method)
         {
             if (!type.IsBaseFrom<IApplicationService>())
             {
                 return false;
             }
 
-            if (!base.ShouldInterceptMethod(type, method))
+            if (!FrameworkHelper.IsMethodHook(type, method))
             {
                 return false;
             }

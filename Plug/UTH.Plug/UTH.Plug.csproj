@@ -16,4 +16,8 @@
     <ProjectReference Include="..\..\Infrastructure\UTH.Infrastructure.Utility\UTH.Infrastructure.Utility.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ElasticSearch\" />
+  </ItemGroup>
+
 </Project>

@@ -17,15 +17,33 @@
     /// <summary>
     /// Web Action Aop 代理钩子
     /// </summary>
-    public class ActionProxyHook : BaseProxyHook, IProxyGenerationHook
+    public class ActionProxyHook : IProxyGenerationHook
     {
+        /// <summary>
+        /// 调用生成过程来通知整个过程已经完成
+        /// </summary>
+        public void MethodsInspected()
+        {
+            //throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 调用的生成过程通知成员没有标记为虚拟。
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="method"></param>
+        public void NonProxyableMemberNotification(Type type, MemberInfo method)
+        {
+            //throw new NotImplementedException();
+        }
+
         /// <summary>
         /// 通过生成过程调用来确定指定的方法应被代理。返回给定方法是否需要被代理
         /// </summary>
         /// <param name="type"></param>
         /// <param name="method"></param>
         /// <returns></returns>
-        public override bool ShouldInterceptMethod(Type type, MethodInfo method)
+        public bool ShouldInterceptMethod(Type type, MethodInfo method)
         {
             if (AspNetCoreMvcHelper.IsAction(type, method))
             {
@@ -40,6 +58,16 @@
             }
 
             return false;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 }

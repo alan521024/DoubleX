@@ -83,6 +83,11 @@
 
             isLoaded = true;
 
+            //var items = AppDomain.CurrentDomain.GetAssemblies().OrderBy(x => x.FullName).ToList();
+            //var items2 = Assembly.GetEntryAssembly().GetReferencedAssemblies().OrderBy(x => x.FullName).ToList();
+            //var path = new FileInfo(Assembly.GetExecutingAssembly().Location);
+            //var a = Assembly.LoadFile(Path.Combine($@"{path}\..\..\..\..\..\RefProj\bin\Debug\netstandard2.0", "RefProj.dll"));
+            
             //app domain 
             foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
@@ -112,6 +117,15 @@
                         if (!dll.IsNull() && Matches(dll.FullName) && !_assemblies.Select(x => x.GetName().FullName).Contains(dll.FullName))
                         {
                             _assemblies.Add(dll);
+                            //try
+                            //{
+                            //    app.Load(dll.FullName);
+                            //}
+                            //catch (Exception ex)
+                            //{
+                            //    Console.WriteLine("");
+                            //    Console.WriteLine(string.Format("  App Load：{0}  {1}", dll.FullName, ex.ToString()));
+                            //}
                         }
                     }
                     catch (Exception ex)

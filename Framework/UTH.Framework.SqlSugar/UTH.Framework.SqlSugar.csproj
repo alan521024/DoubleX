@@ -19,7 +19,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Infrastructure\UTH.Infrastructure.Resource\UTH.Infrastructure.Resource.csproj" />
     <ProjectReference Include="..\..\Infrastructure\UTH.Infrastructure.Utility\UTH.Infrastructure.Utility.csproj" />
-    <ProjectReference Include="..\UTH.Framework.Log4net\UTH.Framework.Log4net.csproj" />
     <ProjectReference Include="..\UTH.Framework\UTH.Framework.csproj" />
   </ItemGroup>
 

@@ -21,6 +21,16 @@
     /// </summary>
     public class AutofacIocManager : IIocManager
     {
+        static AutofacIocManager()
+        {
+            Instance = new AutofacIocManager();
+        }
+
+        public AutofacIocManager()
+        {
+            builder = new ContainerBuilder();
+        }
+
         #region ICO容器管理器/属性
 
         /// <summary>
@@ -48,17 +58,6 @@
         protected int containerBuildCount = 0;
 
         #endregion
-
-        static AutofacIocManager()
-        {
-            Instance = new AutofacIocManager();
-        }
-
-        public AutofacIocManager()
-        {
-            builder = new ContainerBuilder();
-        }
-
 
         #region ICO容器管理器/注入
 
@@ -195,7 +194,9 @@
 
         public T Resolve<T>()
         {
-            return container.Resolve<T>();
+            var result = default(T);
+            result = container.Resolve<T>();
+            return result;
         }
 
         public T Resolve<T>(Type type)

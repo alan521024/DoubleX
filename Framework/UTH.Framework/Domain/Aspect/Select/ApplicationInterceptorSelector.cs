@@ -17,11 +17,11 @@
     /// <summary>
     /// 应用服务拦截器选择
     /// </summary>
-    public class ApplicationInterceptorSelector : BaseInterceptorSelector, IInterceptorSelector
+    public class ApplicationInterceptorSelector : IInterceptorSelector
     {
-        public override IInterceptor[] SelectInterceptors(Type type, MethodInfo method, IInterceptor[] interceptors)
+        public IInterceptor[] SelectInterceptors(Type type, MethodInfo method, IInterceptor[] interceptors)
         {
-            return base.SelectInterceptors(type, method, interceptors);
+            return FrameworkHelper.GetServiceInterceptors(type, method, interceptors);
         }
     }
 }

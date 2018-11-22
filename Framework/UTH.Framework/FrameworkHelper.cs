@@ -7,6 +7,7 @@ using FluentValidation.Results;
 using UTH.Infrastructure.Resource.Culture;
 using UTH.Infrastructure.Utility;
 using UTH.Framework;
+using Castle.DynamicProxy;
 
 namespace UTH.Framework
 {
@@ -63,7 +64,56 @@ namespace UTH.Framework
         //    var repObj = EngineHelper.Resolve<IRepository<TEntity>>(repParams);
         //    return EngineHelper.Resolve<TService>(new KeyValueModel<string, object>("_repository", repObj));
         //}
-        
+
+        /// <summary>
+        /// 判断方法是否勾子
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="method"></param>
+        /// <returns></returns>
+        public static bool IsMethodHook(Type type, MethodInfo method)
+        {
+
+            if (method.IsSpecialName)
+            {
+                return false;
+            }
+
+            if (TypeHelper.IsIDisposableMethod(method))
+            {
+                return false;
+            }
+
+            if (method.GetBaseDefinition().DeclaringType == typeof(object))
+            {
+                return false;
+            }
+
+            var attr = method.GetCustomAttribute<ServiceAttribute>();
+            if (!attr.IsNull() && !attr.IsAop)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// 获取服务拦截器
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="method"></param>
+        /// <param name="interceptors"></param>
+        /// <returns></returns>
+        public static IInterceptor[] GetServiceInterceptors(Type type, MethodInfo method, IInterceptor[] interceptors)
+        {
+            if (!interceptors.IsEmpty())
+            {
+                return interceptors.Where(i => i is IServiceInterceptor).ToArray();
+            }
+            return interceptors;
+        }
+
         /// <summary>
         /// 验证规则第一个消息
         /// </summary>
