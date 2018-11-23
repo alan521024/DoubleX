@@ -12,6 +12,7 @@
     using UTH.Infrastructure.Resource;
     using UTH.Infrastructure.Resource.Culture;
     using UTH.Infrastructure.Utility;
+    using AutoMapper.Configuration;
 
     /// <summary>
     /// 引擎 辅助类
@@ -92,7 +93,6 @@
             }
             return _instance;
         });
-
         public static ITypeFinder TypeFinder
         {
             get { return lazyTypeFinder.Value; }
@@ -104,18 +104,34 @@
 
         private static readonly Lazy<ComponentManager> lazyComponentManager = new Lazy<ComponentManager>(() =>
         {
-            var list = new ComponentManager();
+            var mgr = new ComponentManager();
             IEnumerable<Type> types = TypeFinder.FindClassesOfType<IComponentConfiguration>();
             foreach (var item in types)
             {
-                list.Add(Activator.CreateInstance(item) as IComponentConfiguration);
+                mgr.Add(Activator.CreateInstance(item) as IComponentConfiguration);
             }
-            return list;
+            return mgr;
         });
         public static ComponentManager Component { get { return lazyComponentManager.Value; } }
 
         #endregion
-        
+
+        #region 领域管理器
+
+        private static readonly Lazy<DomainProfileManager> lazyDomainProfileManager = new Lazy<DomainProfileManager>(() =>
+        {
+            var mgr = new DomainProfileManager();
+            IEnumerable<Type> types = TypeFinder.FindClassesOfType<IDomainProfile>();
+            foreach (var item in types)
+            {
+                mgr.Add(Activator.CreateInstance(item) as IDomainProfile);
+            }
+            return mgr;
+        });
+        public static DomainProfileManager DomainProfile { get { return lazyDomainProfileManager.Value; } }
+
+        #endregion
+
         #region 容器操作
 
         #region 注册操作
@@ -363,6 +379,16 @@
 
         #region 对象映射
 
+        private static readonly AsyncLocal<IMapper> mapper = new AsyncLocal<IMapper>();
+        public static void MapperInit()
+        {
+            var cfg = new MapperConfigurationExpression();
+            cfg.CreateMissingTypeMaps = true;
+            DomainProfile.List.ForEach(x => x.Mapper(cfg));
+            var configuration = new MapperConfiguration(cfg);
+            mapper.Value = new Mapper(configuration);
+        }
+
         /// <summary>
         /// 对象映射
         /// </summary>
@@ -372,7 +398,7 @@
         /// <returns></returns>
         public static TTarget Map<TSource, TTarget>(TSource source)
         {
-            return Mapper.Map<TSource, TTarget>(source);
+            return mapper.Value.Map<TSource, TTarget>(source);
         }
 
         /// <summary>
@@ -383,7 +409,7 @@
         /// <returns></returns>
         public static TEntity Map<TEntity>(object source)
         {
-            return Mapper.Map<TEntity>(source);
+            return mapper.Value.Map<TEntity>(source);
         }
 
         #endregion

@@ -57,10 +57,16 @@
             LoggingManager.AddLoggerAdapter(new Log4netLoggerAdapter());  //增加日志组件
             EngineHelper.LoggingInfo("UTH.Server.Api - Startup - ");
 
-            //(1)业务领域信息配置
-            DomainHelper.Configuration();
+            //(1)注入初始
+            DomainHelper.IocInitialization();
 
-            //(2)组件安装初始配置
+            //(2)领域配置
+            EngineHelper.DomainProfile.List.ForEach(x => x.Configuration());
+
+            //(3)对对映射
+            EngineHelper.MapperInit();
+
+            //(4)组件安装
             EngineHelper.Component.List.ForEach(x => x.Install());
 
             //己由Strap中方法执行了

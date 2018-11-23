@@ -93,7 +93,7 @@
                 //model binders
                 //..........
 
-            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            }).SetCompatibilityVersion(CompatibilityVersion.Latest);
 
             //mvc application parts
             foreach (var item in current.MvcApplicationParts)

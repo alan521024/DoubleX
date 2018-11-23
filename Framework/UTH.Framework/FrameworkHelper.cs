@@ -8,6 +8,8 @@ using UTH.Infrastructure.Resource.Culture;
 using UTH.Infrastructure.Utility;
 using UTH.Framework;
 using Castle.DynamicProxy;
+using AutoMapper;
+using FluentValidation;
 
 namespace UTH.Framework
 {
@@ -64,7 +66,7 @@ namespace UTH.Framework
         //    var repObj = EngineHelper.Resolve<IRepository<TEntity>>(repParams);
         //    return EngineHelper.Resolve<TService>(new KeyValueModel<string, object>("_repository", repObj));
         //}
-
+        
         /// <summary>
         /// 判断方法是否勾子
         /// </summary>
